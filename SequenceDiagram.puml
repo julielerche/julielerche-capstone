@@ -1,0 +1,12 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+User -> GetTasksActivity: handleRequest(userId, taskType)
+GetTasksActivity -> TaskDao : get(userId, taskType)
+TaskDao -> DynamoDB : query(userId, taskType) from User Table
+TaskDao <-- DynamoDB : queryResults
+GetTasksActivity <-- TaskDao : List<Task>
+User <-- GetTasksActivity : GetTasksResponse(List<Task>)
+
+@enduml
