@@ -22,26 +22,22 @@ I start every day with a to-do list, in the past I have used apps to track my pr
 3. As a user, I want multiple potions with different effects.
 4. As a user, I want to see animations of the attacks.
 5. As a user, I want to gain EXP which allows for more moves.
+6. As a user, I want the day to reset at a set UTC time.
 
 A UML class diagram
 ## Tables
 
 ### User Table
-| UserId (Partition Key) (GSI Key) | displayName | dailies (GSI Key) | chores (GSI Key) | todos (GSI Key) | inventory    | stats                                    |
-|----------------------------------|-------------|-------------------|------------------|-----------------|--------------|------------------------------------------| 
-| String                           | String      | String(json)      | String(json)     | String(json)    | String(json) | Number Set (health, stamina, mana, gold) |
-
-*Three different GSIs allow for quick access to User's Tasks*
-- UserId, dailies
-- UserId, chores
-- UserId, todos
+| UserId (Partition Key) | displayName | dailies      | chores       | todos        | inventory    | stats                                    |
+|------------------------|-------------|--------------|--------------|--------------|--------------|------------------------------------------| 
+| String                 | String      | String(json) | String(json) | String(json) | String(json) | Number Set (health, stamina, mana, gold) |
 
 ### Assets Table
-| assetType (Partition Key) | assetId (Sort Key) | name | description | healthOrCost |
+| assetType (Partition Key) (GSI key) | assetId (Sort Key) | name | description | healthOrCost (GSI Key) |
 |-------------------------------------|-------------|--------------|--------------|------------------------|
 | String (Potion, Monster, Item)      | Number (unique per assetType) | String | String | Number                 |
+*HealthOrCost as a GSI Key allows to getting Monsters of a certain health or items that are affordable to the user.*
 
-A description of each API endpoint that includes:
 # API
 ## API Interactable Objects
 ### User Object
