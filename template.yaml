@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  Book Tracker Service
+  Task Warrior Service
 
 Parameters:
 
@@ -200,40 +200,32 @@ Resources:
                 - logs:PutLogEvents
                 - cloudwatch:PutMetricData
               Resource: '*'
-        - PolicyName: 'AccessBooklistsTable'
+        - PolicyName: 'AccessAssetsTable'
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
             - Effect: Allow
               Action: dynamodb:*
-              Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Booklists"
+              Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Assets"
                 
-        - PolicyName: 'AccessBooksTable'
+        - PolicyName: 'AccessUsersTable'
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
             - Effect: Allow
               Action: dynamodb:*
-              Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Books"
-
-        - PolicyName: 'AccessCommentsTable'
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: dynamodb:*
-                Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Comments"
+              Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Users"
 
   #-----------------------------------------------------
   # Lambda Functions Configuration
   #-----------------------------------------------------
 
-  GetBooklistLambda:
+  GetUserLambda:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: BookTrackerServiceLambda
-      Handler: com.nashss.se.booktrackerservice.lambda.GetBooklistLambda::handleRequest
+      CodeUri: TaskWarriorServiceLambda
+      Handler: julielerche.capstone.lambda.GetUserLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -242,20 +234,20 @@ Resources:
         Variables:
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
-        BookTrackerService:
+        TaskWarriorService:
           Type: Api
           Properties:
-            Path: /booklists/{id}
+            Path: /users/{id}
             Method: get
             Auth:
               Authorizer: 'NONE'
 
-  GetCurrentlyReadingLambda:
+  GetUserInventoryLambda:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: BookTrackerServiceLambda
-      Handler: com.nashss.se.booktrackerservice.lambda.CurrentlyReadingLambda::handleRequest
+      CodeUri: TaskWarriorServiceLambda
+      Handler: julielerche.capstone.lambda.GetUserInventoryLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -264,20 +256,20 @@ Resources:
         Variables:
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
-        BookTrackerService:
+        TaskWarriorService:
           Type: Api
           Properties:
-            Path: /books/{currentlyReading}
+            Path: /users/{id}/inventory
             Method: get
             Auth:
               Authorizer: 'NONE'
 
-  SearchBooklistsLambda:
+  GetTasksLambda:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: BookTrackerServiceLambda
-      Handler: com.nashss.se.booktrackerservice.lambda.SearchBooklistsLambda::handleRequest
+      CodeUri: TaskWarriorServiceLambda
+      Handler: julielerche.capstone.lambda.GetTasksLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -286,20 +278,20 @@ Resources:
         Variables:
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
-        BookTrackerService:
+        TaskWarriorService:
           Type: Api
           Properties:
-            Path: /booklists/search
+            Path: /users/{id}/{type}
             Method: get
             Auth:
               Authorizer: 'NONE'
 
-  GetBooklistBooksLambda:
+  GetSpecificAssetLambda:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: BookTrackerServiceLambda
-      Handler: com.nashss.se.booktrackerservice.lambda.GetBooklistBooksLambda::handleRequest
+      CodeUri: TaskWarriorServiceLambda
+      Handler: julielerche.capstone.lambda.GetSpecificAssetLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -308,20 +300,20 @@ Resources:
         Variables:
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
-        BookTrackerService:
+        TaskWarriorService:
           Type: Api
           Properties:
-            Path: /booklists/{id}/books
+            Path: /assets/{type}/{id}
             Method: get
             Auth:
               Authorizer: 'NONE'
 
-  CreateBooklistLambda:
+  GetAllOfAssetTypeLambda:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: BookTrackerServiceLambda
-      Handler: com.nashss.se.booktrackerservice.lambda.CreateBooklistLambda::handleRequest
+      CodeUri: TaskWarriorServiceLambda
+      Handler: julielerche.capstone.lambda.GetAllOfAssetTypeLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -330,18 +322,18 @@ Resources:
         Variables:
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
-        BookTrackerService:
+        TaskWarriorService:
           Type: Api
           Properties:
-            Path: /booklists
-            Method: post
+            Path: /assets/{type}/{type2}
+            Method: get
 
-  UpdateBooklistLambda:
+  UpdateUserLambda:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: BookTrackerServiceLambda
-      Handler: com.nashss.se.booktrackerservice.lambda.UpdateBooklistLambda::handleRequest
+      CodeUri: TaskWarriorServiceLambda
+      Handler: julielerche.capstone.lambda.UpdateUserLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -350,18 +342,18 @@ Resources:
         Variables:
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
-        BookTrackerService:
+        TaskWarriorService:
           Type: Api
           Properties:
-            Path: /booklists/{id}
+            Path: /users/{user}
             Method: put
 
-  AddBookToBooklistLambda:
+  UpdateTaskLambda:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: BookTrackerServiceLambda
-      Handler: com.nashss.se.booktrackerservice.lambda.AddBookToBooklistLambda::handleRequest
+      CodeUri: TaskWarriorServiceLambda
+      Handler: julielerche.capstone.lambda.UpdateTaskLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -370,18 +362,18 @@ Resources:
         Variables:
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
-        BookTrackerService:
+        TaskWarriorService:
           Type: Api
           Properties:
-            Path: /booklists/{id}/books
-            Method: post
+            Path: /users/{user}/{task}
+            Method: put
 
-  SearchBooksLambda:
+  CreateUserLambda:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: BookTrackerServiceLambda
-      Handler: com.nashss.se.booktrackerservice.lambda.SearchBooksLambda::handleRequest
+      CodeUri: TaskWarriorServiceLambda
+      Handler: julielerche.capstone.lambda.CreateUserLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -390,20 +382,20 @@ Resources:
         Variables:
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
-        BookTrackerService:
+        TaskWarriorService:
           Type: Api
           Properties:
-            Path: /books/search
-            Method: get
+            Path: /users/{id}
+            Method: post
             Auth:
               Authorizer: 'NONE'
 
-  RemoveBooklistLambda:
+  CreateAssetLambda:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: BookTrackerServiceLambda
-      Handler: com.nashss.se.booktrackerservice.lambda.RemoveBooklistLambda::handleRequest
+      CodeUri: TaskWarriorServiceLambda
+      Handler: julielerche.capstone.lambda.CreateAssetLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -412,98 +404,59 @@ Resources:
         Variables:
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
-        BookTrackerService:
+        TaskWarriorService:
           Type: Api
           Properties:
-            Path: /booklists/{id}
+            Path: /assets/{assetType}/{assetId}/{name}/{description}/{healthOrCost}
+            Method: post
+
+  CreateTaskLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: !GetAtt AccessRole.Arn
+      CodeUri: TaskWarriorServiceLambda
+      Handler: julielerche.capstone.lambda.CreateTaskLambda::handleRequest
+      Runtime: java11
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+      Events:
+        TaskWarriorService:
+          Type: Api
+          Properties:
+            Path: /users/{taskType}/{taskName}/{difficulty}
+            Method: post
+
+  DeleteTaskLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: !GetAtt AccessRole.Arn
+      CodeUri: TaskWarriorServiceLambda
+      Handler: julielerche.capstone.lambda.DeleteTaskLambda::handleRequest
+      Runtime: java11
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+      Events:
+        TaskWarriorService:
+          Type: Api
+          Properties:
+            Path: /users/tasks/{taskType}/{taskId}
             Method: delete
 
-  RemoveBookFromBooklistLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      Role: !GetAtt AccessRole.Arn
-      CodeUri: BookTrackerServiceLambda
-      Handler: com.nashss.se.booktrackerservice.lambda.RemoveBookFromBooklistLambda::handleRequest
-      Runtime: java11
-      Architectures:
-        - x86_64
-      MemorySize: 512
-      Environment:
-        Variables:
-          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
-      Events:
-        BookTrackerService:
-          Type: Api
-          Properties:
-            Path: /booklists/{id}/books/{asin}
-            Method: delete
-
-  GetUserBooklistsLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      Role: !GetAtt AccessRole.Arn
-      CodeUri: BookTrackerServiceLambda
-      Handler: com.nashss.se.booktrackerservice.lambda.GetUserBooklistsLambda::handleRequest
-      Runtime: java11
-      Architectures:
-        - x86_64
-      MemorySize: 512
-      Environment:
-        Variables:
-          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
-      Events:
-        BookTrackerService:
-          Type: Api
-          Properties:
-            Path: /userBooklists
-            Method: get
-
-  UpdateBookInBooklistLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      Role: !GetAtt AccessRole.Arn
-      CodeUri: BookTrackerServiceLambda
-      Handler: com.nashss.se.booktrackerservice.lambda.UpdateBookInBooklistLambda::handleRequest
-      Runtime: java11
-      Architectures:
-        - x86_64
-      MemorySize: 512
-      Environment:
-        Variables:
-          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
-      Events:
-        BookTrackerService:
-          Type: Api
-          Properties:
-            Path: /booklists/{id}/books/{asin}
-            Method: put
-
-  GetBookFromBooklistLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      Role: !GetAtt AccessRole.Arn
-      CodeUri: BookTrackerServiceLambda
-      Handler: com.nashss.se.booktrackerservice.lambda.GetBookFromBooklistLambda::handleRequest
-      Runtime: java11
-      Architectures:
-        - x86_64
-      MemorySize: 512
-      Environment:
-        Variables:
-          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
-      Events:
-        BookTrackerService:
-          Type: Api
-          Properties:
-            Path: /booklists/{id}/books/{asin}
-            Method: get
 
   #-----------------------------------------------------
   # DynamoDB Configuration
   #-----------------------------------------------------
   
 
-  BooklistTable:
+  UserTable:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
@@ -513,40 +466,30 @@ Resources:
         - AttributeName: "id"
           KeyType: "HASH"
       BillingMode: "PAY_PER_REQUEST"
-      TableName: "Booklists"
+      TableName: "Users"
 
-  BookTable:
+  AssetTable:
     Type: AWS::DynamoDB::Table
     Properties:
+      TableName: "Assets"
       AttributeDefinitions:
-        - AttributeName: "asin"
+        - AttributeName: "assetType"
           AttributeType: "S"
+        - AttributeName: "assetId"
+          AttributeType: "N"
+        - AttributeName: "healthOrCost"
+          AttributeType: "N"
       KeySchema:
-        - AttributeName: "asin"
+        - AttributeName: "assetType"
           KeyType: "HASH"
-      BillingMode: "PAY_PER_REQUEST"
-      TableName: "Books"
-
-  CommentTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: "Comments"
-      AttributeDefinitions:
-        - AttributeName: "commentId"
-          AttributeType: "S"
-        - AttributeName: "asin"
-          AttributeType: "S"
-        - AttributeName: "customerId"
-          AttributeType: "S"
-      KeySchema:
-        - AttributeName: "commentId"
-          KeyType: "HASH"
+        - AttributeName: "assetId"
+          KeyType: "RANGE"
       GlobalSecondaryIndexes:
-        - IndexName: "CustomerIdAsinIndex"
+        - IndexName: "HealthOrCostIndex"
           KeySchema:
-            - AttributeName: "customerId"
+            - AttributeName: "assetType"
               KeyType: "HASH"
-            - AttributeName: "asin"
+            - AttributeName: "healthOrCost"
               KeyType: "RANGE"
           Projection:
             ProjectionType: "ALL"

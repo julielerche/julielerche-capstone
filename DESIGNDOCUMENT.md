@@ -143,9 +143,6 @@ Updates the user table with new task data.
 ```
 user // the user object that we need to update in the table
 task  // the task object that is going to be updated
-name // new name if name is being updated, optional
-difficulty // new difficulty if difficulty is being updated, optional
-completed // new boolean if completed is being updated, optional
 ```
 ### UpdateTaskResponse
 ```
