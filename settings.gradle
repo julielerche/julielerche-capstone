@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'julielerche-capstone'
-include('app')
+include('TaskWarriorService')
