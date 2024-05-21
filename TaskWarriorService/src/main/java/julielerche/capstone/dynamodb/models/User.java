@@ -4,12 +4,14 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
+import julielerche.capstone.converters.AssetConverter;
 import julielerche.capstone.converters.TaskConverter;
 
+import java.util.ArrayList;
 import java.util.List;
 @DynamoDBTable(tableName = "Users")
 public class User {
-    private String userId;
+    private final String userId;
     private String displayName;
     private List<Task> dailies;
     private List<Task> chores;
@@ -19,6 +21,19 @@ public class User {
     private Integer stamina;
     private Integer mana;
     private Integer gold;
+
+    public User(String userId, String displayName) {
+        this.userId = userId;
+        this.displayName = displayName;
+        this.dailies = new ArrayList<>();
+        this.chores = new ArrayList<>();
+        this.toDos = new ArrayList<>();
+        this.inventory = new ArrayList<>();
+        this.health = 100;
+        this.stamina = 100;
+        this.mana = 100;
+        this.gold = 100;
+    }
 
     @DynamoDBHashKey(attributeName = "userId")
     public String getUserId() {
@@ -60,8 +75,8 @@ public class User {
     public void setToDos(List<Task> toDos) {
         this.toDos = toDos;
     }
-    @DynamoDBAttribute(attributeName = "dailies")
-    @DynamoDBTypeConverted(converter = TaskConverter.class)
+    @DynamoDBAttribute(attributeName = "inventory")
+    @DynamoDBTypeConverted(converter = AssetConverter.class)
     public List<Asset> getInventory() {
         return inventory;
     }
@@ -69,7 +84,7 @@ public class User {
     public void setInventory(List<Asset> inventory) {
         this.inventory = inventory;
     }
-
+    @DynamoDBAttribute(attributeName = "health")
     public Integer getHealth() {
         return health;
     }
@@ -77,7 +92,7 @@ public class User {
     public void setHealth(Integer health) {
         this.health = health;
     }
-
+    @DynamoDBAttribute(attributeName = "stamina")
     public Integer getStamina() {
         return stamina;
     }
@@ -85,7 +100,7 @@ public class User {
     public void setStamina(Integer stamina) {
         this.stamina = stamina;
     }
-
+    @DynamoDBAttribute(attributeName = "mana")
     public Integer getMana() {
         return mana;
     }
@@ -93,7 +108,7 @@ public class User {
     public void setMana(Integer mana) {
         this.mana = mana;
     }
-
+    @DynamoDBAttribute(attributeName = "gold")
     public Integer getGold() {
         return gold;
     }

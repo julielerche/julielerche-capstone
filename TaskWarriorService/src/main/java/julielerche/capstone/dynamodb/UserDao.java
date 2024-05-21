@@ -1,6 +1,7 @@
 package julielerche.capstone.dynamodb;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import julielerche.capstone.dynamodb.models.User;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,5 +17,9 @@ public class UserDao {
     @Inject
     public UserDao(DynamoDBMapper dynamoDBMapper) {
         this.mapper = dynamoDBMapper;
+    }
+
+    public void saveUser(User user) {
+        this.mapper.save(user);
     }
 }

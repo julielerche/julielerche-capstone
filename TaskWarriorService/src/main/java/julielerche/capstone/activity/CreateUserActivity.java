@@ -2,7 +2,10 @@ package julielerche.capstone.activity;
 
 import julielerche.capstone.activity.requests.CreateUserRequest;
 import julielerche.capstone.activity.results.CreateUserResult;
+import julielerche.capstone.converters.UserToModelConverter;
 import julielerche.capstone.dynamodb.UserDao;
+import julielerche.capstone.dynamodb.models.User;
+import julielerche.capstone.models.UserModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,25 +51,11 @@ public class CreateUserActivity {
 
         //TODO check string for valid characters
 
-//        Set<String> booklistTags = null;
-//        if (createUserRequest.getTags() != null) {
-//            booklistTags = new HashSet<>(createUserRequest.getTags());
-//        }
-//
-//        Booklist booklist = new Booklist();
-//        booklist.setId(MusicPlaylistServiceUtils.generatePlaylistId());
-//        booklist.setName(createUserRequest.getName());
-//        booklist.setCustomerId(createUserRequest.getCustomerId());
-//        booklist.setBookCount(0);
-//        booklist.setTags(booklistTags);
-//        booklist.setBooks(new ArrayList<>());
-//
-//        userDao.saveBooklist(booklist);
-//
-//        BooklistModel booklistModel = new ModelConverterCarbon().toBooklistModel(booklist);
-//        return CreateUserResult.builder()
-//                .withBooklist(booklistModel)
-//                .build();
-
+        User newUser = new User(createUserRequest.getUserId(), createUserRequest.getName());
+        userDao.saveUser(newUser);
+        UserModel model = new UserToModelConverter().userToModel(newUser);
+        return CreateUserResult.builder()
+                .withUser(model)
+                .build();
     }
 }
