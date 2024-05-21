@@ -22,6 +22,11 @@ public class User {
     private Integer mana;
     private Integer gold;
 
+    /**
+     * Constructs a user object with default values from the given data.
+     * @param userId the userId from the request
+     * @param displayName the display name from the request
+     */
     public User(String userId, String displayName) {
         this.userId = userId;
         this.displayName = displayName;

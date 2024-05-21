@@ -6,7 +6,9 @@ import julielerche.capstone.models.UserModel;
 public class UserToModelConverter {
 
     /**
-     * Converts a User to a UserModel representation
+     * Converts a User to a UserModel representation.
+     * @param user the user to convert into the model
+     * @return model the model of the user to return
      */
     public UserModel userToModel(User user) {
         UserModel model = new UserModel(user.getUserId(), user.getDisplayName(),

@@ -2,6 +2,7 @@ package julielerche.capstone.activity;
 
 import julielerche.capstone.activity.requests.CreateUserRequest;
 import julielerche.capstone.activity.results.CreateUserResult;
+
 import julielerche.capstone.converters.UserToModelConverter;
 import julielerche.capstone.dynamodb.UserDao;
 import julielerche.capstone.dynamodb.models.User;
@@ -10,10 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
-import javax.management.InvalidAttributeValueException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Implementation of the CreateUserActivity for the TaskWarriorService's CreateUser API.

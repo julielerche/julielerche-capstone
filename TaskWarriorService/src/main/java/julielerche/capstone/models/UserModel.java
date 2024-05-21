@@ -17,6 +17,20 @@ public class UserModel {
     private Integer mana;
     private Integer gold;
 
+    /**
+     *
+     * @param userId the user id from the original
+     * @param displayName the display name from the original
+     * @param dailies the list of daily tasks from the original
+     * @param chores the list of chore tasks from the original
+     * @param toDos the list of to-do tasks from the original
+     * @param inventory the list of assets from the original
+     * @param health the current health of the original
+     * @param stamina the current stamina of the original
+     * @param mana the current mana of the original
+     * @param gold the current gold of the original
+     */
+
     public UserModel(String userId, String displayName, List<Task> dailies, List<Task> chores,
                      List<Task> toDos, List<Asset> inventory, Integer health, Integer stamina,
                      Integer mana, Integer gold) {

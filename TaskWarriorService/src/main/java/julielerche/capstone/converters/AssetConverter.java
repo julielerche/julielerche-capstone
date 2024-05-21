@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import julielerche.capstone.dynamodb.models.Asset;
-import julielerche.capstone.dynamodb.models.Task;
 import julielerche.capstone.exceptions.TaskSerializationException;
 
 import java.util.List;
