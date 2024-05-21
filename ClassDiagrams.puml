@@ -1,0 +1,76 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+class User {
+- String userId
+- String displayName
+- List<Task> dailies
+- List<Task> chores
+- List<Task> toDos
+- List<Asset> inventory
+- Integer health
+- Integer stamina
+- Integer mana
+- Integer gold
+}
+
+abstract class Asset {
+- enum assetType
+- Integer assetId
+- String Name
+- String Description
+}
+
+class Item implements Asset {
+- enum assetType
+- Integer assetId
+- String Name
+- String Description
+- Integer Cost
+}
+
+class Monster implements Asset {
+- enum assetType
+- Integer assetId
+- String Name
+- String Description
+- Integer StartingHealth
+- Integer CurrentHealth
+- Integer AttackPower
+}
+
+
+
+class Task {
+- TaskType type
+- String taskName
+- Difficulty difficulty
+- Boolean completed
+}
+
+TaskType --|> Task
+Difficulty --|> Task
+Task --|> User
+Asset --|> User
+AssetType -|> Asset
+
+enum TaskType {
+DAILY
+CHORE
+TODO
+}
+
+enum AssetType {
+POTION
+ITEM
+MONSTER
+}
+
+enum Difficulty {
+EASY
+MEDIUM
+HARD
+}
+
+@enduml
