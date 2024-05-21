@@ -24,7 +24,9 @@ I start every day with a to-do list, in the past I have used apps to track my pr
 5. As a user, I want to gain EXP which allows for more moves.
 6. As a user, I want the day to reset at a set UTC time.
 
-A UML class diagram
+### UML Diagram
+![Class Diagram](Class Diagram.png)
+
 ## Tables
 
 ### User Table
