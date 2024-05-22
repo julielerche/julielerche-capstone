@@ -2,6 +2,7 @@ package julielerche.capstone.dependencies;
 
 import dagger.Component;
 import julielerche.capstone.activity.CreateUserActivity;
+import julielerche.capstone.activity.GetUserActivity;
 
 import javax.inject.Singleton;
 
@@ -17,5 +18,11 @@ public interface ServiceComponent {
      * @return CreateUserActivity
      */
     CreateUserActivity provideCreateUserActivity();
+
+    /**
+     * Provides the relevant activity.
+     * @return GetUserActivity
+     */
+    GetUserActivity provideGetUserActivity();
 
 }
