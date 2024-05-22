@@ -1,5 +1,6 @@
 package julielerche.capstone.lambda;
 
+import julielerche.capstone.dependencies.DaggerServiceComponent;
 import julielerche.capstone.dependencies.ServiceComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
