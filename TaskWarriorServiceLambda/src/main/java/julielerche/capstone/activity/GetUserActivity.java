@@ -1,7 +1,7 @@
 package julielerche.capstone.activity;
 
-import julielerche.capstone.activity.requests.CreateUserRequest;
-import julielerche.capstone.activity.results.CreateUserResult;
+import julielerche.capstone.activity.requests.GetUserRequest;
+import julielerche.capstone.activity.results.GetUserResult;
 
 import julielerche.capstone.converters.UserToModelConverter;
 import julielerche.capstone.dynamodb.UserDao;
@@ -13,21 +13,21 @@ import org.apache.logging.log4j.Logger;
 import javax.inject.Inject;
 
 /**
- * Implementation of the CreateUserActivity for the TaskWarriorService's CreateUser API.
+ * Implementation of the GetUserActivity for the TaskWarriorService's GetUser API.
  * <p>
  * This API allows the customer to create a new user in the table.
  */
-public class CreateUserActivity {
+public class GetUserActivity {
     private final Logger log = LogManager.getLogger();
     private final UserDao userDao;
 
     /**
-     * Instantiates a new CreateUserActivity object.
+     * Instantiates a new GetUserActivity object.
      *
      * @param userDao UserDao to access the user table.
      */
     @Inject
-    public CreateUserActivity(UserDao userDao) {
+    public GetUserActivity(UserDao userDao) {
         this.userDao = userDao;
     }
     /**
@@ -39,19 +39,18 @@ public class CreateUserActivity {
      * If the provided user name or customer ID has invalid characters, throws an
      * InvalidAttributeValueException
      *
-     * @param createUserRequest request object containing the customerId
-     * @return createUserResult result object containing the API defined
+     * @param getUserRequest request object containing the customerId
+     * @return getUserResult result object containing the API defined
      */
 
-    public CreateUserResult handleRequest(final CreateUserRequest createUserRequest) {
-        log.info("Received CreateUserRequest {}", createUserRequest);
+    public GetUserResult handleRequest(final GetUserRequest getUserRequest) {
+        log.info("Received GetUserRequest {}", getUserRequest);
 
         //TODO check string for valid characters
 
-        User newUser = new User(createUserRequest.getUserId(), createUserRequest.getName());
-        userDao.saveUser(newUser);
-        UserModel model = new UserToModelConverter().userToModel(newUser);
-        return CreateUserResult.builder()
+        User loadedUser = userDao.loadUser(getUserRequest.getUserId());
+        UserModel model = new UserToModelConverter().userToModel(loadedUser);
+        return GetUserResult.builder()
                 .withUser(model)
                 .build();
     }

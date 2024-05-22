@@ -3,6 +3,7 @@ package julielerche.capstone.dynamodb;
 import julielerche.capstone.dynamodb.models.User;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import julielerche.capstone.exceptions.UserNotFoundException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,5 +27,14 @@ public class UserDao {
      */
     public void saveUser(User user) {
         this.mapper.save(user);
+    }
+
+    public User loadUser(String userId) {
+        User loadedUser = this.mapper.load(User.class, userId);
+
+        if (loadedUser == null) {
+            throw new UserNotFoundException("No user matches the id");
+        }
+        return loadedUser;
     }
 }
