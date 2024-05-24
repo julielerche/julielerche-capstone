@@ -90,6 +90,7 @@ Creates a new user in the User table with blank data.
 ### CreateUserRequest
 ```
 userId // userId from Login to create save data for
+displayName // display name to be saved with the user
 ```
 ### CreateUserResponse
 ```
@@ -100,6 +101,7 @@ user // object with default data returned from creation
 Creates a new asset in the Asset table with correct data.
 ### CreateAssetRequest
 ```
+asset JSON data:
 assetType // enum of POTION, ITEM, MONSTER
 assetId // unique identifier within each Type
 name // String of the name 
@@ -115,9 +117,8 @@ asset // either an item or monster object that was created from the request
 Creates a new task and saves it within existing user.
 ### CreateTaskRequest
 ```
-taskType // enum of DAILY, CHORE, TODO
-taskName // String of the name 
-difficulty // enum of EASY, MEDIUM, HARD
+userId // the user to create the task in
+task // json data of the task
 ```
 ### CreateTaskResponse
 ```
