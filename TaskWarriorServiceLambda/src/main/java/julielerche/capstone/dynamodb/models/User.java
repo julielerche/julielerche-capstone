@@ -22,29 +22,10 @@ public class User {
     private Integer mana;
     private Integer gold;
 
-    /**
-     * Constructs a user object with default values from the given data.
-     * @param userId the userId from the request
-     * @param displayName the display name from the request
-     */
-//    public User(String userId, String displayName) {
-//        this.userId = userId;
-//        this.displayName = displayName;
-//        this.dailies = new ArrayList<>();
-//        this.chores = new ArrayList<>();
-//        this.toDos = new ArrayList<>();
-//        this.inventory = new ArrayList<>();
-//        this.health = 100;
-//        this.stamina = 100;
-//        this.mana = 100;
-//        this.gold = 100;
-//    }
-
     @DynamoDBHashKey(attributeName = "id")
     public String getUserId() {
         return userId;
     }
-
 
     public void setUserId(String userId) {
         this.userId = userId;
