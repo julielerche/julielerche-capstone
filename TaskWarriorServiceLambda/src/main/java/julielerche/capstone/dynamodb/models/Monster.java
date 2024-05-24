@@ -1,10 +1,13 @@
 package julielerche.capstone.dynamodb.models;
 
-public abstract class Asset {
-    AssetType assetType;
+public class Monster extends Asset {
+    AssetType assetType = AssetType.MONSTER;
     Integer assetId;
     String name;
     String description;
+    Integer startingHealth;
+    Integer attackPower;
+    Integer currentHealth;
 
     public AssetType getAssetType() {
         return assetType;
@@ -36,5 +39,29 @@ public abstract class Asset {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getStartingHealth() {
+        return startingHealth;
+    }
+
+    public void setStartingHealth(Integer startingHealth) {
+        this.startingHealth = startingHealth;
+    }
+
+    public Integer getAttackPower() {
+        return attackPower;
+    }
+
+    public void setAttackPower(Integer attackPower) {
+        this.attackPower = attackPower;
+    }
+
+    public Integer getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public void setCurrentHealth(Integer currentHealth) {
+        this.currentHealth = currentHealth;
     }
 }

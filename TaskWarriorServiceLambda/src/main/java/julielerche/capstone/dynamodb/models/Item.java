@@ -1,17 +1,14 @@
 package julielerche.capstone.dynamodb.models;
 
-public abstract class Asset {
-    AssetType assetType;
+public class Item extends Asset{
+    AssetType assetType = AssetType.ITEM;
     Integer assetId;
     String name;
     String description;
+    Integer cost;
 
     public AssetType getAssetType() {
         return assetType;
-    }
-
-    public void setAssetType(AssetType assetType) {
-        this.assetType = assetType;
     }
 
     public Integer getAssetId() {
@@ -36,5 +33,13 @@ public abstract class Asset {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getCost() {
+        return cost;
+    }
+
+    public void setCost(Integer cost) {
+        this.cost = cost;
     }
 }
