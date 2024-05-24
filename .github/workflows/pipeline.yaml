@@ -11,8 +11,8 @@ env:
   # STUDENTS: Set these environment variables 
   API_BASE_URL: https://6rl4hxotu3.execute-api.us-east-2.amazonaws.com/Prod/
   COGNITO_DOMAIN: task-warrior-julie-lerche.auth.us-east-2.amazoncognito.com
-  COGNITO_REDIRECT_SIGNIN: TODO-REPLACE
-  COGNITO_REDIRECT_SIGNOUT: TODO-REPLACE
+  COGNITO_REDIRECT_SIGNIN: https://d3kdqlpdjmx3sk.cloudfront.net
+  COGNITO_REDIRECT_SIGNOUT: https://d3kdqlpdjmx3sk.cloudfront.net
 
   COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
   COGNITO_USER_POOL_CLIENT_ID: ${{ secrets.COGNITO_USER_POOL_CLIENT_ID }}
