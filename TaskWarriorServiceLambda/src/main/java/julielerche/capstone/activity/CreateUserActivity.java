@@ -48,11 +48,11 @@ public class CreateUserActivity {
 
         //TODO check string for valid characters
 
-        User newUser = new User(createUserRequest.getUserId(), createUserRequest.getName());
-        userDao.saveUser(newUser);
-        UserModel model = new UserToModelConverter().userToModel(newUser);
+        //User newUser = new User(createUserRequest.getUserId(), createUserRequest.getName());
+        //userDao.saveUser(newUser);
+        //UserModel model = new UserToModelConverter().userToModel(newUser);
         return CreateUserResult.builder()
-                .withUser(model)
+                //.withUser(model)
                 .build();
     }
 }

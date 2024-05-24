@@ -258,7 +258,7 @@ Resources:
         TaskWarriorService:
           Type: Api
           Properties:
-            Path: /users
+            Path: /users/{id}/name/{name}
             Method: post
             Auth:
               Authorizer: 'NONE'
