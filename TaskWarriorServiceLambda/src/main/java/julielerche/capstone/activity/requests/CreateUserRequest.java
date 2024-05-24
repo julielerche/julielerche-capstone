@@ -50,7 +50,7 @@ public class CreateUserRequest {
         }
 
         public CreateUserRequest build() {
-            return new CreateUserRequest(name, userId);
+            return new CreateUserRequest(userId, name);
         }
     }
 }

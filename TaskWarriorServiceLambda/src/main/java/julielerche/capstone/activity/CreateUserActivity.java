@@ -5,12 +5,14 @@ import julielerche.capstone.activity.results.CreateUserResult;
 
 import julielerche.capstone.converters.UserToModelConverter;
 import julielerche.capstone.dynamodb.UserDao;
+import julielerche.capstone.dynamodb.models.Task;
 import julielerche.capstone.dynamodb.models.User;
 import julielerche.capstone.models.UserModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 
 /**
  * Implementation of the CreateUserActivity for the TaskWarriorService's CreateUser API.
@@ -47,12 +49,28 @@ public class CreateUserActivity {
         log.info("Received CreateUserRequest {}", createUserRequest);
 
         //TODO check string for valid characters
+        //constructs the new user with default and custom values
+        User newUser = new User();
+        newUser.setUserId(createUserRequest.getUserId());
+        newUser.setDisplayName(createUserRequest.getName());
+        newUser.setChores(new ArrayList<>());
+        newUser.setDailies(new ArrayList<>());
+        newUser.setToDos(new ArrayList<>());
+        newUser.setInventory(new ArrayList<>());
+        newUser.setGold(100);
+        newUser.setHealth(100);
+        newUser.setMana(100);
+        newUser.setStamina(100);
 
-        //User newUser = new User(createUserRequest.getUserId(), createUserRequest.getName());
-        //userDao.saveUser(newUser);
-        //UserModel model = new UserToModelConverter().userToModel(newUser);
+        //saves the user to the table
+        userDao.saveUser(newUser);
+
+        //converts the user to the model to be returned
+        UserModel model = new UserToModelConverter().userToModel(newUser);
+
+        //returns the result with the model
         return CreateUserResult.builder()
-                //.withUser(model)
+                .withUser(model)
                 .build();
     }
 }
