@@ -5,14 +5,14 @@ import julielerche.capstone.activity.results.CreateUserResult;
 
 import julielerche.capstone.converters.UserToModelConverter;
 import julielerche.capstone.dynamodb.UserDao;
-import julielerche.capstone.dynamodb.models.Task;
 import julielerche.capstone.dynamodb.models.User;
 import julielerche.capstone.models.UserModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
+import javax.inject.Inject;
+
 
 /**
  * Implementation of the CreateUserActivity for the TaskWarriorService's CreateUser API.

@@ -29,6 +29,11 @@ public class UserDao {
         this.mapper.save(user);
     }
 
+    /**
+     * Loads the user from the User table in dynamoDB.
+     * @param userId the user to load from the table.
+     * @return user the user object loaded from the table.
+     */
     public User loadUser(String userId) {
         User loadedUser = this.mapper.load(User.class, userId);
 

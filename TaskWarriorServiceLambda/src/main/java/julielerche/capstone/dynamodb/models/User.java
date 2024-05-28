@@ -7,7 +7,6 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 import julielerche.capstone.converters.AssetConverter;
 import julielerche.capstone.converters.TaskConverter;
 
-import java.util.ArrayList;
 import java.util.List;
 @DynamoDBTable(tableName = "Users")
 public class User {

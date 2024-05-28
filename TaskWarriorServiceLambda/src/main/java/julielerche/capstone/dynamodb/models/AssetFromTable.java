@@ -1,43 +1,29 @@
 package julielerche.capstone.dynamodb.models;
 
-public class Asset {
-    AssetType assetType;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+
+@DynamoDBTable(tableName = "Assets")
+public class AssetFromTable {
+    String assetType;
     Integer assetId;
     String name;
     String description;
     Integer healthOrCost;
     Integer attackPower;
 
-    /**
-     * Constructor for the asset object.
-     * @param assetType either potion, monster, or item
-     * @param assetId the unique number identifier
-     * @param name the name of the object
-     * @param description description of use
-     * @param healthOrCost either the health or cost of the asset
-     */
-    public Asset(AssetType assetType, Integer assetId, String name, String description, Integer healthOrCost) {
-        this.assetType = assetType;
-        this.assetId = assetId;
-        this.name = name;
-        this.description = description;
-        this.healthOrCost = healthOrCost;
-    }
-
-    /**
-     * default constructor for the asset object.
-     */
-    public Asset() {
-    }
-
-    public AssetType getAssetType() {
+    @DynamoDBHashKey(attributeName = "assetType")
+    public String getAssetType() {
         return assetType;
     }
 
-    public void setAssetType(AssetType assetType) {
+    public void setAssetType(String assetType) {
         this.assetType = assetType;
     }
-
+    @DynamoDBRangeKey(attributeName = "assetId")
     public Integer getAssetId() {
         return assetId;
     }
@@ -45,7 +31,7 @@ public class Asset {
     public void setAssetId(Integer assetId) {
         this.assetId = assetId;
     }
-
+    @DynamoDBAttribute(attributeName = "name")
     public String getName() {
         return name;
     }
@@ -53,7 +39,7 @@ public class Asset {
     public void setName(String name) {
         this.name = name;
     }
-
+    @DynamoDBAttribute(attributeName = "description")
     public String getDescription() {
         return description;
     }
@@ -61,7 +47,7 @@ public class Asset {
     public void setDescription(String description) {
         this.description = description;
     }
-
+    @DynamoDBIndexHashKey(globalSecondaryIndexName = "HealthOrCostIndex", attributeName = "healthOrCost")
     public Integer getHealthOrCost() {
         return healthOrCost;
     }
@@ -69,7 +55,7 @@ public class Asset {
     public void setHealthOrCost(Integer healthOrCost) {
         this.healthOrCost = healthOrCost;
     }
-
+    @DynamoDBAttribute(attributeName = "attackPower")
     public Integer getAttackPower() {
         return attackPower;
     }

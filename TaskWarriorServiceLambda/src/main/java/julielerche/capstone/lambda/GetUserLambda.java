@@ -17,12 +17,12 @@ public class GetUserLambda
     public LambdaResponse handleRequest(LambdaRequest<GetUserRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
-                () -> input.fromPath(path ->
-                        GetUserRequest.builder()
-                                .withUserId(path.get("id"))
-                                .build()),
-                (request, serviceComponent) ->
-                        serviceComponent.provideGetUserActivity().handleRequest(request)
+            () -> input.fromPath(path ->
+                    GetUserRequest.builder()
+                        .withUserId(path.get("id"))
+                        .build()),
+            (request, serviceComponent) ->
+                    serviceComponent.provideGetUserActivity().handleRequest(request)
         );
     }
 

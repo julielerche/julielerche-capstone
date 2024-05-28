@@ -1,6 +1,6 @@
 package julielerche.capstone.exceptions;
 
-public class UserNotFoundException extends RuntimeException{
+public class UserNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = -3048059006259402126L;
 
