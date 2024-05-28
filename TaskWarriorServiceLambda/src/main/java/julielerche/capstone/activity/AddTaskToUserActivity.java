@@ -2,6 +2,7 @@ package julielerche.capstone.activity;
 
 import julielerche.capstone.activity.requests.AddTaskToUserRequest;
 import julielerche.capstone.activity.results.AddTaskToUserResult;
+
 import julielerche.capstone.converters.UserToModelConverter;
 import julielerche.capstone.dynamodb.UserDao;
 import julielerche.capstone.dynamodb.models.User;

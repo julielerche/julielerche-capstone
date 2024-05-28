@@ -10,6 +10,12 @@ public class AddTaskToUserRequest {
     private final String taskType;
     private final Task task;
 
+    /**
+     * Constructs the request object.
+     * @param userId unique id for the user.
+     * @param taskType task category to add to the list of.
+     * @param task the task to add.
+     */
     public AddTaskToUserRequest(String userId, String taskType, Task task) {
         this.userId = userId;
         this.taskType = taskType;

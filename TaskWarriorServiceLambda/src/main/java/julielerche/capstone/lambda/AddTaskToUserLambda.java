@@ -17,16 +17,16 @@ public class AddTaskToUserLambda
     public LambdaResponse handleRequest(LambdaRequest<AddTaskToUserRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
-                () -> {
-                    AddTaskToUserRequest unauthenticatedRequest = input.fromBody(AddTaskToUserRequest.class);
-                    return AddTaskToUserRequest.builder()
-                            .withUserId(unauthenticatedRequest.getUserId())
-                            .withTaskType(unauthenticatedRequest.getTaskType())
-                            .withTask(unauthenticatedRequest.getTask())
-                            .build();
-                },
-                (request, serviceComponent) ->
-                        serviceComponent.provideAddTaskToUserActivity().handleRequest(request)
+            () -> {
+                AddTaskToUserRequest unauthenticatedRequest = input.fromBody(AddTaskToUserRequest.class);
+                return AddTaskToUserRequest.builder()
+                    .withUserId(unauthenticatedRequest.getUserId())
+                    .withTaskType(unauthenticatedRequest.getTaskType())
+                    .withTask(unauthenticatedRequest.getTask())
+                    .build();
+            },
+            (request, serviceComponent) ->
+                    serviceComponent.provideAddTaskToUserActivity().handleRequest(request)
         );
     }
 

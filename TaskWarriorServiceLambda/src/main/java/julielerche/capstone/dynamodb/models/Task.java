@@ -6,6 +6,13 @@ public class Task {
     Difficulty difficulty;
     Boolean completed;
 
+    /**
+     * Constructs the task object.
+     * @param taskType either daily, chore, or to-Do
+     * @param taskName name of the task
+     * @param difficulty either easy, medium, or hard
+     * @param completed if its been completed or not.
+     */
     public Task(TaskType taskType, String taskName, Difficulty difficulty, Boolean completed) {
         this.taskType = taskType;
         this.taskName = taskName;
@@ -13,6 +20,9 @@ public class Task {
         this.completed = completed;
     }
 
+    /**
+     * Default constructor for task.
+     */
     public Task() {
     }
 

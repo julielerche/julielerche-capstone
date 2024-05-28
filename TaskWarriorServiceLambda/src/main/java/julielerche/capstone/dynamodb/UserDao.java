@@ -1,17 +1,19 @@
 package julielerche.capstone.dynamodb;
 
-import julielerche.capstone.activity.requests.AddTaskToUserRequest;
 import julielerche.capstone.dynamodb.models.Task;
 import julielerche.capstone.dynamodb.models.TaskType;
 import julielerche.capstone.dynamodb.models.User;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+
+import julielerche.capstone.activity.requests.AddTaskToUserRequest;
 import julielerche.capstone.exceptions.UserNotFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
 
 @Singleton
 public class UserDao {
@@ -47,7 +49,11 @@ public class UserDao {
         }
         return loadedUser;
     }
-
+    /**
+     * Saves the user to the User table in dynamoDB.
+     * @param addTaskToUserRequest the request with task and user info
+     * @return user the user with the new data
+     */
     public User saveTaskToUser(AddTaskToUserRequest addTaskToUserRequest) {
         User loadedUser = loadUser(addTaskToUserRequest.getUserId());
         Task taskToAdd = addTaskToUserRequest.getTask();
@@ -71,6 +77,7 @@ public class UserDao {
                 break;
             default:
                 taskList = new ArrayList<>();
+                break;
         }
         saveUser(loadedUser);
         return loadedUser;
