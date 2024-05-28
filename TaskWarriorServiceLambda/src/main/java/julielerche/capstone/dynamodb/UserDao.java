@@ -7,6 +7,7 @@ import julielerche.capstone.dynamodb.models.User;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 
 import julielerche.capstone.activity.requests.AddTaskToUserRequest;
+import julielerche.capstone.activity.requests.DeleteTaskRequest;
 import julielerche.capstone.exceptions.UserNotFoundException;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class UserDao {
         return loadedUser;
     }
     /**
-     * Saves the user to the User table in dynamoDB.
+     * Saves the task to the User table in dynamoDB.
      * @param addTaskToUserRequest the request with task and user info
      * @return user the user with the new data
      */
@@ -73,6 +74,39 @@ public class UserDao {
             case DAILY:
                 taskList = loadedUser.getDailies();
                 taskList.add(taskToAdd);
+                loadedUser.setDailies(taskList);
+                break;
+            default:
+                taskList = new ArrayList<>();
+                break;
+        }
+        saveUser(loadedUser);
+        return loadedUser;
+    }
+    /**
+     * Deletes the given task from the list and saves the user data in the table.
+     * @param deleteTaskRequest the request with task and user info
+     * @return user the user with the deleted data
+     */
+    public User deleteTaskFromUser(DeleteTaskRequest deleteTaskRequest) {
+        User loadedUser = loadUser(deleteTaskRequest.getUserId());
+        Task taskToDelete = deleteTaskRequest.getTask();
+        TaskType requestedType = deleteTaskRequest.getTask().getTaskType();
+        List<Task> taskList;
+        switch (requestedType) {
+            case TODO:
+                taskList = loadedUser.getToDos();
+                taskList.remove(taskToDelete);
+                loadedUser.setToDos(taskList);
+                break;
+            case CHORE:
+                taskList = loadedUser.getChores();
+                taskList.remove(taskToDelete);
+                loadedUser.setChores(taskList);
+                break;
+            case DAILY:
+                taskList = loadedUser.getDailies();
+                taskList.remove(taskToDelete);
                 loadedUser.setDailies(taskList);
                 break;
             default:

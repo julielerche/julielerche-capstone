@@ -57,4 +57,12 @@ public class Task {
     public void setCompleted(Boolean completed) {
         this.completed = completed;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Task other = (Task) obj;
+        return this.taskType.equals(other.taskType) &&
+                this.taskName.equals(other.taskName) &&
+                this.difficulty.equals(other.difficulty);
+    }
 }
