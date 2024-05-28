@@ -2,6 +2,7 @@ package julielerche.capstone.activity;
 
 import julielerche.capstone.activity.requests.CreateAssetRequest;
 import julielerche.capstone.activity.results.CreateAssetResult;
+
 import julielerche.capstone.converters.AssetToModelConverter;
 import julielerche.capstone.dynamodb.AssetDao;
 import julielerche.capstone.models.AssetModel;

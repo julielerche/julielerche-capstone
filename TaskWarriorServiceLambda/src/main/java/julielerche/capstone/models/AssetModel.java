@@ -10,6 +10,13 @@ public class AssetModel {
     Integer healthOrCost;
     Integer attackPower;
 
+    /**
+     * The constructor for the asset model.
+     * @param assetType either potion, item, or monster
+     * @param assetId the unique number
+     * @param name name of the asset
+     * @param description description of what it does.
+     */
     public AssetModel(AssetType assetType, Integer assetId, String name,
                       String description) {
         this.assetType = assetType;

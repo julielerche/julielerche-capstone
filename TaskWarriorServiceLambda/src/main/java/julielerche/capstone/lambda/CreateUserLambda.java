@@ -17,14 +17,13 @@ public class CreateUserLambda
     public LambdaResponse handleRequest(LambdaRequest<CreateUserRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
-                () -> input.fromPath(path ->
-                        CreateUserRequest.builder()
-                                .withUserId(path.get("id"))
-                                .withName(path.get("name"))
-                                .build()),
-                (request, serviceComponent) ->
-                        serviceComponent.provideCreateUserActivity().handleRequest(request)
+            () -> input.fromPath(path ->
+                    CreateUserRequest.builder()
+                        .withUserId(path.get("id"))
+                        .withName(path.get("name"))
+                        .build()),
+            (request, serviceComponent) ->
+                    serviceComponent.provideCreateUserActivity().handleRequest(request)
         );
     }
-
 }

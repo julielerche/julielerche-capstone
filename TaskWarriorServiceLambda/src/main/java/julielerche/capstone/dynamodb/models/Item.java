@@ -1,6 +1,6 @@
 package julielerche.capstone.dynamodb.models;
 
-public class Item extends Asset{
+public class Item extends Asset {
     AssetType assetType = AssetType.ITEM;
     Integer assetId;
     String name;

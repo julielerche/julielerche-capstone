@@ -1,6 +1,7 @@
 package julielerche.capstone.dependencies;
 
 import dagger.Component;
+import julielerche.capstone.activity.CreateAssetActivity;
 import julielerche.capstone.activity.CreateUserActivity;
 import julielerche.capstone.activity.GetUserActivity;
 
@@ -24,5 +25,11 @@ public interface ServiceComponent {
      * @return GetUserActivity
      */
     GetUserActivity provideGetUserActivity();
+
+    /**
+     * Provides the relevant activity.
+     * @return CreateAssetActivity
+     */
+    CreateAssetActivity provideCreateAssetActivity();
 
 }

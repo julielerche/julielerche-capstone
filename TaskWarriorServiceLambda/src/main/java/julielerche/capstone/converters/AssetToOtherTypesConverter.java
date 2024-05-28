@@ -1,15 +1,24 @@
 package julielerche.capstone.converters;
 
-import julielerche.capstone.dynamodb.models.*;
+import julielerche.capstone.dynamodb.models.Asset;
+import julielerche.capstone.dynamodb.models.AssetFromTable;
+import julielerche.capstone.dynamodb.models.AssetType;
+import julielerche.capstone.dynamodb.models.Item;
+import julielerche.capstone.dynamodb.models.Monster;
+import julielerche.capstone.dynamodb.models.Potion;
 
 public class AssetToOtherTypesConverter {
+
+    /**
+     * Converts a Asset to a its correct asset representation.
+     * @param tableAsset the asset to convert into the other type
+     * @return Asset the correct typed asset to return
+     */
     public Asset convertAssetToAssigned(AssetFromTable tableAsset) {
         AssetType type = tableAsset.getAssetType();
 
-        switch (type)
-        {
+        switch (type) {
             case POTION:
-                //code
                 Asset potion = new Potion();
                 potion.setAssetId(tableAsset.getAssetId());
                 potion.setName(tableAsset.getName());
@@ -17,7 +26,6 @@ public class AssetToOtherTypesConverter {
                 ((Potion) potion).setCost(tableAsset.getHealthOrCost());
                 return potion;
             case ITEM:
-                //code
                 Asset item = new Item();
                 item.setName(tableAsset.getName());
                 item.setAssetId(tableAsset.getAssetId());
@@ -35,7 +43,6 @@ public class AssetToOtherTypesConverter {
                 return monster;
             default:
                 throw new RuntimeException();
-
         }
     }
 }

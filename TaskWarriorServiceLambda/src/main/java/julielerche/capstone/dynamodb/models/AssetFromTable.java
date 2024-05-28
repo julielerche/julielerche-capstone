@@ -1,6 +1,10 @@
 package julielerche.capstone.dynamodb.models;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 @DynamoDBTable(tableName = "Assets")
 public class AssetFromTable {
@@ -19,7 +23,7 @@ public class AssetFromTable {
     public void setAssetType(AssetType assetType) {
         this.assetType = assetType;
     }
-@DynamoDBRangeKey(attributeName = "assetId")
+    @DynamoDBRangeKey(attributeName = "assetId")
     public Integer getAssetId() {
         return assetId;
     }
@@ -27,7 +31,7 @@ public class AssetFromTable {
     public void setAssetId(Integer assetId) {
         this.assetId = assetId;
     }
-@DynamoDBAttribute(attributeName = "name")
+    @DynamoDBAttribute(attributeName = "name")
     public String getName() {
         return name;
     }
@@ -35,7 +39,7 @@ public class AssetFromTable {
     public void setName(String name) {
         this.name = name;
     }
-@DynamoDBAttribute(attributeName = "description")
+    @DynamoDBAttribute(attributeName = "description")
     public String getDescription() {
         return description;
     }
@@ -51,7 +55,7 @@ public class AssetFromTable {
     public void setHealthOrCost(Integer healthOrCost) {
         this.healthOrCost = healthOrCost;
     }
-@DynamoDBAttribute(attributeName = "attackPower")
+    @DynamoDBAttribute(attributeName = "attackPower")
     public Integer getAttackPower() {
         return attackPower;
     }

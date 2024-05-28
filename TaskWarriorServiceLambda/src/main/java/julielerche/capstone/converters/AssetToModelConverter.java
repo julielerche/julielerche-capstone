@@ -1,10 +1,6 @@
 package julielerche.capstone.converters;
 
 import julielerche.capstone.dynamodb.models.Asset;
-import julielerche.capstone.dynamodb.models.Asset;
-import julielerche.capstone.dynamodb.models.AssetType;
-import julielerche.capstone.dynamodb.models.Monster;
-import julielerche.capstone.models.AssetModel;
 import julielerche.capstone.models.AssetModel;
 
 public class AssetToModelConverter {
