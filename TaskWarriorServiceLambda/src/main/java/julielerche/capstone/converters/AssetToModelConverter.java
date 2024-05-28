@@ -12,6 +12,12 @@ public class AssetToModelConverter {
     public AssetModel assetToModel(Asset asset) {
         AssetModel model = new AssetModel(asset.getAssetType(), asset.getAssetId(), asset.getName(),
                 asset.getDescription());
+        if (asset.getHealthOrCost() != null) {
+            model.setHealthOrCost(asset.getHealthOrCost());
+        }
+        if (asset.getAttackPower() != null) {
+            model.setAttackPower(asset.getAttackPower());
+        }
         return model;
     }
 }

@@ -1,8 +1,11 @@
 package julielerche.capstone.dynamodb;
 
 import julielerche.capstone.dynamodb.models.Asset;
+import julielerche.capstone.dynamodb.models.AssetFromTable;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+
+import julielerche.capstone.converters.AssetToOtherTypesConverter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -25,7 +28,9 @@ public class AssetDao {
      * @param asset the asset to save to the table
      */
     public void saveAsset(Asset asset) {
-        this.mapper.save(asset);
+        AssetToOtherTypesConverter converter = new AssetToOtherTypesConverter();
+        AssetFromTable tableAsset = converter.assetToTableAsset(asset);
+        this.mapper.save(tableAsset);
     }
 
 }

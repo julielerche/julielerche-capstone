@@ -8,7 +8,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 @DynamoDBTable(tableName = "Assets")
 public class AssetFromTable {
-    AssetType assetType;
+    String assetType;
     Integer assetId;
     String name;
     String description;
@@ -16,11 +16,11 @@ public class AssetFromTable {
     Integer attackPower;
 
     @DynamoDBHashKey(attributeName = "assetType")
-    public AssetType getAssetType() {
+    public String getAssetType() {
         return assetType;
     }
 
-    public void setAssetType(AssetType assetType) {
+    public void setAssetType(String assetType) {
         this.assetType = assetType;
     }
     @DynamoDBRangeKey(attributeName = "assetId")
