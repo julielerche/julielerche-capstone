@@ -1,9 +1,16 @@
 package julielerche.capstone.dynamodb;
 
+import julielerche.capstone.dynamodb.models.Task;
+import julielerche.capstone.dynamodb.models.TaskType;
 import julielerche.capstone.dynamodb.models.User;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+
+import julielerche.capstone.activity.requests.AddTaskToUserRequest;
 import julielerche.capstone.exceptions.UserNotFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,6 +47,39 @@ public class UserDao {
         if (loadedUser == null) {
             throw new UserNotFoundException("No user matches the id");
         }
+        return loadedUser;
+    }
+    /**
+     * Saves the user to the User table in dynamoDB.
+     * @param addTaskToUserRequest the request with task and user info
+     * @return user the user with the new data
+     */
+    public User saveTaskToUser(AddTaskToUserRequest addTaskToUserRequest) {
+        User loadedUser = loadUser(addTaskToUserRequest.getUserId());
+        Task taskToAdd = addTaskToUserRequest.getTask();
+        TaskType requestedType = addTaskToUserRequest.getTask().getTaskType();
+        List<Task> taskList;
+        switch (requestedType) {
+            case TODO:
+                taskList = loadedUser.getToDos();
+                taskList.add(taskToAdd);
+                loadedUser.setToDos(taskList);
+                break;
+            case CHORE:
+                taskList = loadedUser.getChores();
+                taskList.add(taskToAdd);
+                loadedUser.setChores(taskList);
+                break;
+            case DAILY:
+                taskList = loadedUser.getDailies();
+                taskList.add(taskToAdd);
+                loadedUser.setDailies(taskList);
+                break;
+            default:
+                taskList = new ArrayList<>();
+                break;
+        }
+        saveUser(loadedUser);
         return loadedUser;
     }
 }
