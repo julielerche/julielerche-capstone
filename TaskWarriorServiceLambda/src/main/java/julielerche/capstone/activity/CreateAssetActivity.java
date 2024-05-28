@@ -4,13 +4,11 @@ import julielerche.capstone.activity.requests.CreateAssetRequest;
 import julielerche.capstone.activity.results.CreateAssetResult;
 import julielerche.capstone.converters.AssetToModelConverter;
 import julielerche.capstone.dynamodb.AssetDao;
-import julielerche.capstone.dynamodb.models.Asset;
 import julielerche.capstone.models.AssetModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 
 /**
  * Implementation of the CreateAssetActivity for the TaskWarriorService's CreateAsset API.
@@ -39,7 +37,7 @@ public class CreateAssetActivity {
      * If the provided asset name or customer ID has invalid characters, throws an
      * InvalidAttributeValueException
      *
-     * @param createAssetRequest request object containing the customerId
+     * @param createAssetRequest request object containing the asset pojo
      * @return createAssetResult result object containing the API defined
      */
 
@@ -47,17 +45,16 @@ public class CreateAssetActivity {
         log.info("Received CreateAssetRequest {}", createAssetRequest);
 
         //TODO check string for valid characters
-        //constructs the new asset with default and custom values
-        Asset newAsset = new Asset();
 
         //saves the asset to the table
-        assetDao.saveAsset(newAsset);
+        assetDao.saveAsset(createAssetRequest.getAsset());
 
         //converts the asset to the model to be returned
-        AssetModel model = new AssetToModelConverter().assetToModel(newAsset);
+        AssetModel model = new AssetToModelConverter().assetToModel(createAssetRequest.getAsset());
 
         //returns the result with the model
         return CreateAssetResult.builder()
                 .withAsset(model)
                 .build();
     }
+}

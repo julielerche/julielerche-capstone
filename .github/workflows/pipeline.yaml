@@ -24,7 +24,7 @@ env:
   PIPELINE_USER_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   SAM_TEMPLATE: template.yaml
 
-  STACK_NAME: task-warrior-service
+  STACK_NAME: task-warrior-capstone
   PIPELINE_EXECUTION_ROLE: arn:aws:iam::905418062985:role/aws-sam-cli-managed-ServiceSt-PipelineExecutionRole-4nsJGkfUhnYx
   CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::905418062985:role/aws-sam-cli-managed-Servi-CloudFormationExecutionRo-m7RRrOZ3UFka
   ARTIFACTS_BUCKET: aws-sam-cli-managed-servicestage-p-artifactsbucket-scb03m9qz8il
