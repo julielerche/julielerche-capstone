@@ -4,6 +4,7 @@ import dagger.Component;
 import julielerche.capstone.activity.AddTaskToUserActivity;
 import julielerche.capstone.activity.CreateAssetActivity;
 import julielerche.capstone.activity.CreateUserActivity;
+import julielerche.capstone.activity.DeleteTaskActivity;
 import julielerche.capstone.activity.GetUserActivity;
 
 import javax.inject.Singleton;
@@ -38,4 +39,9 @@ public interface ServiceComponent {
      * @return AddTaskToUserActivity
      */
     AddTaskToUserActivity provideAddTaskToUserActivity();
+    /**
+     * Provides the relevant activity.
+     * @return DeleteTaskActivity
+     */
+    DeleteTaskActivity provideDeleteTaskActivity();
 }
