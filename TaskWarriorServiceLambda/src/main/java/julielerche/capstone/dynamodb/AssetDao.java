@@ -1,14 +1,20 @@
 package julielerche.capstone.dynamodb;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import julielerche.capstone.dynamodb.models.Asset;
 import julielerche.capstone.dynamodb.models.AssetFromTable;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 
 import julielerche.capstone.converters.AssetToOtherTypesConverter;
+import julielerche.capstone.exceptions.UserNotFoundException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Singleton
 public class AssetDao {
@@ -44,6 +50,26 @@ public class AssetDao {
         query.setAssetType(assetType);
         query.setAssetId(assetId);
         return this.mapper.load(query);
+    }
+
+    /**
+     * Gets a list of assets from the table using a query.
+     * @param assetType either POTION, ITEM, or MONSTER
+     * @return the list of assets from the table.
+     */
+    public List<AssetFromTable> getAllOfAssetType(String assetType) {
+        DynamoDBScanExpression dynamoDBScanExpression = new DynamoDBScanExpression();
+        if (assetType == null) {
+            throw new UserNotFoundException("Could not find asset with type " + assetType);
+        }
+
+        Map<String, AttributeValue> valueMap = new HashMap<>();
+        valueMap.put(":assetType", new AttributeValue().withS(assetType));
+
+        dynamoDBScanExpression.setExpressionAttributeValues(valueMap);
+        dynamoDBScanExpression.setFilterExpression("assetType = :assetType");
+
+        return this.mapper.scan(AssetFromTable.class, dynamoDBScanExpression);
     }
 
 }
