@@ -113,19 +113,31 @@ healthOrCost // Integer of either the cost or health of asset
 asset // either an item or monster object that was created from the request
 ```
 
-## CreateTaskLambda
+## AddTaskToUserLambda
 Creates a new task and saves it within existing user.
-### CreateTaskRequest
+### AddTaskToUserRequest
 ```
 userId // the user to create the task in
 task // json data of the task
 ```
-### CreateTaskResponse
+### AddTaskToUserResponse
 ```
 task // the task that was created
 ```
 
 # Put Endpoints
+## AddAssetToUserLambda
+Gets an asset from the table and saves it within existing user.
+### AddAssetToUserRequest
+```
+userId // the user to create the task in
+assetType // string of the asset type
+assetId // int of the assetid
+```
+### AddAssetToUserResponse
+```
+user // user with updated inventory
+```
 
 ## UpdateUserLambda
 Updates the user table with new user data.
@@ -142,7 +154,7 @@ user // the updated user object
 Updates the user table with new task data.
 ### UpdateTaskRequest
 ```
-user // the user object that we need to update in the table
+userId // the user id that we need to update in the table
 task  // the task object that is going to be updated
 ```
 ### UpdateTaskResponse
@@ -216,8 +228,7 @@ Deletes the task from the user's task list, then saves user data without task. T
 ### DeleteTaskRequest
 ```
 userId // userId for the table to check
-taskType // enum of DAILY, CHORE, or TODO
-taskName // name of the task to delete
+task // json data of the task to delete
 ```
 ### DeleteTaskResponse
 ```

@@ -1,6 +1,7 @@
 package julielerche.capstone.dependencies;
 
 import dagger.Component;
+import julielerche.capstone.activity.AddAssetToUserActivity;
 import julielerche.capstone.activity.AddTaskToUserActivity;
 import julielerche.capstone.activity.CreateAssetActivity;
 import julielerche.capstone.activity.CreateUserActivity;
@@ -39,6 +40,13 @@ public interface ServiceComponent {
      * @return AddTaskToUserActivity
      */
     AddTaskToUserActivity provideAddTaskToUserActivity();
+
+    /**
+     * Provides the relevant activity.
+     * @return AddAssetToUserActivity
+     */
+    AddAssetToUserActivity provideAddAssetToUserActivity();
+
     /**
      * Provides the relevant activity.
      * @return DeleteTaskActivity

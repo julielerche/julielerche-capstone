@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import julielerche.capstone.dynamodb.models.Asset;
-import julielerche.capstone.exceptions.TaskSerializationException;
+import julielerche.capstone.exceptions.AssetSerializationException;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class AssetConverter implements DynamoDBTypeConverter<String, List<Asset>
         try {
             return mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            throw new TaskSerializationException("Task failed to deserialize", e);
+            throw new AssetSerializationException("asset failed to deserialize", e);
         }
     }
 
@@ -27,7 +27,7 @@ public class AssetConverter implements DynamoDBTypeConverter<String, List<Asset>
         try {
             return mapper.readValue(object, ref);
         } catch (JsonProcessingException e) {
-            throw new TaskSerializationException("Task failed to be created", e);
+            throw new AssetSerializationException("asset failed to be created", e);
         }
     }
 }
