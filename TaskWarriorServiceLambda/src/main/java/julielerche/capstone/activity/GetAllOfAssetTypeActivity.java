@@ -6,15 +6,15 @@ import julielerche.capstone.activity.results.GetAllOfAssetTypeResult;
 import julielerche.capstone.converters.AssetToModelConverter;
 import julielerche.capstone.converters.AssetToOtherTypesConverter;
 import julielerche.capstone.dynamodb.AssetDao;
-import julielerche.capstone.dynamodb.models.Asset;
 import julielerche.capstone.dynamodb.models.AssetFromTable;
 import julielerche.capstone.models.AssetModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * Implementation of the GetAllOfAssetTypeActivity for the TaskWarriorService's GetAllOfAssetType API.

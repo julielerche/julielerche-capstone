@@ -1,7 +1,6 @@
 package julielerche.capstone.activity.results;
 
 import julielerche.capstone.models.AssetModel;
-import julielerche.capstone.models.UserModel;
 
 import java.util.List;
 

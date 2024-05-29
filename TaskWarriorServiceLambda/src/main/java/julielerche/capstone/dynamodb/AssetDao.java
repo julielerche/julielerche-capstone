@@ -1,20 +1,21 @@
 package julielerche.capstone.dynamodb;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import julielerche.capstone.dynamodb.models.Asset;
 import julielerche.capstone.dynamodb.models.AssetFromTable;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 import julielerche.capstone.converters.AssetToOtherTypesConverter;
 import julielerche.capstone.exceptions.UserNotFoundException;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class AssetDao {
