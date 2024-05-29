@@ -1,5 +1,7 @@
 package julielerche.capstone.dynamodb;
 
+import julielerche.capstone.dynamodb.models.Asset;
+import julielerche.capstone.dynamodb.models.AssetFromTable;
 import julielerche.capstone.dynamodb.models.Task;
 import julielerche.capstone.dynamodb.models.TaskType;
 import julielerche.capstone.dynamodb.models.User;
@@ -8,6 +10,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 
 import julielerche.capstone.activity.requests.AddTaskToUserRequest;
 import julielerche.capstone.activity.requests.DeleteTaskRequest;
+import julielerche.capstone.converters.AssetToOtherTypesConverter;
 import julielerche.capstone.exceptions.UserNotFoundException;
 
 import java.util.ArrayList;
@@ -115,5 +118,20 @@ public class UserDao {
         }
         saveUser(loadedUser);
         return loadedUser;
+    }
+
+    /**
+     * Adds a specific asset to the user inventory, then saves.
+     * @param user the requested user.
+     * @param tableAsset the requested asset.
+     * @return the updated user.
+     */
+    public User addAssetToInventory(User user, AssetFromTable tableAsset) {
+        Asset convertedAsset = new AssetToOtherTypesConverter().convertAssetToAssigned(tableAsset);
+        List<Asset> currentInventory = user.getInventory();
+        currentInventory.add(convertedAsset);
+        user.setInventory(currentInventory);
+        saveUser(user);
+        return user;
     }
 }

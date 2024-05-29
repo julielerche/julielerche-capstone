@@ -33,4 +33,17 @@ public class AssetDao {
         this.mapper.save(tableAsset);
     }
 
+    /**
+     * Gets a specific asset from the table using the type and id.
+     * @param assetType either POTION, ITEM, or MONSTER
+     * @param assetId the Id of the asset.
+     * @return the asset from the table.
+     */
+    public AssetFromTable getSpecificAsset(String assetType, Integer assetId) {
+        AssetFromTable query = new AssetFromTable();
+        query.setAssetType(assetType);
+        query.setAssetId(assetId);
+        return this.mapper.load(query);
+    }
+
 }
