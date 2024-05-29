@@ -9,22 +9,6 @@ public class Asset {
     Integer attackPower;
     Integer cost;
 
-//    /**
-//     * Constructor for the asset object.
-//     * @param assetType either potion, monster, or item
-//     * @param assetId the unique number identifier
-//     * @param name the name of the object
-//     * @param description description of use
-//     * @param healthOrCost either the health or cost of the asset
-//     */
-//    public Asset(AssetType assetType, Integer assetId, String name, String description, Integer healthOrCost) {
-//        this.assetType = assetType;
-//        this.assetId = assetId;
-//        this.name = name;
-//        this.description = description;
-//        this.healthOrCost = healthOrCost;
-//    }
-
     /**
      * default constructor for the asset object.
      */

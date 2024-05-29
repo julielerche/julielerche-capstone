@@ -6,6 +6,7 @@ import julielerche.capstone.activity.AddTaskToUserActivity;
 import julielerche.capstone.activity.CreateAssetActivity;
 import julielerche.capstone.activity.CreateUserActivity;
 import julielerche.capstone.activity.DeleteTaskActivity;
+import julielerche.capstone.activity.GetAllOfAssetTypeActivity;
 import julielerche.capstone.activity.GetUserActivity;
 
 import javax.inject.Singleton;
@@ -46,6 +47,12 @@ public interface ServiceComponent {
      * @return AddAssetToUserActivity
      */
     AddAssetToUserActivity provideAddAssetToUserActivity();
+
+    /**
+     * Provides the relevant activity.
+     * @return GetAllOfAssetTypeActivity
+     */
+    GetAllOfAssetTypeActivity provideGetAllOfAssetTypeActivity();
 
     /**
      * Provides the relevant activity.
