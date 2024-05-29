@@ -62,7 +62,7 @@ public class AddAssetToUserRequest {
             return this;
         }
 
-        public AddAssetToUserRequest.Builder withAsset(Integer assetId) {
+        public AddAssetToUserRequest.Builder withAssetId(Integer assetId) {
             this.assetId = assetId;
             return this;
         }

@@ -22,7 +22,7 @@ public class AddAssetToUserLambda
                 return AddAssetToUserRequest.builder()
                     .withUserId(unauthenticatedRequest.getUserId())
                     .withAssetType(unauthenticatedRequest.getAssetType())
-                    .withAsset(unauthenticatedRequest.getAssetId())
+                    .withAssetId(unauthenticatedRequest.getAssetId())
                     .build();
             },
             (request, serviceComponent) ->
