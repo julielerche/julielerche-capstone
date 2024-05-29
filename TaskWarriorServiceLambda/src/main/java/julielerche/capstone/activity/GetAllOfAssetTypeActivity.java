@@ -51,10 +51,10 @@ public class GetAllOfAssetTypeActivity {
 
         //TODO check string for valid characters
 
-        List<AssetFromTable> assetList = assetDao.getAllOfAssetType(getAssetRequest.getAssetType());
+        List<AssetFromTable> assetList = new ArrayList<>();
+        assetList.addAll(assetDao.getAllOfAssetType(getAssetRequest.getAssetType()));
         if (getAssetRequest.getAssetType2() != null) {
-            List<AssetFromTable> assetList2 = assetDao.getAllOfAssetType(getAssetRequest.getAssetType2());
-            assetList.addAll(assetList2);
+            assetList.addAll(assetDao.getAllOfAssetType(getAssetRequest.getAssetType2()));
         }
         List<AssetModel> convertedList = new ArrayList<>();
         AssetToOtherTypesConverter typesConverter = new AssetToOtherTypesConverter();

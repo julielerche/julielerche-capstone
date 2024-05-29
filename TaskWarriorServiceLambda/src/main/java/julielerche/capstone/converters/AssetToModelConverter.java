@@ -18,6 +18,9 @@ public class AssetToModelConverter {
         if (asset.getAttackPower() != null) {
             model.setAttackPower(asset.getAttackPower());
         }
+        if (asset.getCost() != null) {
+            model.setHealthOrCost(asset.getCost());
+        }
         return model;
     }
 }
