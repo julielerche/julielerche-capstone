@@ -8,6 +8,8 @@ public class Asset {
     Integer healthOrCost;
     Integer attackPower;
     Integer cost;
+    Integer startingHealth;
+    Integer currentHealth;
 
     /**
      * default constructor for the asset object.
@@ -69,5 +71,21 @@ public class Asset {
 
     public void setCost(Integer cost) {
         this.cost = cost;
+    }
+
+    public Integer getStartingHealth() {
+        return startingHealth;
+    }
+
+    public void setStartingHealth(Integer startingHealth) {
+        this.startingHealth = startingHealth;
+    }
+
+    public Integer getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public void setCurrentHealth(Integer currentHealth) {
+        this.currentHealth = currentHealth;
     }
 }

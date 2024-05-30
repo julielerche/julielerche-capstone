@@ -6,6 +6,7 @@ import julielerche.capstone.activity.AddTaskToUserActivity;
 import julielerche.capstone.activity.CreateAssetActivity;
 import julielerche.capstone.activity.CreateUserActivity;
 import julielerche.capstone.activity.DeleteTaskActivity;
+import julielerche.capstone.activity.GetAffordableAssetsActivity;
 import julielerche.capstone.activity.GetAllOfAssetTypeActivity;
 import julielerche.capstone.activity.GetUserActivity;
 
@@ -53,6 +54,12 @@ public interface ServiceComponent {
      * @return GetAllOfAssetTypeActivity
      */
     GetAllOfAssetTypeActivity provideGetAllOfAssetTypeActivity();
+
+    /**
+     * Provides the relevant activity.
+     * @return GetAffordableAssetsActivity
+     */
+    GetAffordableAssetsActivity provideGetAffordableAssetsActivity();
 
     /**
      * Provides the relevant activity.

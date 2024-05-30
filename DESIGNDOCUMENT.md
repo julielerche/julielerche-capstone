@@ -222,6 +222,17 @@ assetType2 // optional second enum (for the shop to get all potions and items)
 assetList // a list of all assets of a certain type
 ```
 
+## GetAffordableAssetsLambda
+Gets the requested assets that are affordable to the user.
+### GetAffordableAssetsRequest
+```
+userId // user id to get the gold count for 
+```
+### GetAffordableAssetsResponse
+```
+assetList // a list of all assets of a certain type
+```
+
 # Delete Endpoints
 ## DeleteTaskLambda
 Deletes the task from the user's task list, then saves user data without task. Throws error if task doesn't exist.

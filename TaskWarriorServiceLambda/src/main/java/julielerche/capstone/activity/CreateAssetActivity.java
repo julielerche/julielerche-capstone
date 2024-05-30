@@ -4,7 +4,9 @@ import julielerche.capstone.activity.requests.CreateAssetRequest;
 import julielerche.capstone.activity.results.CreateAssetResult;
 
 import julielerche.capstone.converters.AssetToModelConverter;
+import julielerche.capstone.converters.AssetToOtherTypesConverter;
 import julielerche.capstone.dynamodb.AssetDao;
+import julielerche.capstone.dynamodb.models.AssetFromTable;
 import julielerche.capstone.models.AssetModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,10 +50,12 @@ public class CreateAssetActivity {
         //TODO check string for valid characters
 
         //saves the asset to the table
-        assetDao.saveAsset(createAssetRequest.getAsset());
+        AssetFromTable tableAsset = assetDao.saveAsset(createAssetRequest.getAsset());
+
 
         //converts the asset to the model to be returned
-        AssetModel model = new AssetToModelConverter().assetToModel(createAssetRequest.getAsset());
+        AssetModel model = new AssetToModelConverter().assetToModel(new AssetToOtherTypesConverter()
+                .convertAssetToAssigned(tableAsset));
 
         //returns the result with the model
         return CreateAssetResult.builder()

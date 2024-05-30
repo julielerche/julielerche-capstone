@@ -1,11 +1,12 @@
 package julielerche.capstone.activity;
 
-import julielerche.capstone.activity.requests.GetAllOfAssetTypeRequest;
-import julielerche.capstone.activity.results.GetAllOfAssetTypeResult;
+import julielerche.capstone.activity.requests.GetAffordableAssetsRequest;
+import julielerche.capstone.activity.results.GetAffordableAssetsResult;
 
 import julielerche.capstone.converters.AssetToModelConverter;
 import julielerche.capstone.converters.AssetToOtherTypesConverter;
 import julielerche.capstone.dynamodb.AssetDao;
+import julielerche.capstone.dynamodb.UserDao;
 import julielerche.capstone.dynamodb.models.AssetFromTable;
 import julielerche.capstone.models.AssetModel;
 import org.apache.logging.log4j.LogManager;
@@ -17,22 +18,25 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * Implementation of the GetAllOfAssetTypeActivity for the TaskWarriorService's GetAllOfAssetType API.
+ * Implementation of the GetAffordableAssetsActivity for the TaskWarriorService's GetAffordableAssets API.
  * <p>
- * This API allows the customer to query the table by type.
+ * This API allows the customer to create a new asset in the table.
  */
-public class GetAllOfAssetTypeActivity {
+public class GetAffordableAssetsActivity {
     private final Logger log = LogManager.getLogger();
     private final AssetDao assetDao;
+    private final UserDao userDao;
 
     /**
-     * Instantiates a new GetAllOfAssetTypeActivity object.
+     * Instantiates a new GetAffordableAssetsActivity object.
      *
      * @param assetDao AssetDao to access the asset table.
+     * @param userDao UserDao to access the user table.
      */
     @Inject
-    public GetAllOfAssetTypeActivity(AssetDao assetDao) {
+    public GetAffordableAssetsActivity(AssetDao assetDao, UserDao userDao) {
         this.assetDao = assetDao;
+        this.userDao = userDao;
     }
     /**
      * This method handles the incoming request by querying the asset table.
@@ -46,16 +50,13 @@ public class GetAllOfAssetTypeActivity {
      * @return getAssetResult result object containing the API defined
      */
 
-    public GetAllOfAssetTypeResult handleRequest(final GetAllOfAssetTypeRequest getAssetRequest) {
-        log.info("Received GetAllOfAssetTypeRequest {}", getAssetRequest);
+    public GetAffordableAssetsResult handleRequest(final GetAffordableAssetsRequest getAssetRequest) {
+        log.info("Received GetAffordableAssetsRequest {}", getAssetRequest);
 
-        //TODO check string for valid characters
+        Integer moneyAmount = userDao.loadUser(getAssetRequest.getUserId()).getGold();
 
-        List<AssetFromTable> assetList = new ArrayList<>();
-        assetList.addAll(assetDao.getAllOfAssetType(getAssetRequest.getAssetType()));
-        if (getAssetRequest.getAssetType2() != null) {
-            assetList.addAll(assetDao.getAllOfAssetType(getAssetRequest.getAssetType2()));
-        }
+        List<AssetFromTable> assetList = assetDao.getAffordableAssets(moneyAmount);
+
         List<AssetModel> convertedList = new ArrayList<>();
         AssetToOtherTypesConverter typesConverter = new AssetToOtherTypesConverter();
 
@@ -64,7 +65,7 @@ public class GetAllOfAssetTypeActivity {
                     .convertAssetToAssigned(tableAsset)));
         }
 
-        return GetAllOfAssetTypeResult.builder()
+        return GetAffordableAssetsResult.builder()
                 .withAssets(convertedList)
                 .build();
     }

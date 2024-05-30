@@ -33,11 +33,13 @@ public class AssetDao {
     /**
      * Saves the user to the Asset table in dynamoDB.
      * @param asset the asset to save to the table
+     * @return assetFromTable the asset that was saved to the table.
      */
-    public void saveAsset(Asset asset) {
+    public AssetFromTable saveAsset(Asset asset) {
         AssetToOtherTypesConverter converter = new AssetToOtherTypesConverter();
         AssetFromTable tableAsset = converter.assetToTableAsset(asset);
         this.mapper.save(tableAsset);
+        return tableAsset;
     }
 
     /**
@@ -69,6 +71,30 @@ public class AssetDao {
 
         dynamoDBScanExpression.setExpressionAttributeValues(valueMap);
         dynamoDBScanExpression.setFilterExpression("assetType = :assetType");
+
+        return this.mapper.scan(AssetFromTable.class, dynamoDBScanExpression);
+    }
+
+    /**
+     * Queries the table for all assets that cost less than the gold the user has.
+     * @param goldAmount the amount of gold the user has.
+     * @return List assets the user can afford.
+     */
+    public List<AssetFromTable> getAffordableAssets(Integer goldAmount) {
+        DynamoDBScanExpression dynamoDBScanExpression = new DynamoDBScanExpression()
+                .withIndexName("HealthOrCostIndex")
+                .withConsistentRead(false);
+
+        if (goldAmount == null) {
+            throw new UserNotFoundException("Could not find asset with type " + goldAmount);
+        }
+
+        Map<String, AttributeValue> valueMap = new HashMap<>();
+        valueMap.put(":goldAmount", new AttributeValue().withN(String.valueOf(goldAmount)));
+        valueMap.put(":monster", new AttributeValue().withS("MONSTER"));
+
+        dynamoDBScanExpression.setExpressionAttributeValues(valueMap);
+        dynamoDBScanExpression.setFilterExpression("healthOrCost <= :goldAmount and assetType <> :monster");
 
         return this.mapper.scan(AssetFromTable.class, dynamoDBScanExpression);
     }
