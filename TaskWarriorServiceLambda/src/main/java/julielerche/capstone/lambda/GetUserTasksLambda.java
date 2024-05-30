@@ -23,9 +23,9 @@ public class GetUserTasksLambda
                     .withUserId(unauthenticatedRequest.getUserId())
                     .withTaskType(unauthenticatedRequest.getTaskType())
                     .build();
-                },
-                (request, serviceComponent) ->
-                        serviceComponent.provideGetUserTasksActivity().handleRequest(request)
+            },
+            (request, serviceComponent) ->
+                    serviceComponent.provideGetUserTasksActivity().handleRequest(request)
         );
     }
 

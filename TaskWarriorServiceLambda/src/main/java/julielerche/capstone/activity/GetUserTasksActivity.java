@@ -3,16 +3,16 @@ package julielerche.capstone.activity;
 import julielerche.capstone.activity.requests.GetUserTasksRequest;
 import julielerche.capstone.activity.results.GetUserTasksResult;
 
-import julielerche.capstone.converters.UserToModelConverter;
 import julielerche.capstone.dynamodb.UserDao;
 import julielerche.capstone.dynamodb.models.Task;
 import julielerche.capstone.dynamodb.models.User;
-import julielerche.capstone.models.UserModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * Implementation of the GetUserTasksActivity for the TaskWarriorService's GetUserTasks API.
@@ -60,6 +60,9 @@ public class GetUserTasksActivity {
                 break;
             case "TODO":
                 chosenList = loadedUser.getToDos();
+                break;
+            default:
+                chosenList = new ArrayList<>();
                 break;
         }
         return GetUserTasksResult.builder()
