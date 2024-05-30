@@ -347,6 +347,26 @@ Resources:
             Path: /users/inventory
             Method: put
 
+  GetUserInventoryLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: !GetAtt AccessRole.Arn
+      CodeUri: TaskWarriorServiceLambda
+      Handler: julielerche.capstone.lambda.GetUserInventoryLambda::handleRequest
+      Runtime: java11
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+      Events:
+        TaskWarriorService:
+          Type: Api
+          Properties:
+            Path: /users/inventory
+            Method: get
+
   GetAllOfAssetTypeLambda:
     Type: AWS::Serverless::Function
     Properties:

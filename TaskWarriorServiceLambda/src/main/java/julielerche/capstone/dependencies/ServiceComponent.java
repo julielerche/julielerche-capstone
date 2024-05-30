@@ -36,6 +36,12 @@ public interface ServiceComponent {
 
     /**
      * Provides the relevant activity.
+     * @return GetUserInventoryActivity
+     */
+    GetUserInventoryActivity provideGetUserInventoryActivity();
+
+    /**
+     * Provides the relevant activity.
      * @return CreateAssetActivity
      */
     CreateAssetActivity provideCreateAssetActivity();
