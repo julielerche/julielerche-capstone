@@ -86,6 +86,7 @@ public class UserDao {
         saveUser(loadedUser);
         return loadedUser;
     }
+
     /**
      * Deletes the given task from the list and saves the user data in the table.
      * @param deleteTaskRequest the request with task and user info

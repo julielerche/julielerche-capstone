@@ -75,4 +75,9 @@ public interface ServiceComponent {
      * @return DeleteTaskActivity
      */
     DeleteTaskActivity provideDeleteTaskActivity();
+    /**
+     * Provides the relevant activity.
+     * @return UpdateTaskActivity
+     */
+    UpdateTaskActivity provideUpdateTaskActivity();
 }
