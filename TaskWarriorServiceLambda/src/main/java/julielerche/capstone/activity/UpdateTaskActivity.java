@@ -104,7 +104,7 @@ public class UpdateTaskActivity {
         try {
             Task existingTask = new Task();
             for (Task task : chosenList) {
-                if (task.getTaskName().equals(updateTaskRequest.getTask().getTaskName())){
+                if (task.getTaskName().equals(updateTaskRequest.getTask().getTaskName())) {
                     existingTask = task;
                     chosenList.remove(existingTask);
                     break;

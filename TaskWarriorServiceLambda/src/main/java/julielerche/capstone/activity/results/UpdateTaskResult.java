@@ -2,8 +2,6 @@ package julielerche.capstone.activity.results;
 
 import julielerche.capstone.dynamodb.models.Task;
 
-import java.util.List;
-
 public class UpdateTaskResult {
     private final Task task;
 
