@@ -73,4 +73,22 @@ public class AssetDao {
         return this.mapper.scan(AssetFromTable.class, dynamoDBScanExpression);
     }
 
+    public List<AssetFromTable> getAffordableAssets(Integer goldAmount) {
+        DynamoDBScanExpression dynamoDBScanExpression = new DynamoDBScanExpression()
+                .withIndexName("HealthOrCostIndex")
+                .withConsistentRead(false);
+
+        if (goldAmount == null) {
+            throw new UserNotFoundException("Could not find asset with type " + goldAmount);
+        }
+
+        Map<String, AttributeValue> valueMap = new HashMap<>();
+        valueMap.put(":goldAmount", new AttributeValue().withS(String.valueOf(goldAmount)));
+
+        dynamoDBScanExpression.setExpressionAttributeValues(valueMap);
+        dynamoDBScanExpression.setFilterExpression("healthOrCost <= :goldAmount");
+
+        return this.mapper.scan(AssetFromTable.class, dynamoDBScanExpression);
+    }
+
 }

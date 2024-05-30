@@ -7,8 +7,10 @@ public class AssetModel {
     Integer assetId;
     String name;
     String description;
-    Integer healthOrCost;
     Integer attackPower;
+    Integer cost;
+    Integer startingHealth;
+    Integer currentHealth;
 
     /**
      * The constructor for the asset model.
@@ -57,19 +59,35 @@ public class AssetModel {
         this.description = description;
     }
 
-    public Integer getHealthOrCost() {
-        return healthOrCost;
-    }
-
-    public void setHealthOrCost(Integer healthOrCost) {
-        this.healthOrCost = healthOrCost;
-    }
-
     public Integer getAttackPower() {
         return attackPower;
     }
 
     public void setAttackPower(Integer attackPower) {
         this.attackPower = attackPower;
+    }
+
+    public Integer getCost() {
+        return cost;
+    }
+
+    public void setCost(Integer cost) {
+        this.cost = cost;
+    }
+
+    public Integer getStartingHealth() {
+        return startingHealth;
+    }
+
+    public void setStartingHealth(Integer startingHealth) {
+        this.startingHealth = startingHealth;
+    }
+
+    public Integer getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public void setCurrentHealth(Integer currentHealth) {
+        this.currentHealth = currentHealth;
     }
 }
