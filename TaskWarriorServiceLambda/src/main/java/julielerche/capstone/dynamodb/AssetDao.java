@@ -33,6 +33,7 @@ public class AssetDao {
     /**
      * Saves the user to the Asset table in dynamoDB.
      * @param asset the asset to save to the table
+     * @return assetFromTable the asset that was saved to the table.
      */
     public AssetFromTable saveAsset(Asset asset) {
         AssetToOtherTypesConverter converter = new AssetToOtherTypesConverter();

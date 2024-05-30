@@ -6,7 +6,6 @@ import julielerche.capstone.activity.results.CreateAssetResult;
 import julielerche.capstone.converters.AssetToModelConverter;
 import julielerche.capstone.converters.AssetToOtherTypesConverter;
 import julielerche.capstone.dynamodb.AssetDao;
-import julielerche.capstone.dynamodb.models.Asset;
 import julielerche.capstone.dynamodb.models.AssetFromTable;
 import julielerche.capstone.models.AssetModel;
 import org.apache.logging.log4j.LogManager;
