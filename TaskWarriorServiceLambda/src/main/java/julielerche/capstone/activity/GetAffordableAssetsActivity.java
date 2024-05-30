@@ -31,6 +31,7 @@ public class GetAffordableAssetsActivity {
      * Instantiates a new GetAffordableAssetsActivity object.
      *
      * @param assetDao AssetDao to access the asset table.
+     * @param userDao UserDao to access the user table.
      */
     @Inject
     public GetAffordableAssetsActivity(AssetDao assetDao, UserDao userDao) {

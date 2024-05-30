@@ -22,7 +22,7 @@ public class GetAffordableAssetsLambda
                 return GetAffordableAssetsRequest.builder()
                     .withUserId(unauthenticatedRequest.getUserId())
                     .build();
-        },
+            },
             (request, serviceComponent) ->
                     serviceComponent.provideGetAffordableAssetsActivity().handleRequest(request)
         );
