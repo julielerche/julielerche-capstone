@@ -1,5 +1,5 @@
 package julielerche.capstone.dependencies;
-
+//CHECKSTYLE:OFF:Builder
 import dagger.Component;
 import julielerche.capstone.activity.*;
 

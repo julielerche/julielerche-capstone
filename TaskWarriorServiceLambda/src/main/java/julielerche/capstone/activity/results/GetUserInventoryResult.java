@@ -1,6 +1,5 @@
 package julielerche.capstone.activity.results;
 
-import julielerche.capstone.activity.requests.GetUserRequest;
 import julielerche.capstone.dynamodb.models.Asset;
 
 import java.util.List;

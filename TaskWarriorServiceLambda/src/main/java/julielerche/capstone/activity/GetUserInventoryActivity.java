@@ -3,16 +3,15 @@ package julielerche.capstone.activity;
 import julielerche.capstone.activity.requests.GetUserInventoryRequest;
 import julielerche.capstone.activity.results.GetUserInventoryResult;
 
-import julielerche.capstone.converters.UserToModelConverter;
 import julielerche.capstone.dynamodb.UserDao;
 import julielerche.capstone.dynamodb.models.Asset;
 import julielerche.capstone.dynamodb.models.User;
-import julielerche.capstone.models.UserModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.inject.Inject;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * Implementation of the GetUserInventoryActivity for the TaskWarriorService's GetUserInventory API.
