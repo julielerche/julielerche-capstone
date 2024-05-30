@@ -9,6 +9,7 @@ import julielerche.capstone.activity.DeleteTaskActivity;
 import julielerche.capstone.activity.GetAffordableAssetsActivity;
 import julielerche.capstone.activity.GetAllOfAssetTypeActivity;
 import julielerche.capstone.activity.GetUserActivity;
+import julielerche.capstone.activity.GetUserTasksActivity;
 
 import javax.inject.Singleton;
 
@@ -30,6 +31,11 @@ public interface ServiceComponent {
      * @return GetUserActivity
      */
     GetUserActivity provideGetUserActivity();
+    /**
+     * Provides the relevant activity.
+     * @return GetUserTasksActivity
+     */
+    GetUserTasksActivity provideGetUserTasksActivity();
 
     /**
      * Provides the relevant activity.
