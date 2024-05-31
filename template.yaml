@@ -258,7 +258,7 @@ Resources:
         TaskWarriorService:
           Type: Api
           Properties:
-            Path: /users/
+            Path: /users
             Method: post
             Auth:
               Authorizer: 'NONE'
@@ -302,7 +302,7 @@ Resources:
         TaskWarriorService:
           Type: Api
           Properties:
-            Path: /users/
+            Path: /users
             Method: put
             Auth:
               Authorizer: 'NONE'
@@ -324,7 +324,7 @@ Resources:
         TaskWarriorService:
           Type: Api
           Properties:
-            Path: /assets/
+            Path: /assets
             Method: post
             Auth:
               Authorizer: 'NONE'
