@@ -86,4 +86,10 @@ public interface ServiceComponent {
      * @return MarkTaskAsCompletedActivity
      */
     MarkTaskAsCompletedActivity provideMarkTaskAsCompletedActivity();
+
+    /**
+     * Provides the relevant activity.
+     * @return UseItemActivity
+     */
+    UseItemActivity provideUseItemActivity();
 }

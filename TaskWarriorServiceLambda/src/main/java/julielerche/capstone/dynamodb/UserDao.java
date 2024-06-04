@@ -140,4 +140,45 @@ public class UserDao {
         saveUser(user);
         return user;
     }
+
+    /**
+     * Uses the item on the user and removes it from their inventory.
+     * @param user the user to update
+     * @param asset the item to use and remove.
+     * @return user with updated values.
+     */
+    public User useItem(User user, Asset asset) {
+        String description = asset.getDescription();
+        String[] elements = description.split(" ");
+        switch (elements[0]) {
+            case "health":
+                int newHealth = user.getHealth() + Integer.parseInt(elements[2]);
+                if (newHealth >= 100) {
+                    newHealth = 100;
+                }
+                user.setHealth(newHealth);
+                break;
+            case "mana":
+                int newmana = user.getMana() + Integer.parseInt(elements[2]);
+                if (newmana >= 100) {
+                    newmana = 100;
+                }
+                user.setMana(newmana);
+                break;
+            case "stamina":
+                int newStaimina = user.getStamina() + Integer.parseInt(elements[2]);
+                if (newStaimina >= 100) {
+                    newStaimina = 100;
+                }
+                user.setStamina(newStaimina);
+                break;
+            default:
+                break;
+        }
+        List<Asset> newInventory = user.getInventory();
+        newInventory.remove(asset);
+        user.setInventory(newInventory);
+        saveUser(user);
+        return user;
+    }
 }
