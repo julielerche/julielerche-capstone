@@ -63,7 +63,6 @@ public class MarkTaskAsCompletedActivity {
                 taskMap = this.markTaskAsCompletedToList(chosenList, markTaskAsCompletedRequest);
                 for (Task task : taskMap.keySet()) {
                     loadedUser.setChores(taskMap.get(task));
-                    userDao.saveUser(loadedUser);
                     updatedTask = task;
                 }
                 break;
@@ -72,7 +71,6 @@ public class MarkTaskAsCompletedActivity {
                 taskMap = this.markTaskAsCompletedToList(chosenList, markTaskAsCompletedRequest);
                 for (Task task : taskMap.keySet()) {
                     loadedUser.setDailies(taskMap.get(task));
-                    userDao.saveUser(loadedUser);
                     updatedTask = task;
                 }
                 break;
@@ -81,12 +79,15 @@ public class MarkTaskAsCompletedActivity {
                 taskMap = this.markTaskAsCompletedToList(chosenList, markTaskAsCompletedRequest);
                 for (Task task : taskMap.keySet()) {
                     loadedUser.setToDos(taskMap.get(task));
-                    userDao.saveUser(loadedUser);
                     updatedTask = task;
                 }
                 break;
+            default:
+                break;
         }
         goldEarned = getGold(updatedTask.getDifficulty(), updatedTask.getTaskType());
+        loadedUser.setGold(loadedUser.getGold() + goldEarned);
+        userDao.saveUser(loadedUser);
 
         return MarkTaskAsCompletedResult.builder()
                 .withTask(updatedTask)
@@ -100,29 +101,21 @@ public class MarkTaskAsCompletedActivity {
      * @param markTaskAsCompletedRequest the request that has the new info
      * @return a map of the new task to the list of updated tasks
      */
-    private Map<Task, List<Task>> markTaskAsCompletedToList(List<Task> chosenList, MarkTaskAsCompletedRequest markTaskAsCompletedRequest) {
+    private Map<Task, List<Task>> markTaskAsCompletedToList(List<Task> chosenList,
+                                        MarkTaskAsCompletedRequest markTaskAsCompletedRequest) {
         try {
             Task existingTask = new Task();
             for (Task task : chosenList) {
                 if (task.getTaskName().equals(markTaskAsCompletedRequest.getTask().getTaskName())) {
                     existingTask = task;
                     chosenList.remove(existingTask);
+                    existingTask.setCompleted(true);
                     break;
                 }
             }
-            switch (existingTask.getTaskType()) {
-                case CHORE:
-                    existingTask.setCompleted(true);
-                case DAILY:
-                    existingTask.setCompleted(true);
-                case TODO:
-                    existingTask.setCompleted(true);
-                    break;
-                default:
-                    chosenList.add(existingTask);
-                    break;
+            if (!existingTask.getTaskType().equals(TaskType.TODO)) {
+                chosenList.add(existingTask);
             }
-
             Map<Task, List<Task>> taskListMap = new HashMap<>();
             taskListMap.put(existingTask, chosenList);
             return taskListMap;
@@ -149,6 +142,8 @@ public class MarkTaskAsCompletedActivity {
                 break;
             case HARD:
                 gold = 30;
+                break;
+            default:
                 break;
         }
         switch (type) {

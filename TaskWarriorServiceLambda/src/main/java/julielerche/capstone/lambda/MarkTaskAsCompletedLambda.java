@@ -17,15 +17,15 @@ public class MarkTaskAsCompletedLambda
     public LambdaResponse handleRequest(LambdaRequest<MarkTaskAsCompletedRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
-                () -> {
-                    MarkTaskAsCompletedRequest unauthenticatedRequest = input.fromBody(MarkTaskAsCompletedRequest.class);
-                    return MarkTaskAsCompletedRequest.builder()
-                            .withUserId(unauthenticatedRequest.getUserId())
-                            .withTask(unauthenticatedRequest.getTask())
-                            .build();
-                },
-                (request, serviceComponent) ->
-                        serviceComponent.provideMarkTaskAsCompletedActivity().handleRequest(request)
+            () -> {
+                MarkTaskAsCompletedRequest unauthenticatedRequest = input.fromBody(MarkTaskAsCompletedRequest.class);
+                return MarkTaskAsCompletedRequest.builder()
+                    .withUserId(unauthenticatedRequest.getUserId())
+                    .withTask(unauthenticatedRequest.getTask())
+                    .build();
+            },
+            (request, serviceComponent) ->
+                    serviceComponent.provideMarkTaskAsCompletedActivity().handleRequest(request)
         );
     }
 
