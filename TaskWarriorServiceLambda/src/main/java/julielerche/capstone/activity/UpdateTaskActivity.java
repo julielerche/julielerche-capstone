@@ -62,7 +62,6 @@ public class UpdateTaskActivity {
                 taskMap = this.updateTaskToList(chosenList, updateTaskRequest);
                 for (Task task : taskMap.keySet()) {
                     loadedUser.setChores(taskMap.get(task));
-                    userDao.saveUser(loadedUser);
                     updatedTask = task;
                 }
                 break;
@@ -71,7 +70,6 @@ public class UpdateTaskActivity {
                 taskMap = this.updateTaskToList(chosenList, updateTaskRequest);
                 for (Task task : taskMap.keySet()) {
                     loadedUser.setDailies(taskMap.get(task));
-                    userDao.saveUser(loadedUser);
                     updatedTask = task;
                 }
                 break;
@@ -80,7 +78,6 @@ public class UpdateTaskActivity {
                 taskMap = this.updateTaskToList(chosenList, updateTaskRequest);
                 for (Task task : taskMap.keySet()) {
                     loadedUser.setToDos(taskMap.get(task));
-                    userDao.saveUser(loadedUser);
                     updatedTask = task;
                 }
                 break;
@@ -88,7 +85,29 @@ public class UpdateTaskActivity {
                 chosenList = new ArrayList<>();
                 break;
         }
+        if (updateTaskRequest.getNewType() != null) {
+            switch (updateTaskRequest.getNewType()) {
+                case "DAILY":
+                    chosenList = loadedUser.getDailies();
+                    chosenList.add(updatedTask);
+                    loadedUser.setDailies(chosenList);
+                    break;
+                case "CHORE":
+                    chosenList = loadedUser.getChores();
+                    chosenList.add(updatedTask);
+                    loadedUser.setChores(chosenList);
+                    break;
+                case "TODO":
+                    chosenList = loadedUser.getToDos();
+                    chosenList.add(updatedTask);
+                    loadedUser.setToDos(chosenList);
+                    break;
+                default:
+                    break;
+            }
+        }
 
+        userDao.saveUser(loadedUser);
         return UpdateTaskResult.builder()
                 .withTasks(updatedTask)
                 .build();
@@ -113,11 +132,14 @@ public class UpdateTaskActivity {
             if (updateTaskRequest.getNewName() != null) {
                 existingTask.setTaskName(updateTaskRequest.getNewName());
             }
-            if (updateTaskRequest.getDifficulty() != null) {
+            if (updateTaskRequest.getNewDifficulty() != null) {
                 existingTask.setDifficulty(new DifficultyConverter()
-                        .stringToDifficulty(updateTaskRequest.getDifficulty()));
+                        .stringToDifficulty(updateTaskRequest.getNewDifficulty()));
             }
-            chosenList.add(existingTask);
+            if (updateTaskRequest.getNewType().equals(existingTask.getTaskType().toString()) ||
+            updateTaskRequest.getNewType() == null) {
+                chosenList.add(existingTask);
+            }
             Map<Task, List<Task>> taskListMap = new HashMap<>();
             taskListMap.put(existingTask, chosenList);
             return taskListMap;
