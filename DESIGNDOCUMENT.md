@@ -40,6 +40,11 @@ I start every day with a to-do list, in the past I have used apps to track my pr
 | String (Potion, Monster, Item)      | Number (unique per assetType) | String | String | Number                 |
 *HealthOrCost as a GSI Key allows to getting Monsters of a certain health or items that are affordable to the user.*
 
+### Encounter Table
+| UserId (Partition Key) | creatures              |
+|------------------------|------------------------|
+| String                 | Map <Integer, Monster> | 
+
 # API
 ## API Interactable Objects
 ### User Object
