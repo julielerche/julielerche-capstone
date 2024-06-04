@@ -11,6 +11,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import julielerche.capstone.activity.requests.AddTaskToUserRequest;
 import julielerche.capstone.activity.requests.DeleteTaskRequest;
 import julielerche.capstone.converters.AssetToOtherTypesConverter;
+import julielerche.capstone.exceptions.InsufficentGoldException;
 import julielerche.capstone.exceptions.UserNotFoundException;
 
 import java.util.ArrayList;
@@ -129,9 +130,13 @@ public class UserDao {
      */
     public User addAssetToInventory(User user, AssetFromTable tableAsset) {
         Asset convertedAsset = new AssetToOtherTypesConverter().convertAssetToAssigned(tableAsset);
+        if (user.getGold() < convertedAsset.getCost()) {
+            throw new InsufficentGoldException();
+        }
         List<Asset> currentInventory = user.getInventory();
         currentInventory.add(convertedAsset);
         user.setInventory(currentInventory);
+        user.setGold(user.getGold() - convertedAsset.getCost());
         saveUser(user);
         return user;
     }

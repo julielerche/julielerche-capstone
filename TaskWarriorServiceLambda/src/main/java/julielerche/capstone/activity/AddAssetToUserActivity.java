@@ -8,6 +8,7 @@ import julielerche.capstone.dynamodb.AssetDao;
 import julielerche.capstone.dynamodb.UserDao;
 import julielerche.capstone.dynamodb.models.AssetFromTable;
 import julielerche.capstone.dynamodb.models.User;
+import julielerche.capstone.exceptions.InsufficentGoldException;
 import julielerche.capstone.exceptions.InvalidAssetException;
 import julielerche.capstone.models.UserModel;
 import org.apache.logging.log4j.LogManager;
@@ -55,12 +56,15 @@ public class AddAssetToUserActivity {
             throw new InvalidAssetException("Cannot be monster");
         }
         User requestedUser = userDao.loadUser(addAssetToUserRequest.getUserId());
+        try {
+            User updatedUser = userDao.addAssetToInventory(requestedUser, requestedAsset);
+            UserModel model = new UserToModelConverter().userToModel(updatedUser);
+            return AddAssetToUserResult.builder()
+                    .withUser(model)
+                    .build();
+        } catch (InsufficentGoldException e) {
+            throw new RuntimeException("Not enough gold to buy item");
+        }
 
-        User updatedUser = userDao.addAssetToInventory(requestedUser, requestedAsset);
-
-        UserModel model = new UserToModelConverter().userToModel(updatedUser);
-        return AddAssetToUserResult.builder()
-                .withUser(model)
-                .build();
     }
 }
