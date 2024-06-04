@@ -80,4 +80,10 @@ public interface ServiceComponent {
      * @return UpdateTaskActivity
      */
     UpdateTaskActivity provideUpdateTaskActivity();
+
+    /**
+     * Provides the relevant activity.
+     * @return MarkTaskAsCompletedActivity
+     */
+    MarkTaskAsCompletedActivity provideMarkTaskAsCompletedActivity();
 }
