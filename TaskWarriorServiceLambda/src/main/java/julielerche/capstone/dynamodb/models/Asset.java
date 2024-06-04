@@ -88,4 +88,10 @@ public class Asset {
     public void setCurrentHealth(Integer currentHealth) {
         this.currentHealth = currentHealth;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Asset other = (Asset) obj;
+        return this.getName().equals(other.name) && this.getDescription().equals(other.description);
+    }
 }
