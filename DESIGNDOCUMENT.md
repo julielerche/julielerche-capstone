@@ -4,17 +4,17 @@
 I start every day with a to-do list, in the past I have used apps to track my progress but none of them have enough incentive to keep me around for very long versus pen and paper. My goal is to create a gamified to-do list that includes routine tasks that you do every day (dailies), chores that you do every once and a while but repeatedly (chores), and unique one off tasks that disappear once completed (To-Dos). On completion of a task, the user randomly receives an amount of gold that they can use to buy items to restore stamina, health, and mana bars. These bars are used in combat to defeat creatures and level up.
 
 ### User Stories
-1. As a user, I need to create a task and assign it to Dailies, Chores, or To-Dos.
+1. As a user, I need to create a task and assign it to Dailies, Chores, or To-Dos. ✔
 2. As a user, I need to mark a task as completed for the day. 
-3. As a user, I want to update a task to change name or difficulty, or assign to a different category.
-4. As a user, I want to delete tasks that aren't relevant anymore.
-5. As a user, I want to start a new day manually to reset tasks.
+3. As a user, I want to update a task to change name or difficulty, or assign to a different category. 
+4. As a user, I want to delete tasks that aren't relevant anymore. ✔
+5. As a user, I want to start a new day manually to reset tasks. 
 6. As a user, I want to spend gold at the store to get items.
-7. As a user, I want to see items in my inventory with descriptions.
-8. As a user, I want to spend stamina to attack monsters.
+7. As a user, I want to see items in my inventory with descriptions. ✔
+8. As a user, I want to spend stamina to attack monsters. 
 9. As a user, I want to spend mana to use magic. 
 10. As a user, I need to save my data.
-11. As a user, I want to change my display name.
+11. As a user, I want to change my display name. ✔
 
 ### Stretch Goals
 1. As a user, I want to have different attacks to choose from.
@@ -39,6 +39,11 @@ I start every day with a to-do list, in the past I have used apps to track my pr
 |-------------------------------------|-------------|--------------|--------------|------------------------|
 | String (Potion, Monster, Item)      | Number (unique per assetType) | String | String | Number                 |
 *HealthOrCost as a GSI Key allows to getting Monsters of a certain health or items that are affordable to the user.*
+
+### Encounter Table
+| UserId (Partition Key) | creatures              |
+|------------------------|------------------------|
+| String                 | Map <Integer, Monster> | 
 
 # API
 ## API Interactable Objects
@@ -68,6 +73,13 @@ I start every day with a to-do list, in the past I have used apps to track my pr
 
 ### Item Object inherits from Asset
 - AssetType (String) 
+- AssetId (Integer)
+- Name (String)
+- Description (String)
+- Cost (Integer)
+
+### Potion Object inherits from Asset
+- AssetType (String)
 - AssetId (Integer)
 - Name (String)
 - Description (String)
