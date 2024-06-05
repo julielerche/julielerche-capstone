@@ -107,4 +107,10 @@ public interface ServiceComponent {
      * @return CreateNewEncounterActivity
      */
     CreateNewEncounterActivity provideCreateNewEncounterActivity();
+
+    /**
+     * Provides the relevant activity.
+     * @return GetEncounterActivity
+     */
+    GetEncounterActivity provideGetEncounterActivity();
 }
