@@ -6,19 +6,25 @@ import java.util.List;
 
 public class AttackMonsterResult {
     private final List<AssetModel> assets;
+    private final int goldEarned;
 
-    private AttackMonsterResult(List<AssetModel> assets) {
+    private AttackMonsterResult(List<AssetModel> assets, int goldEarned) {
         this.assets = assets;
+        this.goldEarned = goldEarned;
     }
 
     public List<AssetModel> getAssets() {
         return assets;
     }
 
+    public int getGoldEarned() {
+        return goldEarned;
+    }
     @Override
     public String toString() {
         return "AttackMonsterResult{" +
                 "assets=" + assets +
+                "goldEarned=" + goldEarned +
                 '}';
     }
 
@@ -29,14 +35,19 @@ public class AttackMonsterResult {
 
     public static class Builder {
         private List<AssetModel> assets;
+        private int goldEarned;
 
         public AttackMonsterResult.Builder withAssets(List<AssetModel> assets) {
             this.assets = assets;
             return this;
         }
 
+        public AttackMonsterResult.Builder withGoldEarned(int goldEarned) {
+            this.goldEarned = goldEarned;
+            return this;
+        }
         public AttackMonsterResult build() {
-            return new AttackMonsterResult(assets);
+            return new AttackMonsterResult(assets, goldEarned);
         }
     }
 }

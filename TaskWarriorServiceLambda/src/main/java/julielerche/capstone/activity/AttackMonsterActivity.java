@@ -66,14 +66,21 @@ public class AttackMonsterActivity {
             loadedEncounter.getMonsterList().remove(attackedMonster);
         }
         loadedUser.setStamina(loadedUser.getStamina() - loadedAttack.getStaminaNeeded());
+        int goldEarned = 0;
+        if (loadedEncounter.getMonsterList().isEmpty()) {
+            loadedUser.setGold(loadedUser.getGold() + 100);
+            goldEarned = 100;
+        }
         userDao.saveUser(loadedUser);
         encounterDao.saveEncounter(loadedEncounter);
+
         List<AssetModel> monsterModels = new ArrayList<>();
         for (Asset monster : loadedEncounter.getMonsterList()) {
             monsterModels.add(new AssetToModelConverter().assetToModel(monster));
         }
         return AttackMonsterResult.builder()
                 .withAssets(monsterModels)
+                .withGoldEarned(goldEarned)
                 .build();
     }
 }
