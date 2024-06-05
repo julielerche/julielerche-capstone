@@ -538,6 +538,28 @@ Resources:
             Method: put
             Auth:
               Authorizer: 'NONE'
+
+  AttackMonsterLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: !GetAtt AccessRole.Arn
+      CodeUri: TaskWarriorServiceLambda
+      Handler: julielerche.capstone.lambda.AttackMonsterLambda::handleRequest
+      Runtime: java11
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+      Events:
+        TaskWarriorService:
+          Type: Api
+          Properties:
+            Path: /attack
+            Method: put
+            Auth:
+              Authorizer: 'NONE'
   #-----------------------------------------------------
   # DynamoDB Configuration
   #-----------------------------------------------------
@@ -554,6 +576,18 @@ Resources:
           KeyType: "HASH"
       BillingMode: "PAY_PER_REQUEST"
       TableName: "Users"
+
+  EncounterTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "id"
+          KeyType: "HASH"
+      BillingMode: "PAY_PER_REQUEST"
+      TableName: "Encounters"
 
   AssetTable:
     Type: AWS::DynamoDB::Table
