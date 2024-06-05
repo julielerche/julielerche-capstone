@@ -97,4 +97,9 @@ public interface ServiceComponent {
      * @return StartNewDayActivity
      */
     StartNewDayActivity provideStartNewDayActivity();
+    /**
+     * Provides the relevant activity.
+     * @return AttackMonsterActivity
+     */
+    AttackMonsterActivity provideAttackMonsterActivity();
 }
