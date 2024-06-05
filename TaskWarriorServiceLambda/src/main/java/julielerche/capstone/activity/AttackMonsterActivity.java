@@ -60,7 +60,7 @@ public class AttackMonsterActivity {
             throw new InsufficentStatException("Not enough stamina for action");
         }
         Encounter loadedEncounter = encounterDao.loadEncounter(attackMonsterRequest.getUserId());
-        Monster attackedMonster = loadedEncounter.getMonsterList().get(loadedAttack.getTarget()-1);
+        Asset attackedMonster = loadedEncounter.getMonsterList().get(loadedAttack.getTarget()-1);
         attackedMonster.setCurrentHealth(attackedMonster.getCurrentHealth() - loadedAttack.getAttackPower());
         if (attackedMonster.getCurrentHealth() <= 0) {
             loadedEncounter.getMonsterList().remove(attackedMonster);
@@ -69,7 +69,7 @@ public class AttackMonsterActivity {
         userDao.saveUser(loadedUser);
         encounterDao.saveEncounter(loadedEncounter);
         List<AssetModel> monsterModels = new ArrayList<>();
-        for (Monster monster : loadedEncounter.getMonsterList()) {
+        for (Asset monster : loadedEncounter.getMonsterList()) {
             monsterModels.add(new AssetToModelConverter().assetToModel(monster));
         }
         return AttackMonsterResult.builder()

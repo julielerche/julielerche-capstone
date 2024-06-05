@@ -4,15 +4,16 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import julielerche.capstone.dynamodb.models.Asset;
 import julielerche.capstone.dynamodb.models.Monster;
 import julielerche.capstone.exceptions.MonsterSerializationException;
 
 import java.util.List;
 
-public class MonsterListConverter implements DynamoDBTypeConverter<String, List<Monster>> {
+public class MonsterListConverter implements DynamoDBTypeConverter<String, List<Asset>> {
     ObjectMapper mapper = new ObjectMapper();
     @Override
-    public String convert(List<Monster> object) {
+    public String convertList<Asset> object) {
         try {
             return mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
@@ -21,8 +22,8 @@ public class MonsterListConverter implements DynamoDBTypeConverter<String, List<
     }
 
     @Override
-    public List<Monster> unconvert(String object) {
-        TypeReference<List<Monster>> ref = new TypeReference<>() {
+    public List<Asset> unconvert(String object) {
+        TypeReference<List<Asset>> ref = new TypeReference<>() {
         };
         try {
             return mapper.readValue(object, ref);
