@@ -1,7 +1,11 @@
 package julielerche.capstone.dynamodb.models;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
+import julielerche.capstone.converters.MonsterListConverter;
+import julielerche.capstone.converters.TaskConverter;
 
 import java.util.List;
 
@@ -17,7 +21,8 @@ public class Encounter {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    @DynamoDBHashKey(attributeName = "monsterList")
+    @DynamoDBAttribute(attributeName = "monsterList")
+    @DynamoDBTypeConverted(converter = MonsterListConverter.class)
     public List<Monster> getMonsterList() {
         return monsterList;
     }
