@@ -1,7 +1,6 @@
 package julielerche.capstone.models;
 
 import julielerche.capstone.dynamodb.models.Asset;
-import julielerche.capstone.dynamodb.models.Monster;
 
 import java.util.List;
 

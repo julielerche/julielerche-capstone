@@ -8,11 +8,11 @@ import julielerche.capstone.converters.MonsterListConverter;
 
 import java.util.List;
 
-@DynamoDBTable(tableName = "Encounter")
+@DynamoDBTable(tableName = "Encounters")
 public class Encounter {
     String userId;
     List<Asset> monsterList;
-    @DynamoDBHashKey(attributeName = "userId")
+    @DynamoDBHashKey(attributeName = "id")
     public String getUserId() {
         return userId;
     }

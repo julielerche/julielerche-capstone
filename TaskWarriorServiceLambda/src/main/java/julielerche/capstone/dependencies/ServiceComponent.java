@@ -102,4 +102,9 @@ public interface ServiceComponent {
      * @return AttackMonsterActivity
      */
     AttackMonsterActivity provideAttackMonsterActivity();
+    /**
+     * Provides the relevant activity.
+     * @return CreateNewEncounterActivity
+     */
+    CreateNewEncounterActivity provideCreateNewEncounterActivity();
 }

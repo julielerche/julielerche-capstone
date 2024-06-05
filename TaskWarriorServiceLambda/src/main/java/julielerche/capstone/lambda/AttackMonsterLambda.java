@@ -17,15 +17,15 @@ public class AttackMonsterLambda
     public LambdaResponse handleRequest(LambdaRequest<AttackMonsterRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
-                () -> {
-                    AttackMonsterRequest unauthenticatedRequest = input.fromBody(AttackMonsterRequest.class);
-                    return AttackMonsterRequest.builder()
-                            .withUserId(unauthenticatedRequest.getUserId())
-                            .withAttack(unauthenticatedRequest.getAttack())
-                            .build();
-                },
-                (request, serviceComponent) ->
-                        serviceComponent.provideAttackMonsterActivity().handleRequest(request)
+            () -> {
+                AttackMonsterRequest unauthenticatedRequest = input.fromBody(AttackMonsterRequest.class);
+                return AttackMonsterRequest.builder()
+                    .withUserId(unauthenticatedRequest.getUserId())
+                    .withAttack(unauthenticatedRequest.getAttack())
+                    .build();
+            },
+            (request, serviceComponent) ->
+                    serviceComponent.provideAttackMonsterActivity().handleRequest(request)
         );
     }
 

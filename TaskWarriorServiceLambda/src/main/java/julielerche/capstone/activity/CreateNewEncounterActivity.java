@@ -10,16 +10,17 @@ import julielerche.capstone.dynamodb.EncounterDao;
 import julielerche.capstone.dynamodb.models.Asset;
 import julielerche.capstone.dynamodb.models.AssetFromTable;
 import julielerche.capstone.dynamodb.models.Encounter;
-import julielerche.capstone.dynamodb.models.Monster;
 import julielerche.capstone.models.EncounterModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+
 
 /**
  * Implementation of the CreateNewEncounterActivity for the TaskWarriorService's CreateNewEncounter API.
@@ -35,6 +36,7 @@ public class CreateNewEncounterActivity {
      * Instantiates a new CreateNewEncounterActivity object.
      *
      * @param encounterDao EncounterDao to access the asset table.
+     * @param assetDao AssetDao to load monsters from.
      */
     @Inject
     public CreateNewEncounterActivity(EncounterDao encounterDao, AssetDao assetDao) {
@@ -59,15 +61,20 @@ public class CreateNewEncounterActivity {
         List<AssetFromTable> monsterList = assetDao.getAllOfAssetType("MONSTER");
         Random random = new Random();
         int numberOfMonsters = random.nextInt(3);
+        if (numberOfMonsters == 0) {
+            numberOfMonsters = 1;
+        }
         List<AssetFromTable> chosenMonsters = new ArrayList<>();
-        for(int k = 1; k <= numberOfMonsters; k++) {
-            chosenMonsters.add(monsterList.get(random.nextInt(monsterList.size()-1)));
+        for (int k = 1; k == numberOfMonsters; k++) {
+            chosenMonsters.add(monsterList.get(random.nextInt(monsterList.size() - 1)));
         }
 
         List<Asset> convertedList = chosenMonsters.stream()
                 .map(assetFromTable -> new AssetToOtherTypesConverter().convertAssetToAssigned(assetFromTable))
                 .collect(Collectors.toList());
         encounter.setMonsterList(convertedList);
+
+        encounterDao.saveEncounter(encounter);
 
         //converts the asset to the model to be returned
         EncounterModel model = new EncounterToModelConverter().encounterToModel(encounter);

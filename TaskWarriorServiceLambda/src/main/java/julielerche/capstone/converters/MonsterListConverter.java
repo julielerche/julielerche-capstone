@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import julielerche.capstone.dynamodb.models.Asset;
-import julielerche.capstone.dynamodb.models.Monster;
 import julielerche.capstone.exceptions.MonsterSerializationException;
 
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
 public class MonsterListConverter implements DynamoDBTypeConverter<String, List<Asset>> {
     ObjectMapper mapper = new ObjectMapper();
     @Override
-    public String convertList<Asset> object) {
+    public String convert(List<Asset> object) {
         try {
             return mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
