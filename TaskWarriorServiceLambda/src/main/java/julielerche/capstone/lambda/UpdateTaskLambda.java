@@ -23,7 +23,8 @@ public class UpdateTaskLambda
                     .withUserId(unauthenticatedRequest.getUserId())
                     .withTask(unauthenticatedRequest.getTask())
                     .withNewName(unauthenticatedRequest.getNewName())
-                    .withDifficulty(unauthenticatedRequest.getDifficulty())
+                    .withNewDifficulty(unauthenticatedRequest.getNewDifficulty())
+                    .withNewType(unauthenticatedRequest.getNewType())
                     .build();
             },
             (request, serviceComponent) ->

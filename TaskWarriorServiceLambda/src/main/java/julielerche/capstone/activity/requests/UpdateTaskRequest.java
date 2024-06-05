@@ -7,16 +7,17 @@ import julielerche.capstone.dynamodb.models.Task;
 @JsonDeserialize(builder = UpdateTaskRequest.Builder.class)
 public class UpdateTaskRequest {
     private final String userId;
-
     private final Task task;
     private final String newName;
-    private final String difficulty;
+    private final String newDifficulty;
+    private final String newType;
 
-    private UpdateTaskRequest(String userId, Task task, String newName, String difficulty) {
+    private UpdateTaskRequest(String userId, Task task, String newName, String newDifficulty, String newType) {
         this.userId = userId;
         this.task = task;
         this.newName = newName;
-        this.difficulty = difficulty;
+        this.newDifficulty = newDifficulty;
+        this.newType = newType;
     }
 
     public String getUserId() {
@@ -31,8 +32,13 @@ public class UpdateTaskRequest {
         return newName;
     }
 
-    public String getDifficulty() {
-        return difficulty;
+
+    public String getNewDifficulty() {
+        return newDifficulty;
+    }
+
+    public String getNewType() {
+        return newType;
     }
 
     @Override
@@ -41,7 +47,8 @@ public class UpdateTaskRequest {
                 "userId='" + userId + '\'' +
                 "task='" + task + '\'' +
                 "newName='" + newName + '\'' +
-                "difficulty='" + difficulty + '\'' +
+                "newDifficulty='" + newDifficulty + '\'' +
+                "newType='" + newType + '\'' +
                 '}';
     }
 
@@ -55,7 +62,8 @@ public class UpdateTaskRequest {
         private String userId;
         private Task task;
         private String newName;
-        private String difficulty;
+        private String newDifficulty;
+        private String newType;
 
         public UpdateTaskRequest.Builder withUserId(String userId) {
             this.userId = userId;
@@ -70,13 +78,18 @@ public class UpdateTaskRequest {
             this.newName = newName;
             return this;
         }
-        public UpdateTaskRequest.Builder withDifficulty(String difficulty) {
-            this.difficulty = difficulty;
+        public UpdateTaskRequest.Builder withNewDifficulty(String newDifficulty) {
+            this.newDifficulty = newDifficulty;
+            return this;
+        }
+
+        public UpdateTaskRequest.Builder withNewType(String newType) {
+            this.newType = newType;
             return this;
         }
 
         public UpdateTaskRequest build() {
-            return new UpdateTaskRequest(userId, task, newName, difficulty);
+            return new UpdateTaskRequest(userId, task, newName, newDifficulty, newType);
         }
     }
 }
