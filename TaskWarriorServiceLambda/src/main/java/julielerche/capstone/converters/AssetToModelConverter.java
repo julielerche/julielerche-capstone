@@ -22,7 +22,9 @@ public class AssetToModelConverter {
             model.setStartingHealth(asset.getStartingHealth());
         }
         if (asset.getCurrentHealth() != null) {
-            model.setStartingHealth(asset.getCurrentHealth());
+            model.setCurrentHealth(asset.getCurrentHealth());
+        } else {
+            model.setCurrentHealth(asset.getStartingHealth());
         }
         return model;
     }

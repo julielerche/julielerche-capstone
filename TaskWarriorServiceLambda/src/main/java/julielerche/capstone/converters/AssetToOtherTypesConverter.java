@@ -58,6 +58,7 @@ public class AssetToOtherTypesConverter {
         tableAsset.setName(asset.getName());
         tableAsset.setDescription(asset.getDescription());
         tableAsset.setHealthOrCost(asset.getHealthOrCost());
+        tableAsset.setAttackPower(asset.getAttackPower());
         return tableAsset;
     }
 }
