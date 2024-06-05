@@ -4,22 +4,22 @@ import julielerche.capstone.activity.requests.AttackMonsterRequest;
 import julielerche.capstone.activity.results.AttackMonsterResult;
 
 import julielerche.capstone.converters.AssetToModelConverter;
-import julielerche.capstone.converters.UserToModelConverter;
-import julielerche.capstone.dynamodb.AssetDao;
 import julielerche.capstone.dynamodb.EncounterDao;
 import julielerche.capstone.dynamodb.UserDao;
-import julielerche.capstone.dynamodb.models.*;
-import julielerche.capstone.exceptions.InsufficentGoldException;
+import julielerche.capstone.dynamodb.models.Asset;
+import julielerche.capstone.dynamodb.models.Attack;
+import julielerche.capstone.dynamodb.models.Encounter;
+import julielerche.capstone.dynamodb.models.User;
 import julielerche.capstone.exceptions.InsufficentStatException;
-import julielerche.capstone.exceptions.InvalidAssetException;
 import julielerche.capstone.models.AssetModel;
-import julielerche.capstone.models.UserModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
+
 
 /**
  * Implementation of the AttackMonsterActivity for the AssetWarriorService's AddAsset API.
@@ -60,7 +60,7 @@ public class AttackMonsterActivity {
             throw new InsufficentStatException("Not enough stamina for action");
         }
         Encounter loadedEncounter = encounterDao.loadEncounter(attackMonsterRequest.getUserId());
-        Monster attackedMonster = loadedEncounter.getMonsterList().get(loadedAttack.getTarget()-1);
+        Asset attackedMonster = loadedEncounter.getMonsterList().get(loadedAttack.getTarget() - 1);
         attackedMonster.setCurrentHealth(attackedMonster.getCurrentHealth() - loadedAttack.getAttackPower());
         if (attackedMonster.getCurrentHealth() <= 0) {
             loadedEncounter.getMonsterList().remove(attackedMonster);
@@ -69,7 +69,7 @@ public class AttackMonsterActivity {
         userDao.saveUser(loadedUser);
         encounterDao.saveEncounter(loadedEncounter);
         List<AssetModel> monsterModels = new ArrayList<>();
-        for (Monster monster : loadedEncounter.getMonsterList()) {
+        for (Asset monster : loadedEncounter.getMonsterList()) {
             monsterModels.add(new AssetToModelConverter().assetToModel(monster));
         }
         return AttackMonsterResult.builder()

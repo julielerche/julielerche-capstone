@@ -5,6 +5,12 @@ public class Attack {
     private Integer staminaNeeded;
     private Integer target;
 
+    /**
+     * Constructs an attack object with all parameters.
+     * @param attackPower the amount of damage the attack does.
+     * @param staminaNeeded the stamina needed to perform the attack.
+     * @param target the target monster to attack.
+     */
     public Attack(Integer attackPower, Integer staminaNeeded, Integer target) {
         this.attackPower = attackPower;
         this.staminaNeeded = staminaNeeded;

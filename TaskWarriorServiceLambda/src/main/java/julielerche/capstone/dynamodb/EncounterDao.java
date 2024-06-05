@@ -1,8 +1,9 @@
 package julielerche.capstone.dynamodb;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import julielerche.capstone.dynamodb.models.Encounter;
-import julielerche.capstone.dynamodb.models.User;
+
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+
 import julielerche.capstone.exceptions.UserNotFoundException;
 
 import javax.inject.Inject;
@@ -37,10 +38,10 @@ public class EncounterDao {
     }
 
     /**
-     * Loads the encounter from the encounter table in dynamoDB.
+     * Saves the encounter to the encounter table in dynamoDB.
      * @param encounter the encounter to save to the table
      */
     public void saveEncounter(Encounter encounter) {
-        this.mapper.load(Encounter.class, encounter);
+        this.mapper.save(encounter);
     }
 }

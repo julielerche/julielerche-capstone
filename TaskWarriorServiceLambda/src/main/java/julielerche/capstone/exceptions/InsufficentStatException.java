@@ -6,8 +6,9 @@ public class InsufficentStatException extends RuntimeException {
 
     /**
      * Throws the error message.
+     * @param message the message to display
      */
-    public InsufficentStatException(String notEnoughStaminaForAction) {
+    public InsufficentStatException(String message) {
         super();
     }
 }
