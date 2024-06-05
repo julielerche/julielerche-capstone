@@ -92,4 +92,9 @@ public interface ServiceComponent {
      * @return UseItemActivity
      */
     UseItemActivity provideUseItemActivity();
+    /**
+     * Provides the relevant activity.
+     * @return StartNewDayActivity
+     */
+    StartNewDayActivity provideStartNewDayActivity();
 }
