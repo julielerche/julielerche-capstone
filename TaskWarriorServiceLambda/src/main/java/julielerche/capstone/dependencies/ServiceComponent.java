@@ -113,4 +113,9 @@ public interface ServiceComponent {
      * @return GetEncounterActivity
      */
     GetEncounterActivity provideGetEncounterActivity();
+    /**
+     * Provides the relevant activity.
+     * @return SpellMonsterActivity
+     */
+    SpellMonsterActivity provideSpellMonsterActivity();
 }
