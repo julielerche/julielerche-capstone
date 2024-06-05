@@ -6,7 +6,10 @@ import julielerche.capstone.activity.results.SpellMonsterResult;
 import julielerche.capstone.converters.AssetToModelConverter;
 import julielerche.capstone.dynamodb.EncounterDao;
 import julielerche.capstone.dynamodb.UserDao;
-import julielerche.capstone.dynamodb.models.*;
+import julielerche.capstone.dynamodb.models.Asset;
+import julielerche.capstone.dynamodb.models.Encounter;
+import julielerche.capstone.dynamodb.models.Spell;
+import julielerche.capstone.dynamodb.models.User;
 import julielerche.capstone.exceptions.InsufficentStatException;
 import julielerche.capstone.models.AssetModel;
 import org.apache.logging.log4j.LogManager;
@@ -14,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.inject.Inject;
 
@@ -57,10 +61,13 @@ public class SpellMonsterActivity {
             throw new InsufficentStatException("Not enough mana for action");
         }
         Encounter loadedEncounter = encounterDao.loadEncounter(attackMonsterRequest.getUserId());
-        for (Asset attackedMonster : loadedEncounter.getMonsterList()) {
+
+        ListIterator<Asset> iterator = loadedEncounter.getMonsterList().listIterator();
+        while (iterator.hasNext()){
+            Asset attackedMonster = iterator.next();
             attackedMonster.setCurrentHealth(attackedMonster.getCurrentHealth() - loadedSpell.getAttackPower());
             if (attackedMonster.getCurrentHealth() <= 0) {
-                loadedEncounter.getMonsterList().remove(attackedMonster);
+                iterator.remove();
             }
         }
 
