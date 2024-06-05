@@ -137,7 +137,7 @@ public class UpdateTaskActivity {
                         .stringToDifficulty(updateTaskRequest.getNewDifficulty()));
             }
             if (updateTaskRequest.getNewType().equals(existingTask.getTaskType().toString()) ||
-            updateTaskRequest.getNewType() == null) {
+                updateTaskRequest.getNewType() == null) {
                 chosenList.add(existingTask);
             }
             Map<Task, List<Task>> taskListMap = new HashMap<>();
