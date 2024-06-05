@@ -9,7 +9,7 @@ public class StartNewDayResult {
         this.user = user;
     }
 
-    public UserModel StartNewDay() {
+    public UserModel getUser() {
         return user;
     }
 

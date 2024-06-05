@@ -17,14 +17,14 @@ public class StartNewDayLambda
     public LambdaResponse handleRequest(LambdaRequest<StartNewDayRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
-                () -> {
-                    StartNewDayRequest unauthenticatedRequest = input.fromBody(StartNewDayRequest.class);
-                    return StartNewDayRequest.builder()
-                            .withUserId(unauthenticatedRequest.getUserId())
-                            .build();
-                },
-                (request, serviceComponent) ->
-                        serviceComponent.provideStartNewDayActivity().handleRequest(request)
+            () -> {
+                StartNewDayRequest unauthenticatedRequest = input.fromBody(StartNewDayRequest.class);
+                return StartNewDayRequest.builder()
+                    .withUserId(unauthenticatedRequest.getUserId())
+                    .build();
+            },
+            (request, serviceComponent) ->
+                    serviceComponent.provideStartNewDayActivity().handleRequest(request)
         );
     }
 
