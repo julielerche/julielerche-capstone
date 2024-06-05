@@ -17,6 +17,12 @@ public class Attack {
         this.target = target;
     }
 
+    /**
+     * Constructs an attack.
+     */
+    public Attack() {
+    }
+
     public Integer getAttackPower() {
         return attackPower;
     }
