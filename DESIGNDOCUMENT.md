@@ -5,21 +5,21 @@ I start every day with a to-do list, in the past I have used apps to track my pr
 
 ### User Stories
 1. As a user, I need to create a task and assign it to Dailies, Chores, or To-Dos. ✔
-2. As a user, I need to mark a task as completed for the day. 
-3. As a user, I want to update a task to change name or difficulty, or assign to a different category. 
+2. As a user, I need to mark a task as completed for the day. ✔
+3. As a user, I want to update a task to change name or difficulty, or assign to a different category. ✔
 4. As a user, I want to delete tasks that aren't relevant anymore. ✔
-5. As a user, I want to start a new day manually to reset tasks. 
-6. As a user, I want to spend gold at the store to get items.
+5. As a user, I want to start a new day manually to reset tasks. ✔
+6. As a user, I want to spend gold at the store to get items. ✔
 7. As a user, I want to see items in my inventory with descriptions. ✔
-8. As a user, I want to spend stamina to attack monsters. 
-9. As a user, I want to spend mana to use magic. 
-10. As a user, I need to save my data.
+8. As a user, I want to spend stamina to attack monsters. ✔
+9. As a user, I want to spend mana to use magic. ✔
+10. As a user, I need to save my data. ✔
 11. As a user, I want to change my display name. ✔
 
 ### Stretch Goals
 1. As a user, I want to have different attacks to choose from.
 2. As a user, I want multiple spells to choose from.
-3. As a user, I want multiple potions with different effects.
+3. As a user, I want multiple potions with different effects. ✔
 4. As a user, I want to see animations of the attacks.
 5. As a user, I want to gain EXP which allows for more moves.
 6. As a user, I want the day to reset at a set UTC time.
@@ -41,9 +41,9 @@ I start every day with a to-do list, in the past I have used apps to track my pr
 *HealthOrCost as a GSI Key allows to getting Monsters of a certain health or items that are affordable to the user.*
 
 ### Encounter Table
-| UserId (Partition Key) | creatures              |
-|------------------------|------------------------|
-| String                 | Map <Integer, Monster> | 
+| UserId (Partition Key) | monsterList |
+|------------------------|-------------|
+| String                 | List<Asset> | 
 
 # API
 ## API Interactable Objects
@@ -64,6 +64,19 @@ I start every day with a to-do list, in the past I have used apps to track my pr
 - TaskName
 - Difficulty (enum of EASY, MEDIUM, HARD)
 - Completed (Boolean)
+
+### Attack Object
+- AttackPower (int)
+- StaminaNeeded (int)
+- Target (int)
+
+### Spell Object
+- AttackPower (int)
+- ManaNeeded (int)
+
+### Encounter Object
+- UserId (string)
+- List<Asset> MonsterList
 
 ### Asset Object
 - AssetType (String)
@@ -119,11 +132,25 @@ assetId // unique identifier within each Type
 name // String of the name 
 description // String of the description of the asset
 healthOrCost // Integer of either the cost or health of asset
+attackPower // optional int of monster damage
 ```
 ### CreateAssetResponse
 ```
 asset // either an item or monster object that was created from the request
 ```
+## CreateEncounterLambda
+Creates a new encounter in the encounter table with random data.
+### CreateEncounterRequest
+```
+userId // userId from Login to create encounter data for
+```
+### CreateEncounterResponse
+```
+encounter // encounter model object with random monsters
+```
+
+
+# Put Endpoints
 
 ## AddTaskToUserLambda
 Creates a new task and saves it within existing user.
@@ -134,10 +161,9 @@ task // json data of the task
 ```
 ### AddTaskToUserResponse
 ```
-task // the task that was created
+user // the updated user
 ```
 
-# Put Endpoints
 ## AddAssetToUserLambda
 Gets an asset from the table and saves it within existing user.
 ### AddAssetToUserRequest
@@ -155,7 +181,8 @@ user // user with updated inventory
 Updates the user table with new user data.
 ### UpdateUserRequest
 ```
-user // the user object that we need to update in the table
+userId // the user id that we need to update in the table
+name // the new name to update the user with
 ```
 ### UpdateUserResponse
 ```
@@ -168,8 +195,72 @@ Updates the user table with new task data.
 ```
 userId // the user id that we need to update in the table
 task  // the task object that is going to be updated
+newName // optional new name
+newType // optional new type
+newDifficulty // optional new difficulty
 ```
 ### UpdateTaskResponse
+```
+user // the updated user object
+```
+
+## MarkTaskAsCompletedLambda
+Updates the user table with completed task data.
+### MarkTaskAsCompletedRequest
+```
+userId // the user id that we need to update in the table
+task  // the task object that is going to be completed
+```
+### MarkTaskAsCompletedResponse
+```
+task // the updated task object
+gold // gold earned from task being completed
+```
+
+## StartNewDayLambda
+Sets all tasks to not completed. User loses health for uncompleted daily tasks.
+### StartNewDayRequest
+```
+userId // the user id that we need to update in the table
+```
+### StartNewDayResponse
+```
+user // the updated user object
+```
+
+## AttackMonsterLambda
+Uses an attack to attack the current monsters. Needs stamina from user.
+### AttackMonsterRequest
+```
+userId // the user id to get the encounter from dao
+attack // the attack to use on one monster
+```
+### AttackMonsterResponse
+```
+encounter // the encounter model with updated values
+goldEarned // optional gold earned from defeating monsters
+```
+
+## SpellMonsterLambda
+Uses a spell to attack the current monsters. Needs mana from user.
+### SpellMonsterRequest
+```
+userId // the user id to get the encounter from dao
+spell // the spell to use on all monsters
+```
+### SpellMonsterResponse
+```
+encounter // the encounter model with updated values
+goldEarned // optional gold earned from defeating monsters
+```
+
+## MonsterAttackLambda
+Current monsters attack the user, user loses health.
+### MonsterAttackRequest
+```
+userId // the user id to get the encounter from dao
+```
+### MonsterAttackResponse
 ```
 user // the updated user object
 ```
@@ -187,6 +278,17 @@ userId // the userId that is used at the table key.
 user // the user object requested
 ```
 
+## GetEncounterLambda
+Gets the encounter from the encounter table.
+### GetEncounterRequest
+```
+userId // the userId that is used as the table key.
+```
+### GetEncounterResponse
+```
+encounter // the model encounter gotten from the table
+```
+
 ## GetUserInventoryLambda
 Gets the user's inventory from the user table.
 ### GetUserRequest
@@ -198,28 +300,16 @@ userId // the userId that is used at the table key.
 items // List<Assets> of user inventory
 ```
 
-## GetTasksLambda
+## GetUserTasksLambda
 Gets the requested tasks from the user table.
-### GetTasksRequest
+### GetUserTasksRequest
 ```
-userId // the userId that is used at the table key.
+userId // the userId that is used as the table key.
 taskType // enum of DAILY, CHORE, or TODO
 ```
-### GetTasksResponse
+### GetUserTasksResponse
 ```
 tasks // list<tasks> from the table
-```
-
-## GetSpecificAssetLambda
-Gets the requested asset from the asset table.
-### GetSpecificAssetRequest
-```
-assetType // enum of POTION, ITEM, or MONSTER
-assetId // unique id of the asset
-```
-### GetSpecificAssetResponse
-```
-asset // the specific asset that was requested
 ```
 
 ## GetAllOfAssetTypeLambda
@@ -256,6 +346,17 @@ task // json data of the task to delete
 ### DeleteTaskResponse
 ```
 task // the deleted task
+```
+## UseItemLambda
+Uses an item in the user's inventory, deleting the item and using its effect.
+### UseItemRequest
+```
+userId // userId for the table to check
+asset // json data of the asset to use
+```
+### UseItemResponse
+```
+user // the updated user
 ```
 
 ## Sequence Diagram
