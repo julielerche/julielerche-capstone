@@ -6,6 +6,7 @@ import julielerche.capstone.activity.results.UpdateTaskResult;
 import julielerche.capstone.converters.DifficultyConverter;
 import julielerche.capstone.dynamodb.UserDao;
 import julielerche.capstone.dynamodb.models.Task;
+import julielerche.capstone.dynamodb.models.TaskType;
 import julielerche.capstone.dynamodb.models.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -88,16 +89,19 @@ public class UpdateTaskActivity {
         if (updateTaskRequest.getNewType() != null) {
             switch (updateTaskRequest.getNewType()) {
                 case "DAILY":
+                    updatedTask.setTaskType(TaskType.DAILY);
                     chosenList = loadedUser.getDailies();
                     chosenList.add(updatedTask);
                     loadedUser.setDailies(chosenList);
                     break;
                 case "CHORE":
+                    updatedTask.setTaskType(TaskType.CHORE);
                     chosenList = loadedUser.getChores();
                     chosenList.add(updatedTask);
                     loadedUser.setChores(chosenList);
                     break;
                 case "TODO":
+                    updatedTask.setTaskType(TaskType.TODO);
                     chosenList = loadedUser.getToDos();
                     chosenList.add(updatedTask);
                     loadedUser.setToDos(chosenList);
