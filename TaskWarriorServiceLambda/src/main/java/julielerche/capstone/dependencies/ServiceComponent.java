@@ -80,4 +80,47 @@ public interface ServiceComponent {
      * @return UpdateTaskActivity
      */
     UpdateTaskActivity provideUpdateTaskActivity();
+
+    /**
+     * Provides the relevant activity.
+     * @return MarkTaskAsCompletedActivity
+     */
+    MarkTaskAsCompletedActivity provideMarkTaskAsCompletedActivity();
+
+    /**
+     * Provides the relevant activity.
+     * @return UseItemActivity
+     */
+    UseItemActivity provideUseItemActivity();
+    /**
+     * Provides the relevant activity.
+     * @return StartNewDayActivity
+     */
+    StartNewDayActivity provideStartNewDayActivity();
+    /**
+     * Provides the relevant activity.
+     * @return AttackMonsterActivity
+     */
+    AttackMonsterActivity provideAttackMonsterActivity();
+    /**
+     * Provides the relevant activity.
+     * @return CreateNewEncounterActivity
+     */
+    CreateNewEncounterActivity provideCreateNewEncounterActivity();
+
+    /**
+     * Provides the relevant activity.
+     * @return GetEncounterActivity
+     */
+    GetEncounterActivity provideGetEncounterActivity();
+    /**
+     * Provides the relevant activity.
+     * @return SpellMonsterActivity
+     */
+    SpellMonsterActivity provideSpellMonsterActivity();
+    /**
+     * Provides the relevant activity.
+     * @return MonsterTurnActivity
+     */
+    MonsterTurnActivity provideMonsterTurnActivity();
 }
