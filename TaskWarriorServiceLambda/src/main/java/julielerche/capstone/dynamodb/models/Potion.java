@@ -42,4 +42,10 @@ public class Potion extends Asset {
     public void setCost(Integer cost) {
         this.cost = cost;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Potion other = (Potion) obj;
+        return this.getName().equals(other.name) && this.getDescription().equals(other.description);
+    }
 }

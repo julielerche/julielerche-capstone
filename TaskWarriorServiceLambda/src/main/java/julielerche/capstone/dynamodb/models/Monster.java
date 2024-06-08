@@ -64,4 +64,10 @@ public class Monster extends Asset {
     public void setCurrentHealth(Integer currentHealth) {
         this.currentHealth = currentHealth;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Monster other = (Monster) obj;
+        return this.getName().equals(other.name) && this.getDescription().equals(other.description);
+    }
 }
