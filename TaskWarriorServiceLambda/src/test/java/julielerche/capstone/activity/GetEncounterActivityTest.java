@@ -1,27 +1,21 @@
 package julielerche.capstone.activity;
 
-import julielerche.capstone.activity.requests.CreateAssetRequest;
 import julielerche.capstone.activity.requests.GetEncounterRequest;
 import julielerche.capstone.activity.results.GetEncounterResult;
 import julielerche.capstone.converters.AssetToOtherTypesConverter;
-import julielerche.capstone.dynamodb.AssetDao;
 import julielerche.capstone.dynamodb.EncounterDao;
-import julielerche.capstone.dynamodb.UserDao;
-import julielerche.capstone.dynamodb.models.Asset;
 import julielerche.capstone.dynamodb.models.AssetFromTable;
 import julielerche.capstone.dynamodb.models.Encounter;
-import julielerche.capstone.dynamodb.models.Monster;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.testng.AssertJUnit;
 
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
-import static org.testng.AssertJUnit.*;
+import static org.testng.AssertJUnit.assertEquals;
+
 
 public class GetEncounterActivityTest {
     @Mock
@@ -36,7 +30,7 @@ public class GetEncounterActivityTest {
     }
 
     @Test
-    public void handleRequest_givenUserId_createsNewEncounter() {
+    public void handleRequest_givenUserId_returnsCorrectEncounter() {
         //given
         AssetFromTable asset = new AssetFromTable();
         asset.setName("Dust Bunny");
@@ -60,6 +54,6 @@ public class GetEncounterActivityTest {
         //then
 
         assertEquals("one", result.getEncounter().getUserId());
-        assertFalse(result.getEncounter().getMonsterList().isEmpty());
+        assertEquals(result.getEncounter().getMonsterList().get(0).getName(), asset.getName());
     }
 }
