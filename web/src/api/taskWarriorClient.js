@@ -83,6 +83,29 @@ export default class TaskWarriorClient extends BindingClass {
             this.handleError(error, errorCallback)
         }
     }
+
+
+    /**
+     * Create a new user owned by the current user.
+     * @param name The name of the user to create.
+     * @param errorCallback (Optional) A function to execute if the call fails.
+     * @returns The user that has been created.
+     */
+    async createUser(name, errorCallback) {
+        try {
+            const token = await this.getTokenOrThrow("Only authenticated users can create playlists.");
+            const response = await this.axiosClient.post(`playlists`, {
+                name: name,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data.playlist;
+        } catch (error) {
+            this.handleError(error, errorCallback)
+        }
+    }
     /**
      * Helper method to log the error and run any error functions.
      * @param error The error received from the server.
