@@ -27,6 +27,8 @@ module.exports = {
     viewPlaylist: path.resolve(__dirname, 'src', 'pages', 'viewPlaylist.js'),
     searchPlaylists: path.resolve(__dirname, 'src', 'pages', 'searchPlaylists.js'),
     viewUser: path.resolve(__dirname, 'src', 'pages', 'viewUser.js'),
+    createUser: path.resolve(__dirname, 'src', 'pages', 'createUser.js'),
+    index: path.resolve(__dirname, 'src', 'pages', 'index.js')
   },
   output: {
     path: path.resolve(__dirname, 'build', 'assets'),
