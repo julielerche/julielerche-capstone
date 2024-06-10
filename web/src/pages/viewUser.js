@@ -1,4 +1,4 @@
-import MusicPlaylistClient from '../api/musicPlaylistClient';
+import TaskWarriorClient from '../api/taskWarriorClient';
 import Header from '../components/header';
 import BindingClass from "../util/bindingClass";
 import DataStore from "../util/DataStore";
@@ -8,10 +8,9 @@ import DataStore from "../util/DataStore";
 class ViewUser extends BindingClass {
     constructor() {
         super();
-        this.bindClassMethods(['clientLoaded', 'mount', 'addPlaylistToPage', 'addSongsToPage', 'addSong'], this);
+        this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage'], this);
         this.dataStore = new DataStore();
-        this.dataStore.addChangeListener(this.addPlaylistToPage);
-        this.dataStore.addChangeListener(this.addSongsToPage);
+        this.dataStore.addChangeListener(this.addUserToPage);
         this.header = new Header(this.dataStore);
         console.log("viewUser constructor");
     }
@@ -22,26 +21,33 @@ class ViewUser extends BindingClass {
     async clientLoaded() {
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get('id');
-//        document.getElementById('playlist-name').innerText = "Loading Playlist ...";
-//        const playlist = await this.client.getPlaylist(playlistId);
-//        this.dataStore.set('playlist', playlist);
-//        document.getElementById('songs').innerText = "(loading songs...)";
-//        const songs = await this.client.getPlaylistSongs(playlistId);
-//        this.dataStore.set('songs', songs);
+        document.getElementById('user-name').innerText = "loading user ...";
         const user = await this.client.getUser(userId);
         this.dataStore.set('user', user);
     }
 
     /**
-     * Add the header to the page and load the MusicPlaylistClient.
+     * Add the header to the page and load the TaskWarriorClient.
      */
     mount() {
         this.header.addHeaderToPage();
 
-        this.client = new MusicPlaylistClient();
+        this.client = new TaskWarriorClient();
         this.clientLoaded();
     }
 
+    /**
+    * When user is updated in the datastore, updates user metadata on page
+    */
+    addUserToPage() {
+        const user = this.dataStore.get('user');
+        if (user == null) {
+            return;
+         }
+        document.getElementById('user-name').innerText = user.name;
+
+    }
+}
 /**
  * Main method to run when the page contents have loaded.
  */
