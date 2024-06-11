@@ -8,9 +8,10 @@ import DataStore from "../util/DataStore";
 class ViewEncounter extends BindingClass {
     constructor() {
         super();
-        this.bindClassMethods(['clientLoaded', 'mount', 'addEncounterToPage'], this);
+        this.bindClassMethods(['clientLoaded', 'mount', 'addEncounterToPage', 'createNewEncounterSubmit'], this);
         this.dataStore = new DataStore();
         this.dataStore.addChangeListener(this.addEncounterToPage);
+        this.dataStore.addChangeListener(this.createNewEncounterSubmit);
         this.header = new Header(this.dataStore);
         console.log("viewEncounter constructor");
     }
@@ -57,6 +58,28 @@ class ViewEncounter extends BindingClass {
         }
         document.getElementById('encounter-monsters').innerHTML = encounterHTML;
     }
+
+     /**
+* When user is updated in the datastore, updates user metadata on page
+*/
+async createNewEncounterSubmit(env) {
+    evt.preventDefault();
+
+    const errorMessageDisplay = document.getElementById('error-message');
+    errorMessageDisplay.innerText = ``;
+    errorMessageDisplay.classList.add('hidden');
+
+    const createButton = document.getElementById('createEncounter');
+    const origButtonText = createButton.innerText;
+    createButton.innerText = 'Loading...';
+
+    const encounter = await this.client.createEncounter((error) => {
+        createButton.innerText = origButtonText;
+        errorMessageDisplay.innerText = `Error: ${error.message}`;
+        errorMessageDisplay.classList.remove('hidden');
+    });
+    this.dataStore.set('encounter', encounter);
+}
 }
     /**
  * Main method to run when the page contents have loaded.

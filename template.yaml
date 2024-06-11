@@ -598,8 +598,6 @@ Resources:
           Properties:
             Path: /encounter
             Method: post
-            Auth:
-              Authorizer: 'NONE'
 
   GetEncounterLambda:
     Type: AWS::Serverless::Function

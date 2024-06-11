@@ -15,7 +15,7 @@ export default class TaskWarriorClient extends BindingClass {
     constructor(props = {}) {
         super();
 
-        const methodsToBind = ['clientLoaded', 'getIdentity', 'login', 'logout', 'getUser', 'getStore', 'createUser', 'getUserTasks'];
+        const methodsToBind = ['clientLoaded', 'getIdentity', 'login', 'logout', 'getUser', 'getStore', 'createUser', 'getUserTasks', 'getEncounter', 'createEncounter'];
         this.bindClassMethods(methodsToBind, this);
 
         this.authenticator = new Authenticator();;
@@ -102,6 +102,23 @@ export default class TaskWarriorClient extends BindingClass {
             this.handleError(error, errorCallback)
         }
     }
+
+            /**
+* Gets the user for the given id
+*/
+async createEncounter(errorCallback) {
+    try {
+        const token = await this.getTokenOrThrow("Only authenticated users can get encounters.");
+        const response = await this.axiosClient.post(`encounter`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data.encounter;
+    } catch (error) {
+        this.handleError(error, errorCallback)
+    }
+}
         /**
 * Gets the user tasks for the given id and type
 */
