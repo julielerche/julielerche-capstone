@@ -87,23 +87,41 @@ export default class TaskWarriorClient extends BindingClass {
         }
     }
         /**
-* Gets the user tasks for the given id and type
+* Gets the user for the given id
 */
-    async getUserTasks(taskType, errorCallback) {
+    async getEncounter(errorCallback) {
         try {
-            const token = await this.getTokenOrThrow("Only authenticated users can get tasks.");
-            const response = await this.axiosClient.get(`users/task`, {
-                taskType: taskType,
-            }, {
+            const token = await this.getTokenOrThrow("Only authenticated users can get encounters.");
+            const response = await this.axiosClient.get(`encounter`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            return response.data.taskList;
+            return response.data.user;
         } catch (error) {
             this.handleError(error, errorCallback)
         }
     }
+        /**
+* Gets the user tasks for the given id and type
+*/
+async getUserTasks(taskType, errorCallback) {
+    try {
+        console.log("Recieved task type of: %s", taskType);
+        const token = await this.getTokenOrThrow("Only authenticated users can create users.");
+        const response = await this.axiosClient.get(`users/task`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            body: {
+            taskType: taskType
+            }
+        });
+        return response.data.taskList;
+    } catch (error) {
+        this.handleError(error, errorCallback)
+    }
+}
 /**
     * Gets the store for the given assets
     */

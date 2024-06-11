@@ -8,11 +8,13 @@ import DataStore from "../util/DataStore";
 class ViewUser extends BindingClass {
     constructor() {
         super();
-        this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage'], this);
+        this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage', 'addInventoryToPage', 'addStatsToPage'], this);
         this.dataStore = new DataStore();
         this.dataStore.addChangeListener(this.addUserToPage);
         //this.dataStore.addChangeListener(this.addStoreToPage);
         this.dataStore.addChangeListener(this.addTasksToPage);
+        this.dataStore.addChangeListener(this.addInventoryToPage);
+        this.dataStore.addChangeListener(this.addStatsToPage);
         this.header = new Header(this.dataStore);
         console.log("viewUser constructor");
     }
@@ -23,9 +25,9 @@ class ViewUser extends BindingClass {
     async clientLoaded() {
         document.getElementById('user-name').innerText = "loading user ...";
         const user = await this.client.getUser();
-        const dailies = await this.client.getUserTasks("DAILY");
+       // const dailies = await this.client.getUserTasks("DAILY");
         this.dataStore.set('user', user);
-        this.dataStore.set('dailies', dailies);
+        //this.dataStore.set('dailies', dailies);
         //this.dataStore.set('store', store);
     }
 
@@ -48,14 +50,66 @@ class ViewUser extends BindingClass {
             return;
          }
         document.getElementById('user-name').innerText = user.displayName;
+    }
+
+    /**
+     * adds user inventory to the page tab.
+     */
+    addInventoryToPage() {
+        const user = this.dataStore.get('user');
+        const inventory = user.inventory;
+        if (inventory == null) {
+            return;
+        }
+        
+        let inventoryHTML = '';
+        let asset;
+        for (asset of inventory) {
+            inventoryHTML += `
+                <li class="asset">
+                    <span class="name">${asset.name}</span>
+                    <span class="description">${asset.description}</span>
+                </li>
+            `;
+        }
+        document.getElementById('user-inventory').innerHTML = inventoryHTML;
 
     }
+
+        /**
+     * adds user stats to the progress bars.
+     */
+        addStatsToPage() {
+            const user = this.dataStore.get('user');
+            const health = user.health;
+            if (health == null) {
+                return;
+            }
+            document.getElementsByClassName('progress-bar bg-danger').item(0).setAttribute('aria-valuenow',health);
+            document.getElementsByClassName('progress-bar bg-danger').item(0).setAttribute('style','width:'+Number(health)+'%');
+    
+            const mana = user.mana;
+            if (mana == null) {
+                return;
+            }
+            document.getElementsByClassName('progress-bar bg-info').item(0).setAttribute('aria-valuenow',mana);
+            document.getElementsByClassName('progress-bar bg-info').item(0).setAttribute('style','width:'+Number(mana)+'%');
+    
+            const stamina = user.stamina;
+            if (stamina == null) {
+                return;
+            }
+            document.getElementsByClassName('progress-bar bg-success').item(0).setAttribute('aria-valuenow',stamina);
+            document.getElementsByClassName('progress-bar bg-success').item(0).setAttribute('style','width:'+Number(stamina)+'%');
+    
+        }
 
     /**
      * Gets user tasks in each tab
      */
     addTasksToPage() {
-        const dailies = this.dataStore.get('dailies');
+        const user = this.dataStore.get('user');
+        const dailies = user.dailies;
         if (dailies == null) {
             return;
         }
@@ -71,6 +125,40 @@ class ViewUser extends BindingClass {
             `;
         }
         document.getElementById('daily-tasks').innerHTML = taskHTML;
+
+        const chores = user.chores;
+        if (chores == null) {
+            return;
+        }
+
+        let choreHTML = '';
+        let chore;
+        for (chore of chores) {
+            choreHTML += `
+                <li class="task">
+                    <span class="taskName">${chore.taskName}</span>
+                    <span class="difficulty">${chore.difficulty}</span>
+                </li>
+            `;
+        }
+        document.getElementById('chore-tasks').innerHTML = choreHTML;
+
+        const todos = user.todos;
+        if (todos == null) {
+            return;
+        }
+
+        let todoHTML = '';
+        let todo;
+        for (todo of todos) {
+            todoHTML += `
+                <li class="task">
+                    <span class="taskName">${todo.taskName}</span>
+                    <span class="difficulty">${todo.difficulty}</span>
+                </li>
+            `;
+        }
+        document.getElementById('todo-tasks').innerHTML = todoHTML;
     }
 /**
     * When store button is pushed, adds store to page

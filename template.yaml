@@ -620,8 +620,6 @@ Resources:
           Properties:
             Path: /encounter
             Method: get
-            Auth:
-              Authorizer: 'NONE'
 
   MonsterTurnLambda:
     Type: AWS::Serverless::Function
