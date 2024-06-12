@@ -6,7 +6,7 @@ import DataStore from '../util/DataStore';
 /**
  * Logic needed for the create playlist page of the website.
  */
-class CreatePlaylist extends BindingClass {
+class CreateUser extends BindingClass {
     constructor() {
         super();
         this.bindClassMethods(['mount', 'submit', 'redirectToViewUser'], this);
@@ -54,7 +54,7 @@ class CreatePlaylist extends BindingClass {
     /**
      * When the playlist is updated in the datastore, redirect to the view playlist page.
      */
-    redirectToViewPlaylist() {
+    redirectToViewUser() {
         const user = this.dataStore.get('user');
         if (user != null) {
             window.location.href = 'users/${user.id}';

@@ -15,7 +15,7 @@ export default class TaskWarriorClient extends BindingClass {
     constructor(props = {}) {
         super();
 
-        const methodsToBind = ['clientLoaded', 'getIdentity', 'login', 'logout', 'getUser'];
+        const methodsToBind = ['clientLoaded', 'getIdentity', 'login', 'logout', 'getUser', 'getStore', 'createUser', 'getUserTasks', 'getEncounter', 'createEncounter'];
         this.bindClassMethods(methodsToBind, this);
 
         this.authenticator = new Authenticator();;
@@ -56,12 +56,10 @@ export default class TaskWarriorClient extends BindingClass {
 
     async login() {
         this.authenticator.login();
-        window.location.href = "user.html";
     }
 
     async logout() {
         this.authenticator.logout();
-        window.location.href = "index.html";
     }
 
     async getTokenOrThrow(unauthenticatedErrorMessage) {
@@ -75,10 +73,82 @@ export default class TaskWarriorClient extends BindingClass {
     /**
     * Gets the user for the given id
     */
-    async getUser(id, errorCallback) {
+    async getUser(errorCallback) {
         try {
-            const response = await this.axiosClient.get('users/${id}');
+            const token = await this.getTokenOrThrow("Only authenticated users can get users.");
+            const response = await this.axiosClient.get(`users`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             return response.data.user;
+        } catch (error) {
+            this.handleError(error, errorCallback)
+        }
+    }
+        /**
+* Gets the user for the given id
+*/
+async getEncounter(errorCallback) {
+    try {
+        const token = await this.getTokenOrThrow("Only authenticated users can get encounters.");
+        const response = await this.axiosClient.get(`encounter`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data.user;
+    } catch (error) {
+        this.handleError(error, errorCallback)
+    }
+}
+
+            /**
+* Gets the user for the given id
+*/
+async createEncounter(errorCallback) {
+    try {
+        const token = await this.getTokenOrThrow("Only authenticated users can get encounters.");
+        const response = await this.axiosClient.post(`encounter`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data.encounter;
+    } catch (error) {
+        this.handleError(error, errorCallback)
+    }
+}
+        /**
+* Gets the user tasks for the given id and type
+*/
+async getUserTasks(taskType, errorCallback) {
+    try {
+        console.log("Recieved task type of: %s", taskType);
+        const token = await this.getTokenOrThrow("Only authenticated users can create users.");
+        const response = await this.axiosClient.get(`users/task`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            body: {
+            taskType: taskType
+            }
+        });
+        return response.data.taskList;
+    } catch (error) {
+        this.handleError(error, errorCallback)
+    }
+}
+/**
+    * Gets the store for the given assets
+    */
+    async getStore(assetType1, assetType2, errorCallback) {
+        try {
+            const response = await this.axiosClient.get('assets', {
+                assetType1: assetType1,
+                assetType2: assetType2,
+                });
+            return response.data.assets;
         } catch (error) {
             this.handleError(error, errorCallback)
         }
@@ -93,15 +163,15 @@ export default class TaskWarriorClient extends BindingClass {
      */
     async createUser(name, errorCallback) {
         try {
-            const token = await this.getTokenOrThrow("Only authenticated users can create playlists.");
-            const response = await this.axiosClient.post(`playlists`, {
+            const token = await this.getTokenOrThrow("Only authenticated users can create users.");
+            const response = await this.axiosClient.post(`users`, {
                 name: name,
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            return response.data.playlist;
+            return response.data.user;
         } catch (error) {
             this.handleError(error, errorCallback)
         }

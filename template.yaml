@@ -236,10 +236,8 @@ Resources:
         TaskWarriorService:
           Type: Api
           Properties:
-            Path: /users/{id}
+            Path: /users/
             Method: get
-            Auth:
-              Authorizer: 'NONE'
 
   CreateUserLambda:
     Type: AWS::Serverless::Function
@@ -260,8 +258,6 @@ Resources:
           Properties:
             Path: /users
             Method: post
-            Auth:
-              Authorizer: 'NONE'
 
   MarkTaskAsCompletedLambda:
     Type: AWS::Serverless::Function
@@ -602,8 +598,6 @@ Resources:
           Properties:
             Path: /encounter
             Method: post
-            Auth:
-              Authorizer: 'NONE'
 
   GetEncounterLambda:
     Type: AWS::Serverless::Function
@@ -624,8 +618,6 @@ Resources:
           Properties:
             Path: /encounter
             Method: get
-            Auth:
-              Authorizer: 'NONE'
 
   MonsterTurnLambda:
     Type: AWS::Serverless::Function

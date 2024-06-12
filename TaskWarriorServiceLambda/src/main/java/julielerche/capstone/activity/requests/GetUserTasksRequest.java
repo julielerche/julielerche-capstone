@@ -12,6 +12,10 @@ public class GetUserTasksRequest {
         this.userId = userId;
         this.taskType = taskType;
     }
+    private GetUserTasksRequest(String taskType) {
+        this.taskType = taskType;
+        this.userId = null;
+    }
 
     public String getUserId() {
         return userId;
