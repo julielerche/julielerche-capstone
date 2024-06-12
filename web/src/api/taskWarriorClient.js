@@ -176,6 +176,28 @@ async getUserTasks(taskType, errorCallback) {
             this.handleError(error, errorCallback)
         }
     }
+
+        /**
+     * removes a task from a list.
+     * @param task The task in the list to remove
+     * @returns the updated user.
+     */
+        async removeTaskFromList(task, errorCallback) {
+            try {
+                const token = await this.getTokenOrThrow("Only authenticated users can remove a task from a tasklist.");
+                const response = await this.axiosClient.delete(`/users/task`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                      },
+                      data: {
+                        task: task,
+                      }
+                    });
+                return response.data.user;
+            } catch (error) {
+                this.handleError(error, errorCallback)
+            }
+        }
     /**
      * Helper method to log the error and run any error functions.
      * @param error The error received from the server.
