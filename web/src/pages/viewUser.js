@@ -62,16 +62,28 @@ class ViewUser extends BindingClass {
             return;
         }
         
-        let inventoryHTML = '';
+        let inventoryHTML = '<div class="row">';
+        let assetCounter = 0;
         let asset;
         for (asset of inventory) {
+            assetCounter++;
             inventoryHTML += `
-                <li class="asset">
-                    <span class="name">${asset.name}</span>
-                    <span class="description">${asset.description}</span>
-                </li>
+                <div class="card" style="width: 12rem;">
+                    <img class="card-img-top" src="sprites/${asset.name}.png" alt="Card image cap">
+                    <div class="card-body">
+                    <h5 class="card-title">${asset.name}</h5>
+                    <p class="card-text">${asset.description}</p>
+                    <a href="#" class="btn btn-primary">Use Item</a>
+                    </div>
+                    </div>
             `;
+            if (assetCounter % 2 == 0) {
+                inventoryHTML += `</div>
+                <div class="row">
+                `;
+            }
         }
+        inventoryHTML += `</div>`;
         document.getElementById('user-inventory').innerHTML = inventoryHTML;
 
     }
@@ -118,10 +130,20 @@ class ViewUser extends BindingClass {
         let task;
         for (task of dailies) {
             taskHTML += `
-                <li class="task">
-                    <span class="taskName">${task.taskName}</span>
-                    <span class="difficulty">${task.difficulty}</span>
-                </li>
+            <div class="card">
+                <div class="container">
+  <div class="row">
+    <div class="col">
+    ${task.taskName}
+    </div>
+    <div class="col col-lg-2">
+      ★☆☆
+    </div>
+    <div class="col col-lg-2">
+      ✔
+    </div>
+  </div>
+</div></div>
             `;
         }
         document.getElementById('daily-tasks').innerHTML = taskHTML;
@@ -133,17 +155,26 @@ class ViewUser extends BindingClass {
 
         let choreHTML = '';
         let chore;
+        choreHTML += `<div class="panel-group">
+                     <div class="panel panel-default">`;
         for (chore of chores) {
             choreHTML += `
-                <li class="task">
-                    <span class="taskName">${chore.taskName}</span>
-                    <span class="difficulty">${chore.difficulty}</span>
-                </li>
+                       <div class="panel-heading">
+                           <h4 class="panel-title">
+                             <a data-toggle="collapse" href="#collapse1">${task.taskName}</a>
+                           </h4>
+                       </div>
             `;
         }
+        choreHTML += `<div id="collapse1" class="panel-collapse collapse">
+                    <div class="panel-body">Panel Body</div>
+                   <div class="panel-footer">Panel Footer</div>
+                    </div>
+              </div>
+            </div>`;
         document.getElementById('chore-tasks').innerHTML = choreHTML;
 
-        const todos = user.todos;
+        const todos = user.toDos;
         if (todos == null) {
             return;
         }
@@ -151,11 +182,30 @@ class ViewUser extends BindingClass {
         let todoHTML = '';
         let todo;
         for (todo of todos) {
-            todoHTML += `
-                <li class="task">
-                    <span class="taskName">${todo.taskName}</span>
-                    <span class="difficulty">${todo.difficulty}</span>
-                </li>
+            todoHTML += `<p>
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            
+                <div class="card-body">
+                    <h5>${todo.taskName}
+                    `;
+            if (todo.difficulty == "EASY") {
+                todoHTML += `
+                ★☆☆`;
+            }
+            if (todo.completed) {
+                todoHTML += `
+                ✔`;
+            }
+            todoHTML += ` </h5>
+                    
+                    </div>
+                </a>
+                </p>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                    </div>
+             </div>
             `;
         }
         document.getElementById('todo-tasks').innerHTML = todoHTML;

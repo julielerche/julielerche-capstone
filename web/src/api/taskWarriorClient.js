@@ -97,7 +97,7 @@ async getEncounter(errorCallback) {
                 Authorization: `Bearer ${token}`
             }
         });
-        return response.data.user;
+        return response.data.encounter;
     } catch (error) {
         this.handleError(error, errorCallback)
     }
