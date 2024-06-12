@@ -47,6 +47,11 @@
     color: var(--secondary-color);
 }
 
+img {
+image-rendering: pixelated;
+image-rendering: -moz-crisp-edges;
+image-rendering: crisp-edges;
+}
 .card {
     color: var(--primary-color);
     background-color: var(--secondary-color);
