@@ -256,7 +256,7 @@ Resources:
         TaskWarriorService:
           Type: Api
           Properties:
-            Path: /users
+            Path: /users/
             Method: post
 
   MarkTaskAsCompletedLambda:
@@ -320,7 +320,7 @@ Resources:
         TaskWarriorService:
           Type: Api
           Properties:
-            Path: /users
+            Path: /users/
             Method: put
             Auth:
               Authorizer: 'NONE'
