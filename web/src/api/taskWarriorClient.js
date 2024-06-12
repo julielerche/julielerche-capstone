@@ -89,19 +89,19 @@ export default class TaskWarriorClient extends BindingClass {
         /**
 * Gets the user for the given id
 */
-    async getEncounter(errorCallback) {
-        try {
-            const token = await this.getTokenOrThrow("Only authenticated users can get encounters.");
-            const response = await this.axiosClient.get(`encounter`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            return response.data.user;
-        } catch (error) {
-            this.handleError(error, errorCallback)
-        }
+async getEncounter(errorCallback) {
+    try {
+        const token = await this.getTokenOrThrow("Only authenticated users can get encounters.");
+        const response = await this.axiosClient.get(`encounter`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data.user;
+    } catch (error) {
+        this.handleError(error, errorCallback)
     }
+}
 
             /**
 * Gets the user for the given id

@@ -8,7 +8,7 @@ import DataStore from "../util/DataStore";
 class ViewEncounter extends BindingClass {
     constructor() {
         super();
-        this.bindClassMethods(['clientLoaded', 'mount', 'addEncounterToPage', 'createNewEncounterSubmit'], this);
+        this.bindClassMethods(['clientLoaded', 'mount', 'addEncounterToPage'], this);
         this.dataStore = new DataStore();
         this.dataStore.addChangeListener(this.addEncounterToPage);
         this.dataStore.addChangeListener(this.createNewEncounterSubmit);
@@ -28,7 +28,6 @@ class ViewEncounter extends BindingClass {
      * Add the header to the page and load the TaskWarriorClient.
      */
     mount() {
-        this.header.addHeaderToPage();
 
         this.client = new TaskWarriorClient();
         this.clientLoaded();
@@ -47,7 +46,7 @@ class ViewEncounter extends BindingClass {
         let monster;
         for (monster of monsterList) {
             encounterHTML += `
-                <li class="assetMonster">
+                <li class="monster">
                     <span class="name">${monster.name}</span>
                     <span class="description">${monster.description}</span>
                     <span class="attackPower">${monster.attackPower}</span>
@@ -62,24 +61,24 @@ class ViewEncounter extends BindingClass {
      /**
 * When user is updated in the datastore, updates user metadata on page
 */
-async createNewEncounterSubmit(env) {
-    evt.preventDefault();
+// async createNewEncounterSubmit(evt) {
+//     evt.preventDefault();
 
-    const errorMessageDisplay = document.getElementById('error-message');
-    errorMessageDisplay.innerText = ``;
-    errorMessageDisplay.classList.add('hidden');
+//     const errorMessageDisplay = document.getElementById('error-message');
+//     errorMessageDisplay.innerText = ``;
+//     errorMessageDisplay.classList.add('hidden');
 
-    const createButton = document.getElementById('createEncounter');
-    const origButtonText = createButton.innerText;
-    createButton.innerText = 'Loading...';
+//     const createButton = document.getElementById('createEncounter');
+//     const origButtonText = createButton.innerText;
+//     createButton.innerText = 'Loading...';
 
-    const encounter = await this.client.createEncounter((error) => {
-        createButton.innerText = origButtonText;
-        errorMessageDisplay.innerText = `Error: ${error.message}`;
-        errorMessageDisplay.classList.remove('hidden');
-    });
-    this.dataStore.set('encounter', encounter);
-}
+//     const encounter = await this.client.createEncounter((error) => {
+//         createButton.innerText = origButtonText;
+//         errorMessageDisplay.innerText = `Error: ${error.message}`;
+//         errorMessageDisplay.classList.remove('hidden');
+//     });
+//     this.dataStore.set('encounter', encounter);
+// }
 }
     /**
  * Main method to run when the page contents have loaded.
