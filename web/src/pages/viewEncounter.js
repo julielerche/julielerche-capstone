@@ -12,7 +12,7 @@ class ViewEncounter extends BindingClass {
         this.dataStore = new DataStore();
         this.dataStore.addChangeListener(this.addEncounterToPage);
         this.dataStore.addChangeListener(this.addMonsterTargetsToPage);
-        //this.dataStore.addChangeListener(this.createNewEncounterSubmit);
+        
         this.header = new Header(this.dataStore);
         console.log("viewEncounter constructor");
     }
@@ -23,7 +23,7 @@ class ViewEncounter extends BindingClass {
     async clientLoaded() {
         const encounter = await this.client.getEncounter();
         this.dataStore.set('encounter', encounter);
-        this.dataStore.set("monsterList", encounter.monsterList);
+        this.dataStore.set('monsterList', encounter.monsterList);
     }
 
     /**
@@ -38,11 +38,10 @@ class ViewEncounter extends BindingClass {
     }
 
     addMonsterTargetsToPage(){
-        const encounter = this.dataStore.get('encounter');
-        if (encounter == null) {
+        const monsterList = this.dataStore.get('monsterList');
+        if (monsterList == null) {
             return;
         }
-        let monsterList = encounter.monsterList;
         let optionHTML = `<div class="form-group">
                             <label for="exampleFormControlSelect1">Select Monster</label>
                             <select class="form-control" id="exampleFormControlSelect1">`;
@@ -50,6 +49,7 @@ class ViewEncounter extends BindingClass {
         let counter = 1;
         for (monster of monsterList) {
             optionHTML += `<option value="${counter}">${monster.name}</option>`;
+            counter++;
         }
         optionHTML += `</select>
                          </div>`;
@@ -60,12 +60,10 @@ class ViewEncounter extends BindingClass {
 * When encounterr is updated in the datastore, updates user metadata on page
 */
     addEncounterToPage() {
-        const encounter = this.dataStore.get('encounter');
-        if (encounter == null) {
+        const monsterList = this.dataStore.get('monsterList');
+        if (monsterList == null) {
             return;
         }
-        let monsterList = encounter.monsterList;
-        
         let encounterHTML = '';
         let monster;
         for (monster of monsterList) {
@@ -117,7 +115,8 @@ async createNewEncounterSubmit(evt) {
         errorMessageDisplay.innerText = `Error: ${error.message}`;
         errorMessageDisplay.classList.remove('hidden');
     });
-    this.dataStore.set('encounter', encounter);
+    this.dataStore.set('monsterList', encounter.monsterList);
+    createButton.innerText = origButtonText;
 }
 
      /**
@@ -157,12 +156,12 @@ async spellMonster(evt) {
     const origButtonText = spellButton.innerText;
     spellButton.innerText = 'Loading...';
 
-    const monsterList = await this.client.spellMonster((error) => {
+    const response = await this.client.spellMonster((error) => {
         spellButton.innerText = origButtonText;
         errorMessageDisplay.innerText = `Error: ${error.message}`;
         errorMessageDisplay.classList.remove('hidden');
     });
-    this.dataStore.set('monsterList', monsterList);
+    this.dataStore.set('monsterList', response);
     spellButton.innerText = origButtonText;
 }
 

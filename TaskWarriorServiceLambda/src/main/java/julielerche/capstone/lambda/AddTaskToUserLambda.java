@@ -9,21 +9,21 @@ import org.apache.logging.log4j.Logger;
 
 public class AddTaskToUserLambda
         extends LambdaActivityRunner<AddTaskToUserRequest, AddTaskToUserResult>
-        implements RequestHandler<LambdaRequest<AddTaskToUserRequest>, LambdaResponse> {
+        implements RequestHandler<AuthenticatedLambdaRequest<AddTaskToUserRequest>, LambdaResponse> {
 
     private final Logger log = LogManager.getLogger();
 
     @Override
-    public LambdaResponse handleRequest(LambdaRequest<AddTaskToUserRequest> input, Context context) {
+    public LambdaResponse handleRequest(AuthenticatedLambdaRequest<AddTaskToUserRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
             () -> {
                 AddTaskToUserRequest unauthenticatedRequest = input.fromBody(AddTaskToUserRequest.class);
-                return AddTaskToUserRequest.builder()
-                    .withUserId(unauthenticatedRequest.getUserId())
+                return input.fromUserClaims(claims -> AddTaskToUserRequest.builder()
+                    .withUserId(claims.get("email"))
                     .withTaskType(unauthenticatedRequest.getTaskType())
                     .withTask(unauthenticatedRequest.getTask())
-                    .build();
+                    .build());
             },
             (request, serviceComponent) ->
                     serviceComponent.provideAddTaskToUserActivity().handleRequest(request)

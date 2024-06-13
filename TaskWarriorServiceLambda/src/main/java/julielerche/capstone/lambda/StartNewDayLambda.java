@@ -9,20 +9,17 @@ import org.apache.logging.log4j.Logger;
 
 public class StartNewDayLambda
         extends LambdaActivityRunner<StartNewDayRequest, StartNewDayResult>
-        implements RequestHandler<LambdaRequest<StartNewDayRequest>, LambdaResponse> {
+        implements RequestHandler<AuthenticatedLambdaRequest<StartNewDayRequest>, LambdaResponse> {
 
     private final Logger log = LogManager.getLogger();
 
     @Override
-    public LambdaResponse handleRequest(LambdaRequest<StartNewDayRequest> input, Context context) {
+    public LambdaResponse handleRequest(AuthenticatedLambdaRequest<StartNewDayRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
-            () -> {
-                StartNewDayRequest unauthenticatedRequest = input.fromBody(StartNewDayRequest.class);
-                return StartNewDayRequest.builder()
-                    .withUserId(unauthenticatedRequest.getUserId())
-                    .build();
-            },
+            () -> input.fromUserClaims(claims -> StartNewDayRequest.builder()
+                .withUserId(claims.get("email"))
+                .build()),
             (request, serviceComponent) ->
                     serviceComponent.provideStartNewDayActivity().handleRequest(request)
         );

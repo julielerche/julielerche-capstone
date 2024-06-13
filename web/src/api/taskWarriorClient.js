@@ -16,7 +16,8 @@ export default class TaskWarriorClient extends BindingClass {
         super();
 
         const methodsToBind = ['clientLoaded', 'getIdentity', 'login', 'logout', 'getUser', 'getStore', 'createUser', 'getUserTasks', 
-            'getEncounter', 'createEncounter', 'removeTaskFromList', 'attackMonster', 'spellMonster', 'markCompleted'];
+            'getEncounter', 'createEncounter', 'removeTaskFromList', 'attackMonster', 'spellMonster', 'markCompleted', 'updateUserName',
+        'createNewTask'];
         this.bindClassMethods(methodsToBind, this);
 
         this.authenticator = new Authenticator();;
@@ -88,6 +89,49 @@ export default class TaskWarriorClient extends BindingClass {
         }
     }
         /**
+    * updates the name of the user
+    */
+    async updateUserName(name, errorCallback) {
+        try {
+            const token = await this.getTokenOrThrow("Only authenticated users can get users.");
+            const response = await this.axiosClient.put(`users`, {
+                name: name
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data.user;
+        } catch (error) {
+            this.handleError(error, errorCallback)
+        }
+    }
+
+        /**
+* updates the name of the user
+*/
+    async createNewTask(taskName, taskType, difficulty, errorCallback) {
+        try {
+            const token = await this.getTokenOrThrow("Only authenticated users can get users.");
+            const response = await this.axiosClient.put(`users/task`, {
+                "taskType": taskType,
+                "task": {
+                    "taskType": taskType,
+                    "taskName": taskName,
+                    "difficulty": difficulty,
+                    "completed": false,
+                }
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data.user;
+        } catch (error) {
+            this.handleError(error, errorCallback)
+        }
+    }
+        /**
 * Gets the user for the given id
 */
 async getEncounter(errorCallback) {
@@ -110,7 +154,7 @@ async getEncounter(errorCallback) {
 async createEncounter(errorCallback) {
     try {
         const token = await this.getTokenOrThrow("Only authenticated users can get encounters.");
-        const response = await this.axiosClient.post(`encounter`, {
+        const response = await this.axiosClient.post(`encounter`, {}, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -182,7 +226,7 @@ async getUserTasks(taskType, errorCallback) {
         try {
             const token = await this.getTokenOrThrow("Only authenticated users can create users.");
             const response = await this.axiosClient.put(`users/task/complete`, {
-                task: task,
+                task: JSON.stringify(task),
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -205,14 +249,23 @@ async getUserTasks(taskType, errorCallback) {
             const token = await this.getTokenOrThrow("Only authenticated users can remove a task from a tasklist.");
             let json = {"taskName":taskName,"taskType":taskType,"difficulty":difficulty,"completed":false}
             console.log(json);
-            const response = await this.axiosClient.delete(`/users/task`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                    },
-                    task: {
-                    task: json,
-                    }
-                });
+            // const response = await this.axiosClient.delete(`/users/task`, {
+            //         "task": {
+            //         taskName: taskName,
+            //         taskType: taskType,
+            //         difficulty: difficulty,
+            //         completed: false
+            //         }}, {
+            //             headers: {
+            //                 Authorization: `Bearer ${token}`
+            //             }
+            //         });
+            const response = await this.axiosClient.delete(`/users/task`, { data: { "task": {
+                    "taskName": taskName,
+                    "taskType": taskType,
+                    "difficulty": difficulty,
+                    "completed": false }},
+                    headers: { Authorization: `Bearer ${token}` } });
             return response.data.user;
         } catch (error) {
             this.handleError(error, errorCallback)
@@ -231,7 +284,7 @@ async getUserTasks(taskType, errorCallback) {
                     Authorization: `Bearer ${token}`
                 }
             });
-            return response.data.monsterList;
+            return response.data.assets;
         } catch (error) {
             this.handleError(error, errorCallback)
         }

@@ -51,12 +51,76 @@
                                 <div class="progress-bar bg-info" role="progressbar" style="" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
+                        <sub> Options </sub>
+                        <nav>
+                            <div class="nav nav-pills justify-content-center" id="nav-tab" role="tablist">
+                                <button class="nav-link" id="nav-make-task-tab" data-bs-toggle="tab" data-bs-target="#nav-make-task" type="button" role="tab" aria-controls="nav-make-task" aria-selected="true">New Task</button>
+                                <button class="nav-link" id="nav-change-name-tab" data-bs-toggle="tab" data-bs-target="#nav-change-name" type="button" role="tab" aria-controls="nav-change-name" aria-selected="true">Change Name</button>
+                                <button class="nav-link" id="nav-new-day-tab" data-bs-toggle="tab" data-bs-target="#nav-new-day" type="button" role="tab" aria-controls="nav-new-day" aria-selected="true">Start New Day</button>
+                                <button class="nav-link" id="nav-store-tab" data-bs-toggle="tab" data-bs-target="#nav-store" type="button" role="tab" aria-controls="nav-store" aria-selected="true">Store</button>
+                            </div>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContentOptions">
+                            <div class="tab-pane fade" id="nav-make-task" role="tabpanel" aria-labelledby="nav-make-task-tab" tabindex="0">
+                                Make a new task.
+                                <div class="card">
+                                    <form class="card-content" id="create-task-form">
+                                        <p class="hidden error" id="error-message"> </p>
+                                        <p class="form-field">
+                                            <label>Task Name</label>
+                                            <input type="text" required class="validated-field" id="newTaskName" placeholder="Clean Dishes" autofocus>
+                                        </p>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label>Task Type</label>
+                                        <select class="form-control form-control-sm" id="newTaskType">
+                                            <option value="DAILY">Daily</option>
+                                            <option value="CHORE">Chore</option>
+                                            <option value="TODO">ToDo</option>
+                                          </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label>Difficulty</label>
+                                          <select class="form-control form-control-sm" id="newTaskDifficulty">
+                                            <option value="EASY">Easy</option>
+                                            <option value="MEDIUM">Medium</option>
+                                            <option value="HARD">Hard</option>
+                                          </select>
+                                        </div>
+                                    </div>
+                                    <p></p>
+                                        <p>
+                                            <a href="#" class="button" id="createTask">Create Task</a>
+                                        </p>
+                                    </form>
+                                    <p class="hidden error" id="error-message-task"> </p>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="nav-change-name" role="tabpanel" aria-labelledby="nav-change-name-tab" tabindex="0">
+                                Change your warrior Name.
+                                <div class="mb-6">
+                                    <label for="updated-name" class="form-label">New Name:</label>
+                                    <input type="email" class="form-control-sm" id="updated-name" placeholder="Thor, God of Thunder">
+                                </div>
+                                <p class="hidden error" id="error-message"> </p>
+                                <a href="#" class="button" id="updateUserName">Update Name</a>
+                            </div>
+                            <div class="tab-pane fade" id="nav-new-day" role="tabpanel" aria-labelledby="nav-new-day-tab" tabindex="0">
+                                <p>Starts a new day by setting all tasks to incomplete.</p>
+                                <p>You will lose health for every unfinished Daily task!</p>
+                                <a href="#" class="button" id="startNewDayButton">Start New Day</a>
+                            </div>
+                            <div class="tab-pane fade" id="nav-store" role="tabpanel" aria-labelledby="nav-store-tab" tabindex="0">
+                                You can buy items in the store using gold.
+                            </div>
+                            </div>
+                            <p></p>
                         <nav>
                             <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
                                 <button class="nav-link active" id="nav-daily-tab" data-bs-toggle="tab" data-bs-target="#nav-daily" type="button" role="tab" aria-controls="nav-daily" aria-selected="true">Dailies</button>
                                 <button class="nav-link" id="nav-chore-tab" data-bs-toggle="tab" data-bs-target="#nav-chore" type="button" role="tab" aria-controls="nav-chore" aria-selected="true">Chores</button>
                                 <button class="nav-link" id="nav-todo-tab" data-bs-toggle="tab" data-bs-target="#nav-todo" type="button" role="tab" aria-controls="nav-todo" aria-selected="true">ToDos</button>
-                                <button class="nav-link" id="nav-inventory-tab" data-bs-toggle="tab" data-bs-target="#nav-inventory" type="button" role="tab" aria-controls="nav-store" aria-selected="true">Inventory</button>
+                                <button class="nav-link" id="nav-inventory-tab" data-bs-toggle="tab" data-bs-target="#nav-inventory" type="button" role="tab" aria-controls="nav-inventory" aria-selected="true">Inventory</button>
                             </div>
                         </nav>
                         <div class="tab-content" id="nav-tabContent">
@@ -75,7 +139,7 @@
                                 <ol id="todo-tasks"></ol>
                                 <p class="hidden error" id="error-message-task"> </p>
                             </div>
-                            <div class="tab-pane fade" id="nav-inventory" role="tabpanel" aria-labelledby="nav-store-tab" tabindex="0">
+                            <div class="tab-pane fade" id="nav-inventory" role="tabpanel" aria-labelledby="nav-inventory-tab" tabindex="0">
                                 This is your current inventory, you can buy more at the store.
                                 <div class="d-flex justify-content-around">
                                 <ol id="user-inventory"></ol>

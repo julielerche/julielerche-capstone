@@ -8,7 +8,8 @@ import DataStore from "../util/DataStore";
 class ViewUser extends BindingClass {
     constructor() {
         super();
-        this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage', 'addInventoryToPage', 'addStatsToPage', 'delete', 'markComplete'], this);
+        this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage', 
+            'addInventoryToPage', 'addStatsToPage', 'delete', 'markComplete', 'updateUserName', 'createNewTask'], this);
         this.dataStore = new DataStore();
         this.dataStore.addChangeListener(this.addUserToPage);
         //this.dataStore.addChangeListener(this.addStoreToPage);
@@ -39,6 +40,8 @@ class ViewUser extends BindingClass {
         this.clientLoaded();
         document.getElementById('daily-tasks').addEventListener('click', this.delete);
         document.getElementById('daily-tasks').addEventListener('click', this.markComplete);
+        document.getElementById('nav-change-name').addEventListener('click', this.updateUserName);
+        document.getElementById('createTaskname').addEventListener('click', this.startNewDay);
     }
 
     /**
@@ -220,18 +223,92 @@ class ViewUser extends BindingClass {
     if (!completeButton.classList.contains("complete-task")) {
         return;
     }
-
+    
     completeButton.innerText = "Updating...";
 
     const errorMessageDisplay = document.getElementById('error-message-task');
     errorMessageDisplay.innerText = ``;
     errorMessageDisplay.classList.add('hidden');
-    console.log(completeButton.dataset);
+    console.log(JSON.stringify(completeButton.dataset));
 
-    await this.client.markCompleted(completeButton.dataset, (error) => {
+    await this.client.markCompleted(completeButton.dataset.task, (error) => {
        errorMessageDisplay.innerText = `Error: ${error.message}`;
        errorMessageDisplay.classList.remove('hidden');
    });
+  }
+     /**
+          * when mark complete button is pushed, updates task.
+          */
+  async updateUserName(evt) {
+
+        evt.preventDefault();
+
+        const errorMessageDisplay = document.getElementById('error-message');
+        errorMessageDisplay.innerText = ``;
+        errorMessageDisplay.classList.add('hidden');
+
+        const updateUserNameButton = document.getElementById('updateUserName');
+        const origButtonText = updateUserNameButton.innerText;
+        updateUserNameButton.innerText = 'Loading...';
+
+        const displayName = document.getElementById('updated-name').value;
+
+        const user = await this.client.updateUserName(displayName, (error) => {
+            updateUserNameButton.innerText = origButtonText;
+            errorMessageDisplay.innerText = `Error: ${error.message}`;
+            errorMessageDisplay.classList.remove('hidden');
+        });
+        this.dataStore.set('user', user);
+        updateUserNameButton.innerText = origButtonText;
+    
+   };
+   //creates a new task
+   async createNewTask(evt) {
+    evt.preventDefault();
+
+    const errorMessageDisplay = document.getElementById('error-message');
+    errorMessageDisplay.innerText = ``;
+    errorMessageDisplay.classList.add('hidden');
+
+    const createTaskButton = document.getElementById('createTask');
+    const origButtonText = createTaskButton.innerText;
+    createTaskButton.innerText = 'Loading...';
+
+    const taskName = document.getElementById('newTaskName').value;
+    const newTaskType = document.getElementById('newTaskType').value;
+    const newTaskDifficulty = document.getElementById('newTaskDifficulty').value;
+
+    const user = await this.client.createNewTask(taskName, newTaskType, newTaskDifficulty, (error) => {
+        createTaskButton.innerText = origButtonText;
+        errorMessageDisplay.innerText = `Error: ${error.message}`;
+        errorMessageDisplay.classList.remove('hidden');
+    });
+    this.dataStore.set('user', user);
+    createTaskButton.innerText = origButtonText;
+}
+
+        /**
+* Starts a new day by updating user tasks.
+*/
+async startNewDay(evt) {
+    evt.preventDefault();
+
+    const errorMessageDisplay = document.getElementById('error-message');
+    errorMessageDisplay.innerText = ``;
+    errorMessageDisplay.classList.add('hidden');
+
+    const startNewDayButton = document.getElementById('startNewDayButton');
+    const origButtonText = startNewDayButton.innerText;
+    startNewDayButton.innerText = 'Loading...';
+
+    const user = await this.client.startNewDay((error) => {
+        startNewDayButton.innerText = origButtonText;
+        errorMessageDisplay.innerText = `Error: ${error.message}`;
+        errorMessageDisplay.classList.remove('hidden');
+    });
+    this.dataStore.set('user', user);
+    startNewDayButton.innerText = origButtonText;
+}
 }
 /**
     * When store button is pushed, adds store to page
@@ -248,7 +325,7 @@ class ViewUser extends BindingClass {
     //     }
     //     document.getElementById('store').innerHTML = storeHTML;
     // }
-}
+
 /**
  * Main method to run when the page contents have loaded.
  */
