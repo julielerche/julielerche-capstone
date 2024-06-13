@@ -8,7 +8,7 @@ import DataStore from "../util/DataStore";
 class ViewUser extends BindingClass {
     constructor() {
         super();
-        this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage', 'addInventoryToPage', 'addStatsToPage'], this);
+        this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage', 'addInventoryToPage', 'addStatsToPage', 'delete', 'markComplete'], this);
         this.dataStore = new DataStore();
         this.dataStore.addChangeListener(this.addUserToPage);
         //this.dataStore.addChangeListener(this.addStoreToPage);
@@ -25,20 +25,20 @@ class ViewUser extends BindingClass {
     async clientLoaded() {
         document.getElementById('user-name').innerText = "loading user ...";
         const user = await this.client.getUser();
-       // const dailies = await this.client.getUserTasks("DAILY");
         this.dataStore.set('user', user);
-        //this.dataStore.set('dailies', dailies);
-        //this.dataStore.set('store', store);
     }
 
     /**
      * Add the header to the page and load the TaskWarriorClient.
      */
     mount() {
+        
         this.header.addHeaderToPage();
 
         this.client = new TaskWarriorClient();
         this.clientLoaded();
+        document.getElementById('daily-tasks').addEventListener('click', this.delete);
+        document.getElementById('daily-tasks').addEventListener('click', this.markComplete);
     }
 
     /**
@@ -50,6 +50,7 @@ class ViewUser extends BindingClass {
             return;
          }
         document.getElementById('user-name').innerText = user.displayName;
+        document.getElementById('gold-amount').innerText = user.gold + " Gold";
     }
 
     /**
@@ -125,91 +126,113 @@ class ViewUser extends BindingClass {
         if (dailies == null) {
             return;
         }
-
-        let taskHTML = '';
-        let task;
-        for (task of dailies) {
-            taskHTML += `
-            <div class="card">
-                <div class="container">
-  <div class="row">
-    <div class="col">
-    ${task.taskName}
-    </div>
-    <div class="col col-lg-2">
-      ★☆☆
-    </div>
-    <div class="col col-lg-2">
-      ✔
-    </div>
-  </div>
-</div></div>
-            `;
-        }
-        document.getElementById('daily-tasks').innerHTML = taskHTML;
+        const dailyTaskHTML = this.getTaskHTMLFromList(dailies);
+        document.getElementById('daily-tasks').innerHTML = dailyTaskHTML;
 
         const chores = user.chores;
         if (chores == null) {
             return;
         }
-
-        let choreHTML = '';
-        let chore;
-        choreHTML += `<div class="panel-group">
-                     <div class="panel panel-default">`;
-        for (chore of chores) {
-            choreHTML += `
-                       <div class="panel-heading">
-                           <h4 class="panel-title">
-                             <a data-toggle="collapse" href="#collapse1">${task.taskName}</a>
-                           </h4>
-                       </div>
-            `;
-        }
-        choreHTML += `<div id="collapse1" class="panel-collapse collapse">
-                    <div class="panel-body">Panel Body</div>
-                   <div class="panel-footer">Panel Footer</div>
-                    </div>
-              </div>
-            </div>`;
-        document.getElementById('chore-tasks').innerHTML = choreHTML;
+        const choreTaskHTML = this.getTaskHTMLFromList(chores);
+        document.getElementById('chore-tasks').innerHTML = choreTaskHTML;
 
         const todos = user.toDos;
         if (todos == null) {
             return;
         }
+        const todoTaskHTML = this.getTaskHTMLFromList(todos);
+        document.getElementById('todo-tasks').innerHTML = todoTaskHTML;
+    }
 
-        let todoHTML = '';
-        let todo;
-        for (todo of todos) {
-            todoHTML += `<p>
-            <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-            
-                <div class="card-body">
-                    <h5>${todo.taskName}
-                    `;
-            if (todo.difficulty == "EASY") {
-                todoHTML += `
-                ★☆☆`;
-            }
-            if (todo.completed) {
-                todoHTML += `
-                ✔`;
-            }
-            todoHTML += ` </h5>
-                    
+    getTaskHTMLFromList(taskList) {
+        let taskHTML = '';
+        let task;
+        for (task of taskList) {
+            console.log(JSON.stringify(task));
+            taskHTML += `
+            <div class="card">
+                <div class="container">
+                    <div class="row">
+                         <div class="col"> <strong>
+                           ${task.taskName}
+                         </strong></div>`
+                        if (task.difficulty == "EASY") {
+                            taskHTML += `<div class="col-2">
+                            ★☆☆</div>`;
+                        } else if (task.difficulty == "MEDIUM") {
+                            taskHTML += `<div class="col-2">
+                            ★★☆</div>`;
+                        } else {
+                            taskHTML += `<div class="col-2">
+                            ★★★</div>`;
+                        }
+                        if (task.completed) {
+                            taskHTML += `<div class="col-2">
+                            ☒</div>`;
+                        } else {
+                            taskHTML += `<div class="col-2">
+                            ☐</div>`;
+                        }
+                        taskHTML += `</div> <div class="row"> <div class="col">
+                        <button data-taskName="${task}" class="button update-task">Update</button>
+                        </div>
+                        <div class="col">
+                        <button data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button delete-task">Delete</button>
+                        </div>
+                        <div class="col-5">
+                        <button data-task="${task}" class="button complete-task">Mark Complete</button>
+                        </div>
                     </div>
-                </a>
-                </p>
-                <div class="collapse" id="collapseExample">
-                    <div class="card card-body">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                    </div>
-             </div>
+                </div>
+            </div>
             `;
         }
-        document.getElementById('todo-tasks').innerHTML = todoHTML;
+        return taskHTML;
     }
+
+    /**
+          * when remove button is clicked, removes task from tasklist.
+          */
+    async delete(e) {
+        const deleteButton = e.target;
+        if (!deleteButton.classList.contains("delete-task")) {
+            return;
+        }
+
+        deleteButton.innerText = "Removing...";
+
+        const errorMessageDisplay = document.getElementById('error-message-task');
+        errorMessageDisplay.innerText = ``;
+        errorMessageDisplay.classList.add('hidden');
+        console.log(deleteButton.dataset);
+
+        await this.client.removeTaskFromList(deleteButton.dataset.taskname, deleteButton.dataset.tasktype, deleteButton.dataset.difficulty, (error) => {
+           errorMessageDisplay.innerText = `Error: ${error.message}`;
+           errorMessageDisplay.classList.remove('hidden');
+       });
+  }
+
+  /**
+          * when mark complete button is pushed, updates task.
+          */
+  async markComplete(e) {
+    const completeButton = e.target;
+    if (!completeButton.classList.contains("complete-task")) {
+        return;
+    }
+
+    completeButton.innerText = "Updating...";
+
+    const errorMessageDisplay = document.getElementById('error-message-task');
+    errorMessageDisplay.innerText = ``;
+    errorMessageDisplay.classList.add('hidden');
+    console.log(completeButton.dataset);
+
+    await this.client.markCompleted(completeButton.dataset, (error) => {
+       errorMessageDisplay.innerText = `Error: ${error.message}`;
+       errorMessageDisplay.classList.remove('hidden');
+   });
+}
 /**
     * When store button is pushed, adds store to page
     */

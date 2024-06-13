@@ -55,6 +55,7 @@ public class SpellMonsterActivity {
 
     public SpellMonsterResult handleRequest(final SpellMonsterRequest attackMonsterRequest) {
         log.info("Received SpellMonsterRequest {}", attackMonsterRequest);
+        System.out.print(attackMonsterRequest.getUserId());
         User loadedUser = userDao.loadUser(attackMonsterRequest.getUserId());
         Spell loadedSpell = attackMonsterRequest.getSpell();
         if (loadedUser.getMana() < loadedSpell.getManaNeeded()) {

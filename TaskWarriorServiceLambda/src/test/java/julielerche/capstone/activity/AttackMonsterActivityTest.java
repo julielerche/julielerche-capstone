@@ -61,7 +61,9 @@ public class AttackMonsterActivityTest {
 
         AttackMonsterRequest request = AttackMonsterRequest.builder()
                 .withUserId("one")
-                .withAttack(attack)
+                .withAttackPower(10)
+                .withStaminaNeeded(10)
+                .withTarget(1)
                 .build();
 
         //when

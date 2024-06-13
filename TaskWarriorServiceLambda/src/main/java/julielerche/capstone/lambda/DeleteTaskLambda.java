@@ -9,20 +9,20 @@ import org.apache.logging.log4j.Logger;
 
 public class DeleteTaskLambda
         extends LambdaActivityRunner<DeleteTaskRequest, DeleteTaskResult>
-        implements RequestHandler<LambdaRequest<DeleteTaskRequest>, LambdaResponse> {
+        implements RequestHandler<AuthenticatedLambdaRequest<DeleteTaskRequest>, LambdaResponse> {
 
     private final Logger log = LogManager.getLogger();
 
     @Override
-    public LambdaResponse handleRequest(LambdaRequest<DeleteTaskRequest> input, Context context) {
+    public LambdaResponse handleRequest(AuthenticatedLambdaRequest<DeleteTaskRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
             () -> {
                 DeleteTaskRequest unauthenticatedRequest = input.fromBody(DeleteTaskRequest.class);
-                return DeleteTaskRequest.builder()
-                    .withUserId(unauthenticatedRequest.getUserId())
+                return input.fromUserClaims(claims -> DeleteTaskRequest.builder()
+                    .withUserId(claims.get("email"))
                     .withTask(unauthenticatedRequest.getTask())
-                    .build();
+                    .build());
             },
             (request, serviceComponent) ->
                     serviceComponent.provideDeleteTaskActivity().handleRequest(request)

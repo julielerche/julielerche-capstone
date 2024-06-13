@@ -35,4 +35,9 @@ public class Spell {
     public void setManaNeeded(Integer manaNeeded) {
         this.manaNeeded = manaNeeded;
     }
+
+    @Override
+    public String toString() {
+        return "attackpower:" + attackPower + "\n mananeeded: " + manaNeeded;
+    }
 }
