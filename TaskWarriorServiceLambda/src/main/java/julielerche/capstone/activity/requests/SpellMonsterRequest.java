@@ -10,8 +10,8 @@ public class SpellMonsterRequest {
     private final Spell spell;
 
     private SpellMonsterRequest(String userId, Spell spell) {
-        this.spell = spell;
         this.userId = userId;
+        this.spell = spell;
     }
 
     public Spell getSpell() {

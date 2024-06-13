@@ -17,9 +17,25 @@
         <div class="row">
             <div class="col">
                 <div class="card">
-                    <h2>User Info</h2>
                     <form class="card-content">
-                        <h2 id="user-name"></h2>
+                        <div class="row">
+                            <div class="col-2">
+                                <img src="/sprites/axe.png" style="width: 50px; height: 50px;">
+                            </div>
+                            <div class="col">
+                                <h2 id="user-name"></h2>
+                            </div>
+                            <div class="col-2">
+                                <img src="/sprites/shield.png" style="width: 50px; height: 50px;">
+                            </div>
+                            <div class="col">
+                                <h2 id="gold-amount"></h2>
+                            </div>
+                            <div class="col-2">
+                                <img src="/sprites/goldstacksbag.png" style="width: 50px; height: 50px;">
+                            </div>
+                        </div>
+                    
                         <sub> User Stats </sub>
                         <div class="user-stats-container">
                             Health
@@ -37,24 +53,27 @@
                         </div>
                         <nav>
                             <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
-                                <button class="nav-link" id="nav-daily-tab" data-bs-toggle="tab" data-bs-target="#nav-daily" type="button" role="tab" aria-controls="nav-daily" aria-selected="true">Dailies</button>
+                                <button class="nav-link active" id="nav-daily-tab" data-bs-toggle="tab" data-bs-target="#nav-daily" type="button" role="tab" aria-controls="nav-daily" aria-selected="true">Dailies</button>
                                 <button class="nav-link" id="nav-chore-tab" data-bs-toggle="tab" data-bs-target="#nav-chore" type="button" role="tab" aria-controls="nav-chore" aria-selected="true">Chores</button>
                                 <button class="nav-link" id="nav-todo-tab" data-bs-toggle="tab" data-bs-target="#nav-todo" type="button" role="tab" aria-controls="nav-todo" aria-selected="true">ToDos</button>
                                 <button class="nav-link" id="nav-inventory-tab" data-bs-toggle="tab" data-bs-target="#nav-inventory" type="button" role="tab" aria-controls="nav-store" aria-selected="true">Inventory</button>
                             </div>
                         </nav>
                         <div class="tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade" id="nav-daily" role="tabpanel" aria-labelledby="nav-daily-tab" tabindex="0">
+                            <div class="tab-pane fade show active" id="nav-daily" role="tabpanel" aria-labelledby="nav-daily-tab" tabindex="0">
                                 Daily tasks are expected to be done every day, or you will lose health!
                                 <ol id="daily-tasks"></ol>
+                                <p class="hidden error" id="error-message-task"> </p>
                             </div>
                             <div class="tab-pane fade" id="nav-chore" role="tabpanel" aria-labelledby="nav-chore-tab" tabindex="0">
                                 Chores are tasks that you do every once in a while, so you will not lose health for not doing them every day.
                                 <ol id="chore-tasks"></ol>
+                                <p class="hidden error" id="error-message-task"> </p>
                             </div>
                             <div class="tab-pane fade" id="nav-todo" role="tabpanel" aria-labelledby="nav-todo-tab" tabindex="0">
                                 ToDos are specific tasks that you have to do one time. They are deleted when you mark them as complete.
                                 <ol id="todo-tasks"></ol>
+                                <p class="hidden error" id="error-message-task"> </p>
                             </div>
                             <div class="tab-pane fade" id="nav-inventory" role="tabpanel" aria-labelledby="nav-store-tab" tabindex="0">
                                 This is your current inventory, you can buy more at the store.
@@ -68,10 +87,35 @@
             </div>
             <div class="col">
                 <div class="card">
+                    
                     <h2>Encounter Info</h2>
                     <form class="card-content">
                         <sub> Display the current Encounter here.</sub>
                         <ol id="encounter-monsters"></ol>
+                        <h5>Attacks</h5>
+                        
+                        <sub>Swords attack one creature, while Spells attack all creatures.</sub>
+                        <div class="row">
+                            <div class="card" style="width: 12rem;">
+                                <img class="card-img-top" src="sprites/sword.png" alt="Card image cap">
+                                    <div class="card-body">
+                                    <h5 class="card-title">Sword Swing</h5>
+                                    <p class="card-text">Stamina Needed: 10</p>
+                                    <p class="card-text">Attack Power: 20</p>
+                                    <div class="monsterOptions" id="monsterOptions"></div>
+                                    <a href="#" class="button" id="swordAttack">Use Attack</a>
+                                    </div>
+                            </div>
+                            <div class="card" style="width: 12rem;">
+                                <img class="card-img-top" src="sprites/spell.png" alt="Card image cap">
+                                    <div class="card-body">
+                                    <h5 class="card-title">Chain Lightning</h5>
+                                    <p class="card-text">Mana Needed: 30</p>
+                                    <p class="card-text">Attack Power: 15</p>
+                                    <a href="#" class="button" id="spellAttack">Use Spell</a>
+                                    </div>
+                            </div>
+                         </div>
                         <p class="hidden error" id="error-message"> </p>
                         <a href="#" class="button" id="createEncounter">Create new Encounter</a>
                     </form>

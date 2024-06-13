@@ -9,20 +9,20 @@ import org.apache.logging.log4j.Logger;
 
 public class SpellMonsterLambda
         extends LambdaActivityRunner<SpellMonsterRequest, SpellMonsterResult>
-        implements RequestHandler<LambdaRequest<SpellMonsterRequest>, LambdaResponse> {
+        implements RequestHandler<AuthenticatedLambdaRequest<SpellMonsterRequest>, LambdaResponse> {
 
     private final Logger log = LogManager.getLogger();
 
     @Override
-    public LambdaResponse handleRequest(LambdaRequest<SpellMonsterRequest> input, Context context) {
+    public LambdaResponse handleRequest(AuthenticatedLambdaRequest<SpellMonsterRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
             () -> {
                 SpellMonsterRequest unauthenticatedRequest = input.fromBody(SpellMonsterRequest.class);
-                return SpellMonsterRequest.builder()
-                    .withUserId(unauthenticatedRequest.getUserId())
-                    .withSpell(unauthenticatedRequest.getSpell())
-                    .build();
+                return input.fromUserClaims(claims -> SpellMonsterRequest.builder()
+                        .withUserId(claims.get("email"))
+                        .withSpell(unauthenticatedRequest.getSpell())
+                    .build());
             },
             (request, serviceComponent) ->
                     serviceComponent.provideSpellMonsterActivity().handleRequest(request)

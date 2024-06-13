@@ -15,7 +15,8 @@ export default class TaskWarriorClient extends BindingClass {
     constructor(props = {}) {
         super();
 
-        const methodsToBind = ['clientLoaded', 'getIdentity', 'login', 'logout', 'getUser', 'getStore', 'createUser', 'getUserTasks', 'getEncounter', 'createEncounter'];
+        const methodsToBind = ['clientLoaded', 'getIdentity', 'login', 'logout', 'getUser', 'getStore', 'createUser', 'getUserTasks', 
+            'getEncounter', 'createEncounter', 'removeTaskFromList', 'attackMonster', 'spellMonster', 'markCompleted'];
         this.bindClassMethods(methodsToBind, this);
 
         this.authenticator = new Authenticator();;
@@ -177,27 +178,83 @@ async getUserTasks(taskType, errorCallback) {
         }
     }
 
+    async markCompleted(task, errorCallback) {
+        try {
+            const token = await this.getTokenOrThrow("Only authenticated users can create users.");
+            const response = await this.axiosClient.put(`users/task/complete`, {
+                task: task,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data.gold;
+        } catch (error) {
+            this.handleError(error, errorCallback)
+        }
+    }
+
         /**
      * removes a task from a list.
      * @param task The task in the list to remove
      * @returns the updated user.
      */
-        async removeTaskFromList(task, errorCallback) {
-            try {
-                const token = await this.getTokenOrThrow("Only authenticated users can remove a task from a tasklist.");
-                const response = await this.axiosClient.delete(`/users/task`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                      },
-                      data: {
-                        task: task,
-                      }
-                    });
-                return response.data.user;
-            } catch (error) {
-                this.handleError(error, errorCallback)
-            }
+    async removeTaskFromList(taskName, taskType, difficulty, errorCallback) {
+
+        try {
+            const token = await this.getTokenOrThrow("Only authenticated users can remove a task from a tasklist.");
+            let json = {"taskName":taskName,"taskType":taskType,"difficulty":difficulty,"completed":false}
+            console.log(json);
+            const response = await this.axiosClient.delete(`/users/task`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                    },
+                    task: {
+                    task: json,
+                    }
+                });
+            return response.data.user;
+        } catch (error) {
+            this.handleError(error, errorCallback)
         }
+    }
+
+    async attackMonster(monsterTarget, errorCallback) {
+        try {
+            const token = await this.getTokenOrThrow("Only authenticated users can attack monsters.");
+            const response = await this.axiosClient.put(`/attack`, {
+                attackPower: 20,
+                staminaNeeded: 10,
+                target: monsterTarget,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data.monsterList;
+        } catch (error) {
+            this.handleError(error, errorCallback)
+        }
+    }
+
+    async spellMonster(errorCallback) {
+        try {
+            const token = await this.getTokenOrThrow("Only authenticated users can attack monsters.");
+            const response = await this.axiosClient.put(`/spell`, {
+                "spell": {
+                    "attackPower": 20,
+                    "manaNeeded": 20
+                    }
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data.monsterList;
+        } catch (error) {
+            this.handleError(error, errorCallback)
+        }
+    }
     /**
      * Helper method to log the error and run any error functions.
      * @param error The error received from the server.

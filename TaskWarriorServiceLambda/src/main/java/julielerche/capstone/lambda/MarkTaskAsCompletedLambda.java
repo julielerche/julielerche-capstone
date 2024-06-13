@@ -9,20 +9,20 @@ import org.apache.logging.log4j.Logger;
 
 public class MarkTaskAsCompletedLambda
         extends LambdaActivityRunner<MarkTaskAsCompletedRequest, MarkTaskAsCompletedResult>
-        implements RequestHandler<LambdaRequest<MarkTaskAsCompletedRequest>, LambdaResponse> {
+        implements RequestHandler<AuthenticatedLambdaRequest<MarkTaskAsCompletedRequest>, LambdaResponse> {
 
     private final Logger log = LogManager.getLogger();
 
     @Override
-    public LambdaResponse handleRequest(LambdaRequest<MarkTaskAsCompletedRequest> input, Context context) {
+    public LambdaResponse handleRequest(AuthenticatedLambdaRequest<MarkTaskAsCompletedRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
             () -> {
                 MarkTaskAsCompletedRequest unauthenticatedRequest = input.fromBody(MarkTaskAsCompletedRequest.class);
-                return MarkTaskAsCompletedRequest.builder()
-                    .withUserId(unauthenticatedRequest.getUserId())
+                return input.fromUserClaims(claims ->MarkTaskAsCompletedRequest.builder()
+                    .withUserId(claims.get("email"))
                     .withTask(unauthenticatedRequest.getTask())
-                    .build();
+                    .build());
             },
             (request, serviceComponent) ->
                     serviceComponent.provideMarkTaskAsCompletedActivity().handleRequest(request)

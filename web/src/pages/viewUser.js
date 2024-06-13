@@ -8,7 +8,7 @@ import DataStore from "../util/DataStore";
 class ViewUser extends BindingClass {
     constructor() {
         super();
-        this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage', 'addInventoryToPage', 'addStatsToPage', 'delete'], this);
+        this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage', 'addInventoryToPage', 'addStatsToPage', 'delete', 'markComplete'], this);
         this.dataStore = new DataStore();
         this.dataStore.addChangeListener(this.addUserToPage);
         //this.dataStore.addChangeListener(this.addStoreToPage);
@@ -32,11 +32,13 @@ class ViewUser extends BindingClass {
      * Add the header to the page and load the TaskWarriorClient.
      */
     mount() {
-        document.getElementById('delete-task').addEventListener('click', this.delete);
+        
         this.header.addHeaderToPage();
 
         this.client = new TaskWarriorClient();
         this.clientLoaded();
+        document.getElementById('daily-tasks').addEventListener('click', this.delete);
+        document.getElementById('daily-tasks').addEventListener('click', this.markComplete);
     }
 
     /**
@@ -48,6 +50,7 @@ class ViewUser extends BindingClass {
             return;
          }
         document.getElementById('user-name').innerText = user.displayName;
+        document.getElementById('gold-amount').innerText = user.gold + " Gold";
     }
 
     /**
@@ -145,6 +148,7 @@ class ViewUser extends BindingClass {
         let taskHTML = '';
         let task;
         for (task of taskList) {
+            console.log(JSON.stringify(task));
             taskHTML += `
             <div class="card">
                 <div class="container">
@@ -169,12 +173,11 @@ class ViewUser extends BindingClass {
                             taskHTML += `<div class="col-2">
                             ☐</div>`;
                         }
-                        
                         taskHTML += `</div> <div class="row"> <div class="col">
-                        <button data-task="${task}" class="button update-task">Update</button>
+                        <button data-taskName="${task}" class="button update-task">Update</button>
                         </div>
                         <div class="col">
-                        <button data-task="${task}" class="button delete-task">Delete</button>
+                        <button data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button delete-task">Delete</button>
                         </div>
                         <div class="col-5">
                         <button data-task="${task}" class="button complete-task">Mark Complete</button>
@@ -201,14 +204,35 @@ class ViewUser extends BindingClass {
         const errorMessageDisplay = document.getElementById('error-message-task');
         errorMessageDisplay.innerText = ``;
         errorMessageDisplay.classList.add('hidden');
+        console.log(deleteButton.dataset);
 
-        await this.client.removeTaskFromList(deleteButton.dataset.task, (error) => {
+        await this.client.removeTaskFromList(deleteButton.dataset.taskname, deleteButton.dataset.tasktype, deleteButton.dataset.difficulty, (error) => {
            errorMessageDisplay.innerText = `Error: ${error.message}`;
            errorMessageDisplay.classList.remove('hidden');
        });
-
-        document.getElementById(deleteButton.dataset.task).delete();
   }
+
+  /**
+          * when mark complete button is pushed, updates task.
+          */
+  async markComplete(e) {
+    const completeButton = e.target;
+    if (!completeButton.classList.contains("complete-task")) {
+        return;
+    }
+
+    completeButton.innerText = "Updating...";
+
+    const errorMessageDisplay = document.getElementById('error-message-task');
+    errorMessageDisplay.innerText = ``;
+    errorMessageDisplay.classList.add('hidden');
+    console.log(completeButton.dataset);
+
+    await this.client.markCompleted(completeButton.dataset, (error) => {
+       errorMessageDisplay.innerText = `Error: ${error.message}`;
+       errorMessageDisplay.classList.remove('hidden');
+   });
+}
 /**
     * When store button is pushed, adds store to page
     */

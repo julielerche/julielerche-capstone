@@ -55,7 +55,8 @@ public class AttackMonsterActivity {
     public AttackMonsterResult handleRequest(final AttackMonsterRequest attackMonsterRequest) {
         log.info("Received AttackMonsterRequest {}", attackMonsterRequest);
         User loadedUser = userDao.loadUser(attackMonsterRequest.getUserId());
-        Attack loadedAttack = attackMonsterRequest.getAttack();
+        Attack loadedAttack = new Attack(attackMonsterRequest.getAttackPower(),
+                attackMonsterRequest.getStaminaNeeded(), attackMonsterRequest.getTarget());
         if (loadedUser.getStamina() < loadedAttack.getStaminaNeeded()) {
             throw new InsufficentStatException("Not enough stamina for action");
         }

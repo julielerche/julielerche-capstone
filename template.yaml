@@ -286,8 +286,6 @@ Resources:
           Properties:
             Path: /users/task/complete
             Method: put
-            Auth:
-              Authorizer: 'NONE'
 
   UpdateTaskLambda:
     Type: AWS::Serverless::Function
@@ -562,8 +560,6 @@ Resources:
           Properties:
             Path: /attack
             Method: put
-            Auth:
-              Authorizer: 'NONE'
 
   SpellMonsterLambda:
     Type: AWS::Serverless::Function
@@ -584,8 +580,6 @@ Resources:
           Properties:
             Path: /spell
             Method: put
-            Auth:
-              Authorizer: 'NONE'
 
   CreateNewEncounterLambda:
     Type: AWS::Serverless::Function
