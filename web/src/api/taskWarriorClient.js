@@ -16,8 +16,8 @@ export default class TaskWarriorClient extends BindingClass {
         super();
 
         const methodsToBind = ['clientLoaded', 'getIdentity', 'login', 'logout', 'getUser', 'getStore', 'createUser', 'getUserTasks', 
-            'getEncounter', 'createEncounter', 'removeTaskFromList', 'attackMonster', 'spellMonster', 'markCompleted', 'updateUserName',
-        'createNewTask'];
+            'getEncounter', 'createEncounter', 'removeTaskFromList', 'attackMonster', 'spellMonster', 'markComplete', 'updateUserName',
+        'createNewTask', 'useItem'];
         this.bindClassMethods(methodsToBind, this);
 
         this.authenticator = new Authenticator();;
@@ -187,11 +187,9 @@ async getUserTasks(taskType, errorCallback) {
 /**
     * Gets the store for the given assets
     */
-    async getStore(assetType1, assetType2, errorCallback) {
+    async getStore(errorCallback) {
         try {
             const response = await this.axiosClient.get('assets', {
-                assetType1: assetType1,
-                assetType2: assetType2,
                 });
             return response.data.assets;
         } catch (error) {
@@ -222,17 +220,43 @@ async getUserTasks(taskType, errorCallback) {
         }
     }
 
-    async markCompleted(task, errorCallback) {
+
+                /**
+     * marks a task as completed and adds gold.
+     */
+    async markComplete(taskName, taskType, difficulty, errorCallback) {
+
         try {
-            const token = await this.getTokenOrThrow("Only authenticated users can create users.");
+            const token = await this.getTokenOrThrow("Only authenticated users can remove a task from a tasklist.");
             const response = await this.axiosClient.put(`users/task/complete`, {
-                task: JSON.stringify(task),
+                "task": {
+                    "taskType": taskType,
+                    "taskName": taskName,
+                    "difficulty": difficulty,
+                    "completed": false,
+                }
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            return response.data.gold;
+            return response;
+        } catch (error) {
+            this.handleError(error, errorCallback)
+        }
+    
+    }
+    async startNewDay(errorCallback) {
+        try {
+            const token = await this.getTokenOrThrow("Only authenticated users can start days.");
+            const response = await this.axiosClient.put(`newday`, {
+                
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data.user;
         } catch (error) {
             this.handleError(error, errorCallback)
         }
@@ -247,19 +271,6 @@ async getUserTasks(taskType, errorCallback) {
 
         try {
             const token = await this.getTokenOrThrow("Only authenticated users can remove a task from a tasklist.");
-            let json = {"taskName":taskName,"taskType":taskType,"difficulty":difficulty,"completed":false}
-            console.log(json);
-            // const response = await this.axiosClient.delete(`/users/task`, {
-            //         "task": {
-            //         taskName: taskName,
-            //         taskType: taskType,
-            //         difficulty: difficulty,
-            //         completed: false
-            //         }}, {
-            //             headers: {
-            //                 Authorization: `Bearer ${token}`
-            //             }
-            //         });
             const response = await this.axiosClient.delete(`/users/task`, { data: { "task": {
                     "taskName": taskName,
                     "taskType": taskType,
@@ -270,6 +281,37 @@ async getUserTasks(taskType, errorCallback) {
         } catch (error) {
             this.handleError(error, errorCallback)
         }
+    }
+
+    async useItem(assetType, assetId, assetDescription, assetName, errorCallback) {
+        try {
+            const token = await this.getTokenOrThrow("Only authenticated users can use an item.");
+            const response = await this.axiosClient.delete(`/users/inventory`, { data: { "asset": {
+                "assetId": assetId,
+                "assetType": assetType,
+                "description": assetDescription,
+                "name": assetName }},
+                headers: { Authorization: `Bearer ${token}` } });
+        return response.data.user;
+    } catch (error) {
+        this.handleError(error, errorCallback)
+    }
+    }
+    async buyItem(assetType, assetId, errorCallback) {
+        try {
+            const token = await this.getTokenOrThrow("Only authenticated users can buy an item.");
+            const response = await this.axiosClient.put(`users/inventory`, {
+                "taskType": assetType,
+                "assetId": assetId,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+        return response.data.user;
+    } catch (error) {
+        this.handleError(error, errorCallback)
+    }
     }
 
     async attackMonster(monsterTarget, errorCallback) {

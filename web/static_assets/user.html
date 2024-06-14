@@ -90,7 +90,7 @@
                                     </div>
                                     <p></p>
                                         <p>
-                                            <a href="#" class="button" id="createTask">Create Task</a>
+                                            <a href="#" class="button createTask" id="createTaskButton">Create Task</a>
                                         </p>
                                     </form>
                                     <p class="hidden error" id="error-message-task"> </p>
@@ -112,6 +112,7 @@
                             </div>
                             <div class="tab-pane fade" id="nav-store" role="tabpanel" aria-labelledby="nav-store-tab" tabindex="0">
                                 You can buy items in the store using gold.
+                                <div id="store-page"></div>
                             </div>
                             </div>
                             <p></p>
@@ -123,6 +124,7 @@
                                 <button class="nav-link" id="nav-inventory-tab" data-bs-toggle="tab" data-bs-target="#nav-inventory" type="button" role="tab" aria-controls="nav-inventory" aria-selected="true">Inventory</button>
                             </div>
                         </nav>
+                        <div id="successfulAlert"></div>
                         <div class="tab-content" id="nav-tabContent">
                             <div class="tab-pane fade show active" id="nav-daily" role="tabpanel" aria-labelledby="nav-daily-tab" tabindex="0">
                                 Daily tasks are expected to be done every day, or you will lose health!

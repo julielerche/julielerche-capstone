@@ -2,7 +2,6 @@ package julielerche.capstone.activity.requests;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import julielerche.capstone.dynamodb.models.Attack;
 
 @JsonDeserialize(builder = AttackMonsterRequest.Builder.class)
 public class AttackMonsterRequest {

@@ -2,7 +2,6 @@ package julielerche.capstone.lambda;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import julielerche.capstone.lambda.LambdaRequest;
 
 import java.util.Base64;
 import java.util.HashMap;

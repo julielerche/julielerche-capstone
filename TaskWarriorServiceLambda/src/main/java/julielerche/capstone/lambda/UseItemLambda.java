@@ -9,20 +9,20 @@ import org.apache.logging.log4j.Logger;
 
 public class UseItemLambda
         extends LambdaActivityRunner<UseItemRequest, UseItemResult>
-        implements RequestHandler<LambdaRequest<UseItemRequest>, LambdaResponse> {
+        implements RequestHandler<AuthenticatedLambdaRequest<UseItemRequest>, LambdaResponse> {
 
     private final Logger log = LogManager.getLogger();
 
     @Override
-    public LambdaResponse handleRequest(LambdaRequest<UseItemRequest> input, Context context) {
+    public LambdaResponse handleRequest(AuthenticatedLambdaRequest<UseItemRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
             () -> {
                 UseItemRequest unauthenticatedRequest = input.fromBody(UseItemRequest.class);
-                return UseItemRequest.builder()
-                    .withUserId(unauthenticatedRequest.getUserId())
+                return input.fromUserClaims(claims -> UseItemRequest.builder()
+                    .withUserId(claims.get("email"))
                     .withAsset(unauthenticatedRequest.getAsset())
-                    .build();
+                    .build());
             },
             (request, serviceComponent) ->
                     serviceComponent.provideUseItemActivity().handleRequest(request)

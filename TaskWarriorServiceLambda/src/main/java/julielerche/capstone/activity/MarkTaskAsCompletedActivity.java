@@ -3,6 +3,7 @@ package julielerche.capstone.activity;
 import julielerche.capstone.activity.requests.MarkTaskAsCompletedRequest;
 import julielerche.capstone.activity.results.MarkTaskAsCompletedResult;
 
+import julielerche.capstone.converters.UserToModelConverter;
 import julielerche.capstone.dynamodb.UserDao;
 import julielerche.capstone.dynamodb.models.Difficulty;
 import julielerche.capstone.dynamodb.models.Task;
@@ -90,7 +91,7 @@ public class MarkTaskAsCompletedActivity {
         userDao.saveUser(loadedUser);
 
         return MarkTaskAsCompletedResult.builder()
-                .withTask(updatedTask)
+                .withUser(new UserToModelConverter().userToModel(loadedUser))
                 .withGold(goldEarned)
                 .build();
     }

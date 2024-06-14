@@ -64,7 +64,7 @@ public class SpellMonsterActivity {
         Encounter loadedEncounter = encounterDao.loadEncounter(attackMonsterRequest.getUserId());
 
         ListIterator<Asset> iterator = loadedEncounter.getMonsterList().listIterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Asset attackedMonster = iterator.next();
             attackedMonster.setCurrentHealth(attackedMonster.getCurrentHealth() - loadedSpell.getAttackPower());
             if (attackedMonster.getCurrentHealth() <= 0) {

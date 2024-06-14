@@ -9,21 +9,21 @@ import org.apache.logging.log4j.Logger;
 
 public class AddAssetToUserLambda
         extends LambdaActivityRunner<AddAssetToUserRequest, AddAssetToUserResult>
-        implements RequestHandler<LambdaRequest<AddAssetToUserRequest>, LambdaResponse> {
+        implements RequestHandler<AuthenticatedLambdaRequest<AddAssetToUserRequest>, LambdaResponse> {
 
     private final Logger log = LogManager.getLogger();
 
     @Override
-    public LambdaResponse handleRequest(LambdaRequest<AddAssetToUserRequest> input, Context context) {
+    public LambdaResponse handleRequest(AuthenticatedLambdaRequest<AddAssetToUserRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
             () -> {
                 AddAssetToUserRequest unauthenticatedRequest = input.fromBody(AddAssetToUserRequest.class);
-                return AddAssetToUserRequest.builder()
-                    .withUserId(unauthenticatedRequest.getUserId())
+                return input.fromUserClaims(claims -> AddAssetToUserRequest.builder()
+                    .withUserId(claims.get("email"))
                     .withAssetType(unauthenticatedRequest.getAssetType())
                     .withAssetId(unauthenticatedRequest.getAssetId())
-                    .build();
+                    .build());
             },
             (request, serviceComponent) ->
                     serviceComponent.provideAddAssetToUserActivity().handleRequest(request)

@@ -534,8 +534,6 @@ Resources:
           Properties:
             Path: /newday
             Method: put
-            Auth:
-              Authorizer: 'NONE'
 
   AttackMonsterLambda:
     Type: AWS::Serverless::Function

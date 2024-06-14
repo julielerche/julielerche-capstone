@@ -19,7 +19,7 @@ public class AttackMonsterLambda
         return super.runActivity(
             () -> {
                 AttackMonsterRequest unauthenticatedRequest = input.fromBody(AttackMonsterRequest.class);
-                return input.fromUserClaims(claims ->AttackMonsterRequest.builder()
+                return input.fromUserClaims(claims -> AttackMonsterRequest.builder()
                     .withUserId(claims.get("email"))
                     .withAttackPower(unauthenticatedRequest.getAttackPower())
                     .withStaminaNeeded(unauthenticatedRequest.getStaminaNeeded())
