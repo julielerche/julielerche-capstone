@@ -3,24 +3,16 @@ package julielerche.capstone.activity;
 import julielerche.capstone.activity.requests.MonsterTurnRequest;
 import julielerche.capstone.activity.results.MonsterTurnResult;
 
-import julielerche.capstone.converters.AssetToModelConverter;
 import julielerche.capstone.converters.UserToModelConverter;
 import julielerche.capstone.dynamodb.EncounterDao;
 import julielerche.capstone.dynamodb.UserDao;
 import julielerche.capstone.dynamodb.models.Asset;
 import julielerche.capstone.dynamodb.models.Encounter;
-import julielerche.capstone.dynamodb.models.Spell;
 import julielerche.capstone.dynamodb.models.User;
-import julielerche.capstone.exceptions.InsufficentStatException;
 import julielerche.capstone.exceptions.UserOutOfHealthException;
-import julielerche.capstone.models.AssetModel;
 import julielerche.capstone.models.UserModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
 
 import javax.inject.Inject;
 

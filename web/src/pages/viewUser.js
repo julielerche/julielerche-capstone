@@ -8,10 +8,13 @@ import DataStore from "../util/DataStore";
 class ViewUser extends BindingClass {
     constructor() {
         super();
-        this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage', 'addInventoryToPage', 'addStatsToPage', 'delete', 'markComplete'], this);
+        this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage', 'addStoreToPage',
+            'addInventoryToPage', 'addStatsToPage', 'delete', 'markComplete', 'updateUserName', 'createNewTask', 
+            'useItem', 'startNewDay', 'addGoldToPage'], this);
         this.dataStore = new DataStore();
         this.dataStore.addChangeListener(this.addUserToPage);
-        //this.dataStore.addChangeListener(this.addStoreToPage);
+        this.dataStore.addChangeListener(this.addGoldToPage);
+        this.dataStore.addChangeListener(this.addStoreToPage);
         this.dataStore.addChangeListener(this.addTasksToPage);
         this.dataStore.addChangeListener(this.addInventoryToPage);
         this.dataStore.addChangeListener(this.addStatsToPage);
@@ -26,6 +29,9 @@ class ViewUser extends BindingClass {
         document.getElementById('user-name').innerText = "loading user ...";
         const user = await this.client.getUser();
         this.dataStore.set('user', user);
+        this.dataStore.set('inventory', user.inventory);
+        const store = await this.client.getStore();
+        this.dataStore.set('store', store);
     }
 
     /**
@@ -39,6 +45,11 @@ class ViewUser extends BindingClass {
         this.clientLoaded();
         document.getElementById('daily-tasks').addEventListener('click', this.delete);
         document.getElementById('daily-tasks').addEventListener('click', this.markComplete);
+        document.getElementById('nav-change-name').addEventListener('click', this.updateUserName);
+        document.getElementById('nav-new-day').addEventListener('click', this.startNewDay);
+        document.getElementById('createTaskButton').addEventListener('click', this.createNewTask);
+        document.getElementById('user-inventory').addEventListener('click', this.useItem);
+        document.getElementById('store-page').addEventListener('click', this.buyItem);
     }
 
     /**
@@ -50,15 +61,21 @@ class ViewUser extends BindingClass {
             return;
          }
         document.getElementById('user-name').innerText = user.displayName;
-        document.getElementById('gold-amount').innerText = user.gold + " Gold";
+    }
+
+    addGoldToPage() {
+        const gold = this.dataStore.get('gold');
+        if (gold == null) {
+            return;
+         }
+        document.getElementById('gold-amount').innerText = gold + " Gold";
     }
 
     /**
      * adds user inventory to the page tab.
      */
     addInventoryToPage() {
-        const user = this.dataStore.get('user');
-        const inventory = user.inventory;
+        const inventory = this.dataStore.get('inventory');
         if (inventory == null) {
             return;
         }
@@ -74,7 +91,7 @@ class ViewUser extends BindingClass {
                     <div class="card-body">
                     <h5 class="card-title">${asset.name}</h5>
                     <p class="card-text">${asset.description}</p>
-                    <a href="#" class="btn btn-primary">Use Item</a>
+                    <button data-assetName="${asset.name}" data-assetDescription="${asset.description}" data-assetType="${asset.assetType}" data-assetID="${asset.assetId}" class="button use-item">Use Item</button>
                     </div>
                     </div>
             `;
@@ -148,7 +165,6 @@ class ViewUser extends BindingClass {
         let taskHTML = '';
         let task;
         for (task of taskList) {
-            console.log(JSON.stringify(task));
             taskHTML += `
             <div class="card">
                 <div class="container">
@@ -174,13 +190,13 @@ class ViewUser extends BindingClass {
                             ☐</div>`;
                         }
                         taskHTML += `</div> <div class="row"> <div class="col">
-                        <button data-taskName="${task}" class="button update-task">Update</button>
+                        <button data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button update-task">Update</button>
                         </div>
                         <div class="col">
                         <button data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button delete-task">Delete</button>
                         </div>
                         <div class="col-5">
-                        <button data-task="${task}" class="button complete-task">Mark Complete</button>
+                        <button data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button complete-task">Mark Complete</button>
                         </div>
                     </div>
                 </div>
@@ -220,34 +236,183 @@ class ViewUser extends BindingClass {
     if (!completeButton.classList.contains("complete-task")) {
         return;
     }
-
+    
     completeButton.innerText = "Updating...";
 
     const errorMessageDisplay = document.getElementById('error-message-task');
     errorMessageDisplay.innerText = ``;
     errorMessageDisplay.classList.add('hidden');
-    console.log(completeButton.dataset);
+    console.log(JSON.stringify(completeButton.dataset));
 
-    await this.client.markCompleted(completeButton.dataset, (error) => {
+    const response = await this.client.markComplete(completeButton.dataset.taskname, completeButton.dataset.tasktype, completeButton.dataset.difficulty, (error) => {
        errorMessageDisplay.innerText = `Error: ${error.message}`;
        errorMessageDisplay.classList.remove('hidden');
    });
+   this.dataStore.set("user", response.data.userModel);
+   this.dataStore.set("gold", response.data.gold + response.data.userModel.gold);
+
+    const alertHTML =`<div class="alert alert-success fade show">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <strong>Success!</strong> You earned ${response.data.gold} gold.
+    </div>`
+    document.getElementById('successfulAlert').innerHTML = alertHTML;
+  }
+     /**
+          * when mark complete button is pushed, updates task.
+          */
+  async updateUserName(evt) {
+
+        evt.preventDefault();
+
+        const errorMessageDisplay = document.getElementById('error-message');
+        errorMessageDisplay.innerText = ``;
+        errorMessageDisplay.classList.add('hidden');
+
+        const updateUserNameButton = document.getElementById('updateUserName');
+        const origButtonText = updateUserNameButton.innerText;
+        updateUserNameButton.innerText = 'Loading...';
+
+        const displayName = document.getElementById('updated-name').value;
+
+        const user = await this.client.updateUserName(displayName, (error) => {
+            updateUserNameButton.innerText = origButtonText;
+            errorMessageDisplay.innerText = `Error: ${error.message}`;
+            errorMessageDisplay.classList.remove('hidden');
+        });
+        this.dataStore.set('user', user);
+        updateUserNameButton.innerText = origButtonText;
+    
+   };
+   //creates a new task
+   async createNewTask(evt) {
+    evt.preventDefault();
+    
+
+    const errorMessageDisplay = document.getElementById('error-message');
+    errorMessageDisplay.innerText = ``;
+    errorMessageDisplay.classList.add('hidden');
+
+    const createTaskButton = document.getElementById('createTaskButton');
+    if (!createTaskButton.classList.contains("createTask")) {
+        return;
+    }
+    const origButtonText = createTaskButton.innerText;
+    createTaskButton.innerText = 'Loading...';
+
+    const taskName = document.getElementById('newTaskName').value;
+    const newTaskType = document.getElementById('newTaskType').value;
+    const newTaskDifficulty = document.getElementById('newTaskDifficulty').value;
+
+    const user = await this.client.createNewTask(taskName, newTaskType, newTaskDifficulty, (error) => {
+        createTaskButton.innerText = origButtonText;
+        errorMessageDisplay.innerText = `Error: ${error.message}`;
+        errorMessageDisplay.classList.remove('hidden');
+    });
+    this.dataStore.set('user', user);
+    createTaskButton.innerText = origButtonText;
 }
+
+        /**
+* Starts a new day by updating user tasks.
+*/
+async startNewDay(evt) {
+    evt.preventDefault();
+
+    const errorMessageDisplay = document.getElementById('error-message');
+    errorMessageDisplay.innerText = ``;
+    errorMessageDisplay.classList.add('hidden');
+
+    const startNewDayButton = document.getElementById('startNewDayButton');
+    const origButtonText = startNewDayButton.innerText;
+    startNewDayButton.innerText = 'Loading...';
+
+    const user = await this.client.startNewDay((error) => {
+        startNewDayButton.innerText = origButtonText;
+        errorMessageDisplay.innerText = `Error: ${error.message}`;
+        errorMessageDisplay.classList.remove('hidden');
+    });
+    this.dataStore.set('user', user);
+    startNewDayButton.innerText = origButtonText;
+}
+
+        /**
+* Uses an item in the user inventory
+*/
+async useItem(e) {
+    const useItemButton = e.target;
+
+    const errorMessageDisplay = document.getElementById('error-message');
+    errorMessageDisplay.innerText = ``;
+    errorMessageDisplay.classList.add('hidden');
+
+    const origButtonText = useItemButton.innerText;
+    useItemButton.innerText = 'Loading...';
+
+    const user = await this.client.useItem(useItemButton.dataset.assettype, useItemButton.dataset.assetid, useItemButton.dataset.assetdescription, useItemButton.dataset.assetname, (error) => {
+        useItemButton.innerText = origButtonText;
+        errorMessageDisplay.innerText = `Error: ${error.message}`;
+        errorMessageDisplay.classList.remove('hidden');
+    });
+    this.dataStore.set('user', user);
+    useItemButton.innerText = origButtonText;
+}
+
 /**
     * When store button is pushed, adds store to page
     */
-    // addStoreToPage() {
-    //     const store = this.dataStore.get('store');
-    //     if (store == null) {
-    //         return;
-    //      }
-    //     let storeHTML = '';
-    //     let asset;
-    //     for (asset of store.assets) {
-    //         storeHTML += '<div class="tag">' + asset + '</div>';
-    //     }
-    //     document.getElementById('store').innerHTML = storeHTML;
-    // }
+    addStoreToPage() {
+        const inventory = this.dataStore.get('store');
+        if (inventory == null) {
+            return;
+        }
+        
+        let inventoryHTML = '<div class="row">';
+        let assetCounter = 0;
+        let asset;
+        for (asset of inventory) {
+            assetCounter++;
+            inventoryHTML += `
+                <div class="card" style="width: 12rem;">
+                    <img class="card-img-top" src="sprites/${asset.name}.png" alt="Card image cap">
+                    <div class="card-body">
+                    <h5 class="card-title">${asset.name}</h5>
+                    <p class="card-text">${asset.description}</p>
+                    <button data-assetType="${asset.assetType}" data-assetID="${asset.assetId}" class="button buy-item">Buy Item</button>
+                    </div>
+                    </div>
+            `;
+            if (assetCounter % 2 == 0) {
+                inventoryHTML += `</div>
+                <div class="row">
+                `;
+            }
+        }
+        inventoryHTML += `</div>`;
+        document.getElementById('store-page').innerHTML = inventoryHTML;
+    }
+
+        /**
+* Starts a new day by updating user tasks.
+*/
+async buyItem(e) {
+    const buyItemButton = e.target;
+
+    const errorMessageDisplay = document.getElementById('error-message');
+    errorMessageDisplay.innerText = ``;
+    errorMessageDisplay.classList.add('hidden');
+
+    const origButtonText = buyItemButton.innerText;
+    buyItemButton.innerText = 'Loading...';
+
+    const user = await this.client.buyItem(buyItemButton.dataset.assettype, buyItemButton.dataset.assetid, (error) => {
+        buyItemButton.innerText = origButtonText;
+        errorMessageDisplay.innerText = `Error: ${error.message}`;
+        errorMessageDisplay.classList.remove('hidden');
+    });
+    this.dataStore.set('gold', user.gold);
+    this.dataStore.set('inventory', user.inventory);
+    buyItemButton.innerText = origButtonText;
+}
 }
 /**
  * Main method to run when the page contents have loaded.

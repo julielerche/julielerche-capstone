@@ -18,10 +18,9 @@ public class GetAllOfAssetTypeLambda
         log.info("handleRequest");
         return super.runActivity(
             () -> {
-                GetAllOfAssetTypeRequest unauthenticatedRequest = input.fromBody(GetAllOfAssetTypeRequest.class);
                 return GetAllOfAssetTypeRequest.builder()
-                    .withAssetType(unauthenticatedRequest.getAssetType())
-                    .withAssetType2(unauthenticatedRequest.getAssetType2())
+                    .withAssetType("ITEM")
+                    .withAssetType2("POTION")
                     .build();
             },
             (request, serviceComponent) ->

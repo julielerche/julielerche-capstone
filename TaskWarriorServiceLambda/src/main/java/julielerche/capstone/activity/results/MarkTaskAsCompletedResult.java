@@ -1,18 +1,18 @@
 package julielerche.capstone.activity.results;
 
-import julielerche.capstone.dynamodb.models.Task;
+import julielerche.capstone.models.UserModel;
 
 public class MarkTaskAsCompletedResult {
-    private final Task task;
+    private final UserModel userModel;
     private final Integer gold;
 
-    private MarkTaskAsCompletedResult(Task task, Integer gold) {
-        this.task = task;
+    private MarkTaskAsCompletedResult(UserModel userModel, Integer gold) {
+        this.userModel = userModel;
         this.gold = gold;
     }
 
-    public Task getTasks() {
-        return task;
+    public UserModel getUserModel() {
+        return userModel;
     }
     public Integer getGold() {
         return gold;
@@ -21,7 +21,7 @@ public class MarkTaskAsCompletedResult {
     @Override
     public String toString() {
         return "MarkTaskAsCompletedResult{" +
-                "task=" + task +
+                "userModel=" + userModel +
                 "gold=" + gold +
                 '}';
     }
@@ -32,11 +32,11 @@ public class MarkTaskAsCompletedResult {
     }
 
     public static class Builder {
-        private Task task;
+        private UserModel userModel;
         private Integer gold;
 
-        public MarkTaskAsCompletedResult.Builder withTask(Task task) {
-            this.task = task;
+        public MarkTaskAsCompletedResult.Builder withUser(UserModel userModel) {
+            this.userModel = userModel;
             return this;
         }
         public MarkTaskAsCompletedResult.Builder withGold(Integer gold) {
@@ -45,7 +45,7 @@ public class MarkTaskAsCompletedResult {
         }
 
         public MarkTaskAsCompletedResult build() {
-            return new MarkTaskAsCompletedResult(task, gold);
+            return new MarkTaskAsCompletedResult(userModel, gold);
         }
     }
 }

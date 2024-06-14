@@ -3,7 +3,6 @@ package julielerche.capstone.lambda;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import julielerche.capstone.activity.requests.GetEncounterRequest;
-import julielerche.capstone.activity.requests.GetUserRequest;
 import julielerche.capstone.activity.results.GetEncounterResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

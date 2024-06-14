@@ -1,6 +1,6 @@
 package julielerche.capstone.exceptions;
 
-public class UserOutOfHealthException extends RuntimeException{
+public class UserOutOfHealthException extends RuntimeException {
     private static final long serialVersionUID = 1881605489508682280L;
 
     /**

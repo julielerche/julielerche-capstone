@@ -54,7 +54,6 @@ public class MarkTaskAsCompletedActivityTest {
 
         //then
         assertTrue(result.getGold() > 5);
-        assertEquals(result.getTasks(), task);
-        assertTrue(result.getTasks().getCompleted());
+        assertTrue(result.getUserModel().getChores().contains(task));
     }
 }

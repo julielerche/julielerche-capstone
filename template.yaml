@@ -306,8 +306,6 @@ Resources:
           Properties:
             Path: /users/task/update
             Method: put
-            Auth:
-              Authorizer: 'NONE'
 
   UpdateUserLambda:
     Type: AWS::Serverless::Function
@@ -328,8 +326,6 @@ Resources:
           Properties:
             Path: /users/
             Method: put
-            Auth:
-              Authorizer: 'NONE'
 
   UseItemLambda:
     Type: AWS::Serverless::Function
@@ -538,8 +534,6 @@ Resources:
           Properties:
             Path: /newday
             Method: put
-            Auth:
-              Authorizer: 'NONE'
 
   AttackMonsterLambda:
     Type: AWS::Serverless::Function

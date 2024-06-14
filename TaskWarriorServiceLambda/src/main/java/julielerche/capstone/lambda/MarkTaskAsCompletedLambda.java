@@ -19,7 +19,7 @@ public class MarkTaskAsCompletedLambda
         return super.runActivity(
             () -> {
                 MarkTaskAsCompletedRequest unauthenticatedRequest = input.fromBody(MarkTaskAsCompletedRequest.class);
-                return input.fromUserClaims(claims ->MarkTaskAsCompletedRequest.builder()
+                return input.fromUserClaims(claims -> MarkTaskAsCompletedRequest.builder()
                     .withUserId(claims.get("email"))
                     .withTask(unauthenticatedRequest.getTask())
                     .build());
