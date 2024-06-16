@@ -17,7 +17,7 @@ export default class TaskWarriorClient extends BindingClass {
 
         const methodsToBind = ['clientLoaded', 'getIdentity', 'login', 'logout', 'getUser', 'getStore', 'createUser', 'getUserTasks', 
             'getEncounter', 'createEncounter', 'removeTaskFromList', 'attackMonster', 'spellMonster', 'markComplete', 'updateUserName',
-        'createNewTask', 'useItem'];
+        'createNewTask', 'useItem', 'buyItem'];
         this.bindClassMethods(methodsToBind, this);
 
         this.authenticator = new Authenticator();;
@@ -297,11 +297,12 @@ async getUserTasks(taskType, errorCallback) {
         this.handleError(error, errorCallback)
     }
     }
+
     async buyItem(assetType, assetId, errorCallback) {
         try {
             const token = await this.getTokenOrThrow("Only authenticated users can buy an item.");
             const response = await this.axiosClient.put(`users/inventory`, {
-                "taskType": assetType,
+                "assetType": assetType,
                 "assetId": assetId,
             }, {
                 headers: {

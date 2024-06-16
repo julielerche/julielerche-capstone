@@ -10,7 +10,7 @@ class ViewUser extends BindingClass {
         super();
         this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage', 'addStoreToPage',
             'addInventoryToPage', 'addStatsToPage', 'delete', 'markComplete', 'updateUserName', 'createNewTask', 
-            'useItem', 'startNewDay', 'addGoldToPage'], this);
+            'useItem', 'startNewDay', 'addGoldToPage', 'buyItem'], this);
         this.dataStore = new DataStore();
         this.dataStore.addChangeListener(this.addUserToPage);
         this.dataStore.addChangeListener(this.addGoldToPage);
@@ -29,6 +29,7 @@ class ViewUser extends BindingClass {
         document.getElementById('user-name').innerText = "loading user ...";
         const user = await this.client.getUser();
         this.dataStore.set('user', user);
+        this.dataStore.set('gold', user.gold);
         this.dataStore.set('inventory', user.inventory);
         const store = await this.client.getStore();
         this.dataStore.set('store', store);
@@ -43,8 +44,9 @@ class ViewUser extends BindingClass {
 
         this.client = new TaskWarriorClient();
         this.clientLoaded();
-        document.getElementById('daily-tasks').addEventListener('click', this.delete);
-        document.getElementById('daily-tasks').addEventListener('click', this.markComplete);
+        document.getElementById('nav-tabContent').addEventListener('click', this.delete);
+        document.getElementById('nav-tabContent').addEventListener('click', this.markComplete);
+        document.getElementById('nav-tabContent').addEventListener('click', this.updateTask);
         document.getElementById('nav-change-name').addEventListener('click', this.updateUserName);
         document.getElementById('nav-new-day').addEventListener('click', this.startNewDay);
         document.getElementById('createTaskButton').addEventListener('click', this.createNewTask);
@@ -162,9 +164,12 @@ class ViewUser extends BindingClass {
     }
 
     getTaskHTMLFromList(taskList) {
+        let counter = 0;
         let taskHTML = '';
         let task;
         for (task of taskList) {
+            const buttonId = task.taskType + counter;
+            counter++;
             taskHTML += `
             <div class="card">
                 <div class="container">
@@ -190,7 +195,7 @@ class ViewUser extends BindingClass {
                             ☐</div>`;
                         }
                         taskHTML += `</div> <div class="row"> <div class="col">
-                        <button data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button update-task">Update</button>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#${buttonId}" aria-expanded="false" aria-controls="${buttonId}"> Update Task </button>
                         </div>
                         <div class="col">
                         <button data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button delete-task">Delete</button>
@@ -199,6 +204,47 @@ class ViewUser extends BindingClass {
                         <button data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button complete-task">Mark Complete</button>
                         </div>
                     </div>
+                    
+                    
+              
+              <div class="collapse" id="${buttonId}">
+              <div class="card">
+              <form class="card-content" id="update-task-form">
+                  <p class="hidden error" id="error-message"> </p>
+                  <p class="form-field">
+                  <sub> All fields are optional.</sub>
+                      <label>New Task Name</label>
+                      <input type="text" id="update-newTaskName" placeholder="Clean Dishes" autofocus>
+                  </p>
+                  <div class="row">
+                      <div class="col-6">
+                          <label>New Task Type</label>
+                  <select class="form-control form-control-sm" id="update-newTaskType">
+                      <option value="null"> </option>
+                      <option value="DAILY">Daily</option>
+                      <option value="CHORE">Chore</option>
+                      <option value="TODO">ToDo</option>
+                    </select>
+                  </div>
+                  <div class="col-6">
+                      <label>New Difficulty</label>
+                    <select class="form-control form-control-sm" id="update-newTaskDifficulty">
+                      <option value="null"> </option>
+                      <option value="EASY">Easy</option>
+                      <option value="MEDIUM">Medium</option>
+                      <option value="HARD">Hard</option>
+                    </select>
+                  </div>
+              </div>
+              <p></p>
+                  <p>
+                  <button data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button update-task" id="updateTaskButton">Update Task</a>
+                  </p>
+              </form>
+              <p class="hidden error" id="error-message-update"> </p>
+          </div>
+              </div>
+                    
                 </div>
             </div>
             `;
@@ -206,6 +252,30 @@ class ViewUser extends BindingClass {
         return taskHTML;
     }
 
+
+    /**
+         * when remove button is clicked, removes task from tasklist.
+         */
+    async updateTask(e) {
+        const updateTaskButton = e.target;
+        if (!updateTaskButton.classList.contains("update-task")) {
+            return;
+        }
+
+        updateTaskButton.innerText = "Updating...";
+
+        const errorMessageDisplay = document.getElementById('error-message-update');
+        errorMessageDisplay.innerText = ``;
+        errorMessageDisplay.classList.add('hidden');
+        const taskName = document.getElementById('update-newTaskName').value;
+        const newTaskType = document.getElementById('update-newTaskType').value;
+        const newTaskDifficulty = document.getElementById('update-newTaskDifficulty').value;
+
+        await this.client.updateTask(, (error) => {
+            errorMessageDisplay.innerText = `Error: ${error.message}`;
+            errorMessageDisplay.classList.remove('hidden');
+        });
+    }
     /**
           * when remove button is clicked, removes task from tasklist.
           */
@@ -220,7 +290,6 @@ class ViewUser extends BindingClass {
         const errorMessageDisplay = document.getElementById('error-message-task');
         errorMessageDisplay.innerText = ``;
         errorMessageDisplay.classList.add('hidden');
-        console.log(deleteButton.dataset);
 
         await this.client.removeTaskFromList(deleteButton.dataset.taskname, deleteButton.dataset.tasktype, deleteButton.dataset.difficulty, (error) => {
            errorMessageDisplay.innerText = `Error: ${error.message}`;
@@ -376,7 +445,8 @@ async useItem(e) {
                     <img class="card-img-top" src="sprites/${asset.name}.png" alt="Card image cap">
                     <div class="card-body">
                     <h5 class="card-title">${asset.name}</h5>
-                    <p class="card-text">${asset.description}</p>
+                    <p class="card-text">${asset.description}<br>
+                    ${asset.cost} Gold</p>
                     <button data-assetType="${asset.assetType}" data-assetID="${asset.assetId}" class="button buy-item">Buy Item</button>
                     </div>
                     </div>
