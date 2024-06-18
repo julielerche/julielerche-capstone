@@ -9,23 +9,23 @@ import org.apache.logging.log4j.Logger;
 
 public class UpdateTaskLambda
         extends LambdaActivityRunner<UpdateTaskRequest, UpdateTaskResult>
-        implements RequestHandler<LambdaRequest<UpdateTaskRequest>, LambdaResponse> {
+        implements RequestHandler<AuthenticatedLambdaRequest<UpdateTaskRequest>, LambdaResponse> {
 
     private final Logger log = LogManager.getLogger();
 
     @Override
-    public LambdaResponse handleRequest(LambdaRequest<UpdateTaskRequest> input, Context context) {
+    public LambdaResponse handleRequest(AuthenticatedLambdaRequest<UpdateTaskRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
             () -> {
                 UpdateTaskRequest unauthenticatedRequest = input.fromBody(UpdateTaskRequest.class);
-                return UpdateTaskRequest.builder()
-                    .withUserId(unauthenticatedRequest.getUserId())
+                return input.fromUserClaims(claims -> UpdateTaskRequest.builder()
+                    .withUserId(claims.get("email"))
                     .withTask(unauthenticatedRequest.getTask())
                     .withNewName(unauthenticatedRequest.getNewName())
                     .withNewDifficulty(unauthenticatedRequest.getNewDifficulty())
                     .withNewType(unauthenticatedRequest.getNewType())
-                    .build();
+                    .build());
             },
             (request, serviceComponent) ->
                     serviceComponent.provideUpdateTaskActivity().handleRequest(request)

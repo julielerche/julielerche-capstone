@@ -57,7 +57,7 @@ class CreateUser extends BindingClass {
     redirectToViewUser() {
         const user = this.dataStore.get('user');
         if (user != null) {
-            window.location.href = 'users/${user.id}';
+            window.location.href = 'user.html';
         }
     }
 }
