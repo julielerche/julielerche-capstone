@@ -5,9 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script type="text/javascript" src="assets/viewUser.js"></script>
-    <script type="text/javascript" src="assets/viewEncounter.js"></script>
+    <script type="text/javascript" src="assets/userInitalizer.js"></script>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
 </head>
 
 <body class="background">
@@ -158,6 +161,7 @@
                     <h2>Encounter Info</h2>
                     <form class="card-content">
                         <sub> Display the current Encounter here.</sub>
+                        <div id="monsterKilledAlert"></div>
                         <ol id="encounter-monsters"></ol>
                         <h5>Attacks</h5>
                         

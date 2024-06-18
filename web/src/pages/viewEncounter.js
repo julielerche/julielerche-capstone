@@ -1,19 +1,17 @@
-import TaskWarriorClient from '../api/taskWarriorClient';
-import Header from '../components/header';
 import BindingClass from "../util/bindingClass";
-import DataStore from "../util/DataStore";
 /**
  * Logic needed for the view playlist page of the website.
  */
-class ViewEncounter extends BindingClass {
-    constructor() {
+export default class ViewEncounter extends BindingClass {
+    constructor(client, dataStore) {
         super();
-        this.bindClassMethods(['clientLoaded', 'mount', 'spellMonster', 'addEncounterToPage', 'createNewEncounterSubmit', 'addMonsterTargetsToPage', 'attackMonster'], this);
-        this.dataStore = new DataStore();
+        this.client = client;
+        this.dataStore = dataStore;
+        this.bindClassMethods(['clientLoaded', 'mount', 'spellMonster', 'addEncounterToPage', 
+            'createNewEncounterSubmit', 'addMonsterTargetsToPage', 'attackMonster'], this);
         this.dataStore.addChangeListener(this.addEncounterToPage);
         this.dataStore.addChangeListener(this.addMonsterTargetsToPage);
         
-        this.header = new Header(this.dataStore);
         console.log("viewEncounter constructor");
     }
 
@@ -33,7 +31,6 @@ class ViewEncounter extends BindingClass {
         document.getElementById('createEncounter').addEventListener('click', this.createNewEncounterSubmit);
         document.getElementById('swordAttack').addEventListener('click', this.attackMonster);
         document.getElementById('spellAttack').addEventListener('click', this.spellMonster);
-        this.client = new TaskWarriorClient();
         this.clientLoaded();
     }
 
@@ -61,8 +58,8 @@ class ViewEncounter extends BindingClass {
 */
     addEncounterToPage() {
         const monsterList = this.dataStore.get('monsterList');
-        if (monsterList == null) {
-            const noEncounterHTML = `<div class="card">
+        if (monsterList == null || monsterList.length == 0) {
+            const noEncounterHTML = `<div class="card" style="width: 18rem;">
             <p>Click the new Encounter button below to generate a new encounter.</p>
             </div>`
             document.getElementById('encounter-monsters').innerHTML = noEncounterHTML;
@@ -144,8 +141,14 @@ async attackMonster(evt) {
         errorMessageDisplay.classList.remove('hidden');
     });
     this.dataStore.set('monsterList', response.data.assets);
-    if (response.data.goldEarned !== null) {
-        this.dataStore.set('gold', response.data.goldEarned);
+    if (response.data.goldEarned !== 0) {
+        const user = this.dataStore.get('user');
+        this.dataStore.set("gold", response.data.goldEarned + user.gold);
+        const alertHTML =`<div class="alert alert-success fade show">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <strong>Success!</strong> You earned ${response.data.goldEarned} gold.
+        </div>`
+        document.getElementById('monsterKilledAlert').innerHTML = alertHTML;
     }
     attackButton.innerText = origButtonText;
 }
@@ -169,20 +172,26 @@ async spellMonster(evt) {
         errorMessageDisplay.classList.remove('hidden');
     });
     this.dataStore.set('monsterList', response.data.assets);
-    if (response.data.goldEarned !== null) {
-        this.dataStore.set('gold', response.data.goldEarned);
+    if (response.data.goldEarned !== 0) {
+        const user = this.dataStore.get('user');
+        this.dataStore.set("gold", response.data.goldEarned + user.gold);
+        const alertHTML =`<div class="alert alert-success fade show">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <strong>Success!</strong> You earned ${response.data.goldEarned} gold.
+        </div>`
+        document.getElementById('monsterKilledAlert').innerHTML = alertHTML;
     }
     
     spellButton.innerText = origButtonText;
 }
 
 }
-    /**
- * Main method to run when the page contents have loaded.
- */
-const main = async () => {
-    const viewEncounter = new ViewEncounter();
-    viewEncounter.mount();
-};
+//     /**
+//  * Main method to run when the page contents have loaded.
+//  */
+// const main = async () => {
+//     const viewEncounter = new ViewEncounter();
+//     viewEncounter.mount();
+// };
 
-window.addEventListener('DOMContentLoaded', main);
+//window.addEventListener('DOMContentLoaded', main);

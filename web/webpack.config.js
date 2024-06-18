@@ -29,7 +29,8 @@ module.exports = {
     viewUser: path.resolve(__dirname, 'src', 'pages', 'viewUser.js'),
     viewEncounter: path.resolve(__dirname, 'src', 'pages', 'viewEncounter.js'),
     createUser: path.resolve(__dirname, 'src', 'pages', 'createUser.js'),
-    index: path.resolve(__dirname, 'src', 'pages', 'index.js')
+    index: path.resolve(__dirname, 'src', 'pages', 'index.js'),
+    userInitalizer: path.resolve(__dirname, 'src', 'pages', 'userInitalizer.js')
   },
   output: {
     path: path.resolve(__dirname, 'build', 'assets'),

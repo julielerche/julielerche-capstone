@@ -1,17 +1,16 @@
-import TaskWarriorClient from '../api/taskWarriorClient';
 import Header from '../components/header';
 import BindingClass from "../util/bindingClass";
-import DataStore from "../util/DataStore";
 /**
  * Logic needed for the view playlist page of the website.
  */
-class ViewUser extends BindingClass {
-    constructor() {
+export default class ViewUser extends BindingClass {
+    constructor(client, dataStore) {
         super();
+        this.client = client;
+        this.dataStore = dataStore;
         this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage', 'addStoreToPage',
             'addInventoryToPage', 'addStatsToPage', 'delete', 'markComplete', 'updateUserName', 'createNewTask', 
             'useItem', 'startNewDay', 'addGoldToPage', 'buyItem', 'updateTask'], this);
-        this.dataStore = new DataStore();
         this.dataStore.addChangeListener(this.addUserToPage);
         this.dataStore.addChangeListener(this.addGoldToPage);
         this.dataStore.addChangeListener(this.addStoreToPage);
@@ -27,8 +26,9 @@ class ViewUser extends BindingClass {
      */
     async clientLoaded() {
         document.getElementById('user-name').innerText = "loading user ...";
-        const user = await this.client.getUser();
-        this.dataStore.set('user', user);
+        // const user = await this.client.getUser();
+        // this.dataStore.set('user', user);
+        const user = this.dataStore.get('user');
         this.dataStore.set('gold', user.gold);
         this.dataStore.set('inventory', user.inventory);
         const store = await this.client.getStore();
@@ -41,8 +41,6 @@ class ViewUser extends BindingClass {
     mount() {
         
         this.header.addHeaderToPage();
-
-        this.client = new TaskWarriorClient();
         this.clientLoaded();
         document.getElementById('nav-tabContent').addEventListener('click', this.delete);
         document.getElementById('nav-tabContent').addEventListener('click', this.markComplete);
@@ -141,6 +139,9 @@ class ViewUser extends BindingClass {
      */
     addTasksToPage() {
         const user = this.dataStore.get('user');
+        if (user == null) {
+            return;
+        }
         const dailies = user.dailies;
         if (dailies == null) {
             return;
@@ -500,12 +501,12 @@ async buyItem(e) {
     buyItemButton.innerText = origButtonText;
 }
 }
-/**
- * Main method to run when the page contents have loaded.
- */
-const main = async () => {
-    const viewUser = new ViewUser();
-    viewUser.mount();
-};
+// /**
+//  * Main method to run when the page contents have loaded.
+//  */
+// const main = async () => {
+//     const viewUser = new ViewUser();
+//     viewUser.mount();
+// };
 
-window.addEventListener('DOMContentLoaded', main);
+//window.addEventListener('DOMContentLoaded', main);
