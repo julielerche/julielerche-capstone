@@ -4,6 +4,7 @@ import julielerche.capstone.activity.requests.UpdateTaskRequest;
 import julielerche.capstone.activity.results.UpdateTaskResult;
 
 import julielerche.capstone.converters.DifficultyConverter;
+import julielerche.capstone.converters.UserToModelConverter;
 import julielerche.capstone.dynamodb.UserDao;
 import julielerche.capstone.dynamodb.models.Task;
 import julielerche.capstone.dynamodb.models.TaskType;
@@ -86,7 +87,8 @@ public class UpdateTaskActivity {
                 chosenList = new ArrayList<>();
                 break;
         }
-        if (updateTaskRequest.getNewType() != null) {
+        if (updateTaskRequest.getNewType() != null &&
+                !updateTaskRequest.getNewType().equals(updatedTask.getTaskType().toString())) {
             switch (updateTaskRequest.getNewType()) {
                 case "DAILY":
                     updatedTask.setTaskType(TaskType.DAILY);
@@ -113,7 +115,7 @@ public class UpdateTaskActivity {
 
         userDao.saveUser(loadedUser);
         return UpdateTaskResult.builder()
-                .withTasks(updatedTask)
+                .withUserModel(new UserToModelConverter().userToModel(loadedUser))
                 .build();
     }
 
@@ -140,8 +142,8 @@ public class UpdateTaskActivity {
                 existingTask.setDifficulty(new DifficultyConverter()
                         .stringToDifficulty(updateTaskRequest.getNewDifficulty()));
             }
-            if (updateTaskRequest.getNewType().equals(existingTask.getTaskType().toString()) ||
-                updateTaskRequest.getNewType() == null) {
+            if (updateTaskRequest.getNewType() == null ||
+                updateTaskRequest.getNewType().equals(existingTask.getTaskType().toString())) {
                 chosenList.add(existingTask);
             }
             Map<Task, List<Task>> taskListMap = new HashMap<>();

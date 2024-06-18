@@ -1,22 +1,22 @@
 package julielerche.capstone.activity.results;
 
 import julielerche.capstone.dynamodb.models.Task;
+import julielerche.capstone.models.UserModel;
 
 public class UpdateTaskResult {
-    private final Task task;
+    private final UserModel userModel;
 
-    private UpdateTaskResult(Task task) {
-        this.task = task;
+    private UpdateTaskResult(UserModel userModel) {
+        this.userModel = userModel;
     }
 
-    public Task getTasks() {
-        return task;
+    public UserModel getUserModel() {
+        return this.userModel;
     }
-
     @Override
     public String toString() {
         return "UpdateTaskResult{" +
-                "task=" + task +
+                "user=" + userModel +
                 '}';
     }
 
@@ -26,15 +26,15 @@ public class UpdateTaskResult {
     }
 
     public static class Builder {
-        private Task task;
+        private UserModel userModel;
 
-        public UpdateTaskResult.Builder withTasks(Task task) {
-            this.task = task;
+        public UpdateTaskResult.Builder withUserModel(UserModel userModel) {
+            this.userModel = userModel;
             return this;
         }
 
         public UpdateTaskResult build() {
-            return new UpdateTaskResult(task);
+            return new UpdateTaskResult(userModel);
         }
     }
 }

@@ -7,6 +7,7 @@ import julielerche.capstone.dynamodb.models.Difficulty;
 import julielerche.capstone.dynamodb.models.Task;
 import julielerche.capstone.dynamodb.models.TaskType;
 import julielerche.capstone.dynamodb.models.User;
+import julielerche.capstone.models.UserModel;
 import julielerche.capstone.testHelper.UserCreater;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
 
 public class UpdateTaskActivityTest {
     @Mock
@@ -55,9 +57,68 @@ public class UpdateTaskActivityTest {
         UpdateTaskResult result = updateTaskActivity.handleRequest(request);
 
         //then
-        Task updatedTask = result.getTasks();
-        assertEquals(TaskType.DAILY, updatedTask.getTaskType());
-        assertEquals(Difficulty.MEDIUM, updatedTask.getDifficulty());
-        assertEquals("Laundry", updatedTask.getTaskName());
+        UserModel resultUser = result.getUserModel();
+        List<Task> tasks = resultUser.getDailies();
+        assertEquals("Laundry", tasks.get(0).getTaskName());
+        assertEquals(Difficulty.MEDIUM, tasks.get(0).getDifficulty());
+    }
+
+    @Test
+    public void handleRequest_withNameOnly_returnsTaskWithUpdatedName() {
+        //given
+        User user = UserCreater.generateUser("one", "Julie");
+
+        Task task = new Task(TaskType.CHORE, "Dishes", Difficulty.EASY, false);
+        List<Task> taskList = new ArrayList<>();
+        taskList.add(task);
+        user.setChores(taskList);
+
+        UpdateTaskRequest request = UpdateTaskRequest.builder()
+                .withUserId("one")
+                .withTask(task)
+                .withNewName("DISHES")
+                .build();
+
+        when(userDao.loadUser("one")).thenReturn(user);
+
+        //when
+        UpdateTaskResult result = updateTaskActivity.handleRequest(request);
+
+        //then
+        UserModel resultUser = result.getUserModel();
+        List<Task> tasks = resultUser.getChores();
+        assertEquals("DISHES", tasks.get(0).getTaskName());
+        assertEquals(Difficulty.EASY, tasks.get(0).getDifficulty());
+    }
+
+    @Test
+    public void handleRequest_withNameAndDuplicateType_returnsTaskWithUpdatedName() {
+        //given
+        User user = UserCreater.generateUser("one", "Julie");
+
+        Task task = new Task(TaskType.CHORE, "Dishes", Difficulty.EASY, false);
+        List<Task> taskList = new ArrayList<>();
+        taskList.add(task);
+        user.setChores(taskList);
+
+        UpdateTaskRequest request = UpdateTaskRequest.builder()
+                .withUserId("one")
+                .withTask(task)
+                .withNewName("DISHES")
+                .withNewType("CHORE")
+                .build();
+
+        when(userDao.loadUser("one")).thenReturn(user);
+
+        //when
+        UpdateTaskResult result = updateTaskActivity.handleRequest(request);
+
+        //then
+        UserModel resultUser = result.getUserModel();
+        List<Task> tasks = resultUser.getChores();
+        assertEquals("DISHES", tasks.get(0).getTaskName());
+        assertEquals(Difficulty.EASY, tasks.get(0).getDifficulty());
+        assertEquals(TaskType.CHORE, tasks.get(0).getTaskType());
+        assertEquals(1, tasks.size());
     }
 }

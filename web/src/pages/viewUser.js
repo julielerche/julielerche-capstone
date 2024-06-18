@@ -10,7 +10,7 @@ class ViewUser extends BindingClass {
         super();
         this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage', 'addStoreToPage',
             'addInventoryToPage', 'addStatsToPage', 'delete', 'markComplete', 'updateUserName', 'createNewTask', 
-            'useItem', 'startNewDay', 'addGoldToPage', 'buyItem'], this);
+            'useItem', 'startNewDay', 'addGoldToPage', 'buyItem', 'updateTask'], this);
         this.dataStore = new DataStore();
         this.dataStore.addChangeListener(this.addUserToPage);
         this.dataStore.addChangeListener(this.addGoldToPage);
@@ -47,7 +47,7 @@ class ViewUser extends BindingClass {
         document.getElementById('nav-tabContent').addEventListener('click', this.delete);
         document.getElementById('nav-tabContent').addEventListener('click', this.markComplete);
         document.getElementById('nav-tabContent').addEventListener('click', this.updateTask);
-        document.getElementById('nav-change-name').addEventListener('click', this.updateUserName);
+        document.getElementById('updateUserName').addEventListener('click', this.updateUserName);
         document.getElementById('nav-new-day').addEventListener('click', this.startNewDay);
         document.getElementById('createTaskButton').addEventListener('click', this.createNewTask);
         document.getElementById('user-inventory').addEventListener('click', this.useItem);
@@ -214,13 +214,13 @@ class ViewUser extends BindingClass {
                   <p class="form-field">
                   <sub> All fields are optional.</sub>
                       <label>New Task Name</label>
-                      <input type="text" id="update-newTaskName" placeholder="Clean Dishes" autofocus>
+                      <input type="text" id="update-newTaskName-${buttonId}" placeholder="Clean Dishes" autofocus>
                   </p>
                   <div class="row">
                       <div class="col-6">
                           <label>New Task Type</label>
-                  <select class="form-control form-control-sm" id="update-newTaskType">
-                      <option value="null"> </option>
+                  <select class="form-control form-control-sm" id="update-newTaskType-${buttonId}">
+                      <option value=null> </option>
                       <option value="DAILY">Daily</option>
                       <option value="CHORE">Chore</option>
                       <option value="TODO">ToDo</option>
@@ -228,8 +228,8 @@ class ViewUser extends BindingClass {
                   </div>
                   <div class="col-6">
                       <label>New Difficulty</label>
-                    <select class="form-control form-control-sm" id="update-newTaskDifficulty">
-                      <option value="null"> </option>
+                    <select class="form-control form-control-sm" id="update-newTaskDifficulty-${buttonId}">
+                      <option value=null> </option>
                       <option value="EASY">Easy</option>
                       <option value="MEDIUM">Medium</option>
                       <option value="HARD">Hard</option>
@@ -238,7 +238,9 @@ class ViewUser extends BindingClass {
               </div>
               <p></p>
                   <p>
-                  <button data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button update-task" id="updateTaskButton">Update Task</a>
+                  <div id="updateTaskListener">
+                  <button data-buttonId=${buttonId} data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button update-task" id="updateTaskButton">Update Task</a>
+                  </div>
                   </p>
               </form>
               <p class="hidden error" id="error-message-update"> </p>
@@ -254,7 +256,7 @@ class ViewUser extends BindingClass {
 
 
     /**
-         * when remove button is clicked, removes task from tasklist.
+         * when update button is clicked, updates tasks in tasklist.
          */
     async updateTask(e) {
         const updateTaskButton = e.target;
@@ -263,18 +265,24 @@ class ViewUser extends BindingClass {
         }
 
         updateTaskButton.innerText = "Updating...";
+        const buttonId = updateTaskButton.dataset.buttonid;
 
         const errorMessageDisplay = document.getElementById('error-message-update');
         errorMessageDisplay.innerText = ``;
         errorMessageDisplay.classList.add('hidden');
-        const taskName = document.getElementById('update-newTaskName').value;
-        const newTaskType = document.getElementById('update-newTaskType').value;
-        const newTaskDifficulty = document.getElementById('update-newTaskDifficulty').value;
+        const nameId = "update-newTaskName-" + buttonId;
+        const typeId = "update-newTaskType-" + buttonId;
+        const difficultyId = "update-newTaskDifficulty-" + buttonId;
+        const taskName = document.getElementById(nameId).value;
+        const newTaskType = document.getElementById(typeId).value;
+        const newTaskDifficulty = document.getElementById(difficultyId).value;
 
-        await this.client.updateTask(, (error) => {
+        const user = await this.client.updateTask(updateTaskButton.dataset.taskname, updateTaskButton.dataset.tasktype, updateTaskButton.dataset.difficulty, taskName, newTaskType, newTaskDifficulty, (error) => {
             errorMessageDisplay.innerText = `Error: ${error.message}`;
             errorMessageDisplay.classList.remove('hidden');
         });
+        this.dataStore.set('user', user);
+
     }
     /**
           * when remove button is clicked, removes task from tasklist.
@@ -291,10 +299,11 @@ class ViewUser extends BindingClass {
         errorMessageDisplay.innerText = ``;
         errorMessageDisplay.classList.add('hidden');
 
-        await this.client.removeTaskFromList(deleteButton.dataset.taskname, deleteButton.dataset.tasktype, deleteButton.dataset.difficulty, (error) => {
+        const user = await this.client.removeTaskFromList(deleteButton.dataset.taskname, deleteButton.dataset.tasktype, deleteButton.dataset.difficulty, (error) => {
            errorMessageDisplay.innerText = `Error: ${error.message}`;
            errorMessageDisplay.classList.remove('hidden');
        });
+       this.dataStore.set('user', user);
   }
 
   /**
@@ -333,13 +342,19 @@ class ViewUser extends BindingClass {
 
         evt.preventDefault();
 
+        
+        const updateUserNameButton = document.getElementById('updateUserName');
+
+        if (!updateUserNameButton.classList.contains("updateUserNameButton")) {
+            return;
+        }
+
+        const origButtonText = updateUserNameButton.innerText;
+        updateUserNameButton.innerText = 'Loading...';
+
         const errorMessageDisplay = document.getElementById('error-message');
         errorMessageDisplay.innerText = ``;
         errorMessageDisplay.classList.add('hidden');
-
-        const updateUserNameButton = document.getElementById('updateUserName');
-        const origButtonText = updateUserNameButton.innerText;
-        updateUserNameButton.innerText = 'Loading...';
 
         const displayName = document.getElementById('updated-name').value;
 
@@ -423,6 +438,7 @@ async useItem(e) {
         errorMessageDisplay.classList.remove('hidden');
     });
     this.dataStore.set('user', user);
+    this.dataStore.set('inventory', user.inventory);
     useItemButton.innerText = origButtonText;
 }
 
@@ -479,7 +495,7 @@ async buyItem(e) {
         errorMessageDisplay.innerText = `Error: ${error.message}`;
         errorMessageDisplay.classList.remove('hidden');
     });
-    this.dataStore.set('gold', user.gold);
+    this.dataStore.set('user', user);
     this.dataStore.set('inventory', user.inventory);
     buyItemButton.innerText = origButtonText;
 }

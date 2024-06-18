@@ -62,6 +62,10 @@ class ViewEncounter extends BindingClass {
     addEncounterToPage() {
         const monsterList = this.dataStore.get('monsterList');
         if (monsterList == null) {
+            const noEncounterHTML = `<div class="card">
+            <p>Click the new Encounter button below to generate a new encounter.</p>
+            </div>`
+            document.getElementById('encounter-monsters').innerHTML = noEncounterHTML;
             return;
         }
         let encounterHTML = '';
@@ -134,12 +138,15 @@ async attackMonster(evt) {
     const origButtonText = attackButton.innerText;
     attackButton.innerText = 'Loading...';
 
-    const monsterList = await this.client.attackMonster(monsterTarget, (error) => {
+    const response = await this.client.attackMonster(monsterTarget, (error) => {
         attackButton.innerText = origButtonText;
         errorMessageDisplay.innerText = `Error: ${error.message}`;
         errorMessageDisplay.classList.remove('hidden');
     });
-    this.dataStore.set('monsterList', monsterList);
+    this.dataStore.set('monsterList', response.data.assets);
+    if (response.data.goldEarned !== null) {
+        this.dataStore.set('gold', response.data.goldEarned);
+    }
     attackButton.innerText = origButtonText;
 }
      /**
@@ -161,7 +168,11 @@ async spellMonster(evt) {
         errorMessageDisplay.innerText = `Error: ${error.message}`;
         errorMessageDisplay.classList.remove('hidden');
     });
-    this.dataStore.set('monsterList', response);
+    this.dataStore.set('monsterList', response.data.assets);
+    if (response.data.goldEarned !== null) {
+        this.dataStore.set('gold', response.data.goldEarned);
+    }
+    
     spellButton.innerText = origButtonText;
 }
 
