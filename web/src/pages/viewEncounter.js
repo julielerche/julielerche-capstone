@@ -27,7 +27,6 @@ export default class ViewEncounter extends BindingClass {
         this.dataStore.set('stamina', user.stamina);
         this.dataStore.set('mana', user.mana);
         this.dataStore.set('health', user.health);
-
     }
 
     /**
@@ -102,6 +101,8 @@ export default class ViewEncounter extends BindingClass {
         }
         document.getElementById('encounter-monsters').innerHTML = encounterHTML;
     }
+
+
 
      /**
 * When user is updated in the datastore, updates user metadata on page

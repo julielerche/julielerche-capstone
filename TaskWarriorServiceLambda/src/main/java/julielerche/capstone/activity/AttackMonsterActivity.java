@@ -69,8 +69,8 @@ public class AttackMonsterActivity {
         loadedUser.setStamina(loadedUser.getStamina() - loadedAttack.getStaminaNeeded());
         int goldEarned = 0;
         if (loadedEncounter.getMonsterList().isEmpty()) {
-            loadedUser.setGold(loadedUser.getGold() + 100);
-            goldEarned = 100;
+            loadedUser.setGold(loadedUser.getGold() + 50);
+            goldEarned = 50;
         }
         userDao.saveUser(loadedUser);
         encounterDao.saveEncounter(loadedEncounter);

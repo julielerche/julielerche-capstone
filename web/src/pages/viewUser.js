@@ -17,7 +17,7 @@ export default class ViewUser extends BindingClass {
         this.dataStore.addChangeListener(this.addTasksToPage);
         this.dataStore.addChangeListener(this.addInventoryToPage);
         this.dataStore.addChangeListener(this.addStatsToPage);
-        this.header = new Header(this.dataStore);
+        //this.header = new Header(this.dataStore);
         console.log("viewUser constructor");
     }
 
@@ -26,8 +26,6 @@ export default class ViewUser extends BindingClass {
      */
     async clientLoaded() {
         document.getElementById('user-name').innerText = "loading user ...";
-        // const user = await this.client.getUser();
-        // this.dataStore.set('user', user);
         const user = this.dataStore.get('user');
         this.dataStore.set('gold', user.gold);
         this.dataStore.set('inventory', user.inventory);
@@ -40,7 +38,7 @@ export default class ViewUser extends BindingClass {
      */
     mount() {
         
-        this.header.addHeaderToPage();
+        //this.header.addHeaderToPage();
         this.clientLoaded();
         document.getElementById('nav-tabContent').addEventListener('click', this.delete);
         document.getElementById('nav-tabContent').addEventListener('click', this.markComplete);
@@ -497,6 +495,7 @@ async buyItem(e) {
         errorMessageDisplay.classList.remove('hidden');
     });
     this.dataStore.set('user', user);
+    this.dataStore.set('gold', user.gold);
     this.dataStore.set('inventory', user.inventory);
     buyItemButton.innerText = origButtonText;
 }
