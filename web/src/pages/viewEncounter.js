@@ -1,19 +1,18 @@
-import TaskWarriorClient from '../api/taskWarriorClient';
-import Header from '../components/header';
 import BindingClass from "../util/bindingClass";
-import DataStore from "../util/DataStore";
 /**
  * Logic needed for the view playlist page of the website.
  */
-class ViewEncounter extends BindingClass {
-    constructor() {
+export default class ViewEncounter extends BindingClass {
+    constructor(client, dataStore) {
         super();
-        this.bindClassMethods(['clientLoaded', 'mount', 'spellMonster', 'addEncounterToPage', 'createNewEncounterSubmit', 'addMonsterTargetsToPage', 'attackMonster'], this);
-        this.dataStore = new DataStore();
+        this.client = client;
+        this.dataStore = dataStore;
+        this.bindClassMethods(['clientLoaded', 'mount', 'spellMonster', 'addEncounterToPage', 
+            'createNewEncounterSubmit', 'addMonsterTargetsToPage', 'attackMonster', 'monsterTurn'], this);
         this.dataStore.addChangeListener(this.addEncounterToPage);
         this.dataStore.addChangeListener(this.addMonsterTargetsToPage);
+        //this.dataStore.addChangeListener(ViewUser.addUserToPage);
         
-        this.header = new Header(this.dataStore);
         console.log("viewEncounter constructor");
     }
 
@@ -24,6 +23,11 @@ class ViewEncounter extends BindingClass {
         const encounter = await this.client.getEncounter();
         this.dataStore.set('encounter', encounter);
         this.dataStore.set('monsterList', encounter.monsterList);
+        const user = this.dataStore.get("user");
+        this.dataStore.set('stamina', user.stamina);
+        this.dataStore.set('mana', user.mana);
+        this.dataStore.set('health', user.health);
+
     }
 
     /**
@@ -33,7 +37,6 @@ class ViewEncounter extends BindingClass {
         document.getElementById('createEncounter').addEventListener('click', this.createNewEncounterSubmit);
         document.getElementById('swordAttack').addEventListener('click', this.attackMonster);
         document.getElementById('spellAttack').addEventListener('click', this.spellMonster);
-        this.client = new TaskWarriorClient();
         this.clientLoaded();
     }
 
@@ -61,8 +64,8 @@ class ViewEncounter extends BindingClass {
 */
     addEncounterToPage() {
         const monsterList = this.dataStore.get('monsterList');
-        if (monsterList == null) {
-            const noEncounterHTML = `<div class="card">
+        if (monsterList == null || monsterList.length == 0) {
+            const noEncounterHTML = `<div class="card" style="width: 18rem;">
             <p>Click the new Encounter button below to generate a new encounter.</p>
             </div>`
             document.getElementById('encounter-monsters').innerHTML = noEncounterHTML;
@@ -106,9 +109,17 @@ class ViewEncounter extends BindingClass {
 async createNewEncounterSubmit(evt) {
     evt.preventDefault();
 
-    const errorMessageDisplay = document.getElementById('error-message');
+    const errorMessageDisplay = document.getElementById('error-message-encounter');
     errorMessageDisplay.innerText = ``;
     errorMessageDisplay.classList.add('hidden');
+    const monsterList = this.dataStore.get("monsterList");
+
+    //prevents new encounter if currently fighting
+    if (monsterList.length !== 0) {
+        errorMessageDisplay.innerText = `You are already in an encounter!`;
+        errorMessageDisplay.classList.remove('hidden');
+        return;
+    }
 
     const createButton = document.getElementById('createEncounter');
     const origButtonText = createButton.innerText;
@@ -129,9 +140,12 @@ async createNewEncounterSubmit(evt) {
 async attackMonster(evt) {
     evt.preventDefault();
 
-    const errorMessageDisplay = document.getElementById('error-message');
+    const errorMessageDisplay = document.getElementById('error-message-monsters');
     errorMessageDisplay.innerText = ``;
     errorMessageDisplay.classList.add('hidden');
+    
+    const stamina = this.dataStore.get("stamina");
+    const userGold = this.dataStore.get("gold");
 
     const attackButton = document.getElementById('swordAttack');
     const monsterTarget = document.getElementById('exampleFormControlSelect1').value;
@@ -140,14 +154,31 @@ async attackMonster(evt) {
 
     const response = await this.client.attackMonster(monsterTarget, (error) => {
         attackButton.innerText = origButtonText;
-        errorMessageDisplay.innerText = `Error: ${error.message}`;
+        if (error.message === "null" && stamina < 10) {
+            errorMessageDisplay.innerText = `Error: Not enough stamina!`;
+        } else {
+            errorMessageDisplay.innerText = `Error: ${error.message}`;
+        }
         errorMessageDisplay.classList.remove('hidden');
+        return;
     });
     this.dataStore.set('monsterList', response.data.assets);
-    if (response.data.goldEarned !== null) {
-        this.dataStore.set('gold', response.data.goldEarned);
+    if (response.data.goldEarned !== 0) {
+        this.dataStore.set("gold", response.data.goldEarned + userGold);
+        const alertHTML =`<div class="alert alert-success fade show">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <strong>Success!</strong> You earned ${response.data.goldEarned} gold.
+        </div>`
+        document.getElementById('monsterKilledAlert').innerHTML = alertHTML;
     }
     attackButton.innerText = origButtonText;
+    const newStamina = stamina - 10;
+    document.getElementsByClassName('progress-bar bg-success').item(0).setAttribute('aria-valuenow',newStamina);
+    document.getElementsByClassName('progress-bar bg-success').item(0).setAttribute('style','width:'+Number(newStamina)+'%');
+    if (response.data.assets.length > 0) {
+        this.monsterTurn();
+    }
+    
 }
      /**
 * Uses an attack to update the encounter.
@@ -155,9 +186,10 @@ async attackMonster(evt) {
 async spellMonster(evt) {
     evt.preventDefault();
 
-    const errorMessageDisplay = document.getElementById('error-message');
+    const errorMessageDisplay = document.getElementById('error-message-monsters');
     errorMessageDisplay.innerText = ``;
     errorMessageDisplay.classList.add('hidden');
+    const mana = this.dataStore.get("mana");
 
     const spellButton = document.getElementById('spellAttack');
     const origButtonText = spellButton.innerText;
@@ -165,24 +197,65 @@ async spellMonster(evt) {
 
     const response = await this.client.spellMonster((error) => {
         spellButton.innerText = origButtonText;
-        errorMessageDisplay.innerText = `Error: ${error.message}`;
+        if (error.message === "null" && mana < 30) {
+            errorMessageDisplay.innerText = `Error: Not enough mana!`;
+        } else {
+            errorMessageDisplay.innerText = `Error: ${error.message}`;
+        }
         errorMessageDisplay.classList.remove('hidden');
+        return;
     });
     this.dataStore.set('monsterList', response.data.assets);
-    if (response.data.goldEarned !== null) {
-        this.dataStore.set('gold', response.data.goldEarned);
+    if (response.data.goldEarned !== 0) {
+        this.dataStore.set("gold", response.data.goldEarned + user.gold);
+        const alertHTML =`<div class="alert alert-success fade show">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <strong>Success!</strong> You earned ${response.data.goldEarned} gold.
+        </div>`
+        document.getElementById('monsterKilledAlert').innerHTML = alertHTML;
     }
+    const newMana = mana - 30;
+    document.getElementsByClassName('progress-bar bg-info').item(0).setAttribute('aria-valuenow',newMana);
+    document.getElementsByClassName('progress-bar bg-info').item(0).setAttribute('style','width:'+Number(newMana)+'%');
+    //this.dataStore.set('user', user);
     
     spellButton.innerText = origButtonText;
+    this.monsterTurn();
+
+}
+
+async monsterTurn() {
+    const monsterList = this.dataStore.get("monsterList");
+    if (monsterList === null) {
+        return;
+    }
+    const user = await this.client.monsterTurn((error) => {
+        errorMessageDisplay.innerText = `Error: ${error.message}`;
+        errorMessageDisplay.classList.remove('hidden');
+        return;
+    });    
+    let attackPower = 0;
+    let monster;
+    for (monster of monsterList) {
+        attackPower += monster.attackPower;
+    }
+    const alertHTML =`<div class="alert alert-danger fade show">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <strong>Monsters Attack!</strong> Lost ${attackPower} points of health.
+        </div>`
+        document.getElementById('monsterKilledAlert').innerHTML = alertHTML;
+    this.dataStore.set("user", user);
+
 }
 
 }
-    /**
- * Main method to run when the page contents have loaded.
- */
-const main = async () => {
-    const viewEncounter = new ViewEncounter();
-    viewEncounter.mount();
-};
 
-window.addEventListener('DOMContentLoaded', main);
+//     /**
+//  * Main method to run when the page contents have loaded.
+//  */
+// const main = async () => {
+//     const viewEncounter = new ViewEncounter();
+//     viewEncounter.mount();
+// };
+
+//window.addEventListener('DOMContentLoaded', main);

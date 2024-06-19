@@ -384,15 +384,32 @@ async updateTask(taskName, taskType, difficulty, newTaskName, newTaskType, newDi
             const token = await this.getTokenOrThrow("Only authenticated users can attack monsters.");
             const response = await this.axiosClient.put(`/spell`, {
                 "spell": {
-                    "attackPower": 20,
-                    "manaNeeded": 20
+                    "attackPower": 15,
+                    "manaNeeded": 30
                     }
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            return response.data.monsterList;
+            return response;
+        } catch (error) {
+            this.handleError(error, errorCallback)
+        }
+    }
+
+    async monsterTurn(errorCallback) {
+        try {
+            const token = await this.getTokenOrThrow("Only authenticated users can be attacked.");
+            const response = await this.axiosClient.put(`/monsterturn`, 
+            {
+                
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data.user;
         } catch (error) {
             this.handleError(error, errorCallback)
         }

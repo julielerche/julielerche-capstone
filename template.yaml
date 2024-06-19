@@ -634,8 +634,6 @@ Resources:
           Properties:
             Path: /monsterturn
             Method: put
-            Auth:
-              Authorizer: 'NONE'
   #-----------------------------------------------------
   # DynamoDB Configuration
   #-----------------------------------------------------
