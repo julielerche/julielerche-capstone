@@ -9,20 +9,17 @@ import org.apache.logging.log4j.Logger;
 
 public class MonsterTurnLambda
         extends LambdaActivityRunner<MonsterTurnRequest, MonsterTurnResult>
-        implements RequestHandler<LambdaRequest<MonsterTurnRequest>, LambdaResponse> {
+        implements RequestHandler<AuthenticatedLambdaRequest<MonsterTurnRequest>, LambdaResponse> {
 
     private final Logger log = LogManager.getLogger();
 
     @Override
-    public LambdaResponse handleRequest(LambdaRequest<MonsterTurnRequest> input, Context context) {
+    public LambdaResponse handleRequest(AuthenticatedLambdaRequest<MonsterTurnRequest> input, Context context) {
         log.info("handleRequest");
         return super.runActivity(
-            () -> {
-                MonsterTurnRequest unauthenticatedRequest = input.fromBody(MonsterTurnRequest.class);
-                return MonsterTurnRequest.builder()
-                    .withUserId(unauthenticatedRequest.getUserId())
-                    .build();
-            },
+            () -> input.fromUserClaims(claims -> MonsterTurnRequest.builder()
+                .withUserId(claims.get("email"))
+                .build()),
             (request, serviceComponent) ->
                     serviceComponent.provideMonsterTurnActivity().handleRequest(request)
         );

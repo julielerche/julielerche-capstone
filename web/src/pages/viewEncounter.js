@@ -8,10 +8,10 @@ export default class ViewEncounter extends BindingClass {
         this.client = client;
         this.dataStore = dataStore;
         this.bindClassMethods(['clientLoaded', 'mount', 'spellMonster', 'addEncounterToPage', 
-            'createNewEncounterSubmit', 'addMonsterTargetsToPage', 'attackMonster'], this);
+            'createNewEncounterSubmit', 'addMonsterTargetsToPage', 'attackMonster', 'monsterTurn'], this);
         this.dataStore.addChangeListener(this.addEncounterToPage);
         this.dataStore.addChangeListener(this.addMonsterTargetsToPage);
-        this.dataStore.addChangeListener(ViewUser.addUserToPage);
+        //this.dataStore.addChangeListener(ViewUser.addUserToPage);
         
         console.log("viewEncounter constructor");
     }
@@ -23,6 +23,11 @@ export default class ViewEncounter extends BindingClass {
         const encounter = await this.client.getEncounter();
         this.dataStore.set('encounter', encounter);
         this.dataStore.set('monsterList', encounter.monsterList);
+        const user = this.dataStore.get("user");
+        this.dataStore.set('stamina', user.stamina);
+        this.dataStore.set('mana', user.mana);
+        this.dataStore.set('health', user.health);
+
     }
 
     /**
@@ -104,9 +109,17 @@ export default class ViewEncounter extends BindingClass {
 async createNewEncounterSubmit(evt) {
     evt.preventDefault();
 
-    const errorMessageDisplay = document.getElementById('error-message');
+    const errorMessageDisplay = document.getElementById('error-message-encounter');
     errorMessageDisplay.innerText = ``;
     errorMessageDisplay.classList.add('hidden');
+    const monsterList = this.dataStore.get("monsterList");
+
+    //prevents new encounter if currently fighting
+    if (monsterList.length !== 0) {
+        errorMessageDisplay.innerText = `You are already in an encounter!`;
+        errorMessageDisplay.classList.remove('hidden');
+        return;
+    }
 
     const createButton = document.getElementById('createEncounter');
     const origButtonText = createButton.innerText;
@@ -130,7 +143,9 @@ async attackMonster(evt) {
     const errorMessageDisplay = document.getElementById('error-message-monsters');
     errorMessageDisplay.innerText = ``;
     errorMessageDisplay.classList.add('hidden');
-    const user = this.dataStore.get("user");
+    
+    const stamina = this.dataStore.get("stamina");
+    const userGold = this.dataStore.get("gold");
 
     const attackButton = document.getElementById('swordAttack');
     const monsterTarget = document.getElementById('exampleFormControlSelect1').value;
@@ -139,7 +154,7 @@ async attackMonster(evt) {
 
     const response = await this.client.attackMonster(monsterTarget, (error) => {
         attackButton.innerText = origButtonText;
-        if (error.message === "null" && user.stamina === 0) {
+        if (error.message === "null" && stamina < 10) {
             errorMessageDisplay.innerText = `Error: Not enough stamina!`;
         } else {
             errorMessageDisplay.innerText = `Error: ${error.message}`;
@@ -149,15 +164,21 @@ async attackMonster(evt) {
     });
     this.dataStore.set('monsterList', response.data.assets);
     if (response.data.goldEarned !== 0) {
-        this.dataStore.set("gold", response.data.goldEarned + user.gold);
+        this.dataStore.set("gold", response.data.goldEarned + userGold);
         const alertHTML =`<div class="alert alert-success fade show">
         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
         <strong>Success!</strong> You earned ${response.data.goldEarned} gold.
         </div>`
         document.getElementById('monsterKilledAlert').innerHTML = alertHTML;
     }
-
     attackButton.innerText = origButtonText;
+    const newStamina = stamina - 10;
+    document.getElementsByClassName('progress-bar bg-success').item(0).setAttribute('aria-valuenow',newStamina);
+    document.getElementsByClassName('progress-bar bg-success').item(0).setAttribute('style','width:'+Number(newStamina)+'%');
+    if (response.data.assets.length > 0) {
+        this.monsterTurn();
+    }
+    
 }
      /**
 * Uses an attack to update the encounter.
@@ -168,7 +189,7 @@ async spellMonster(evt) {
     const errorMessageDisplay = document.getElementById('error-message-monsters');
     errorMessageDisplay.innerText = ``;
     errorMessageDisplay.classList.add('hidden');
-    const user = this.dataStore.get("user");
+    const mana = this.dataStore.get("mana");
 
     const spellButton = document.getElementById('spellAttack');
     const origButtonText = spellButton.innerText;
@@ -176,7 +197,7 @@ async spellMonster(evt) {
 
     const response = await this.client.spellMonster((error) => {
         spellButton.innerText = origButtonText;
-        if (error.message === "null" && user.mana === 0) {
+        if (error.message === "null" && mana < 30) {
             errorMessageDisplay.innerText = `Error: Not enough mana!`;
         } else {
             errorMessageDisplay.innerText = `Error: ${error.message}`;
@@ -193,21 +214,38 @@ async spellMonster(evt) {
         </div>`
         document.getElementById('monsterKilledAlert').innerHTML = alertHTML;
     }
-    user.mana = user.mana - 30;
-    this.dataStore.set('user', user);
+    const newMana = mana - 30;
+    document.getElementsByClassName('progress-bar bg-info').item(0).setAttribute('aria-valuenow',newMana);
+    document.getElementsByClassName('progress-bar bg-info').item(0).setAttribute('style','width:'+Number(newMana)+'%');
+    //this.dataStore.set('user', user);
     
     spellButton.innerText = origButtonText;
-
+    this.monsterTurn();
 
 }
 
 async monsterTurn() {
+    const monsterList = this.dataStore.get("monsterList");
+    if (monsterList === null) {
+        return;
+    }
     const user = await this.client.monsterTurn((error) => {
         errorMessageDisplay.innerText = `Error: ${error.message}`;
         errorMessageDisplay.classList.remove('hidden');
         return;
     });    
+    let attackPower = 0;
+    let monster;
+    for (monster of monsterList) {
+        attackPower += monster.attackPower;
+    }
+    const alertHTML =`<div class="alert alert-danger fade show">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <strong>Monsters Attack!</strong> Lost ${attackPower} points of health.
+        </div>`
+        document.getElementById('monsterKilledAlert').innerHTML = alertHTML;
     this.dataStore.set("user", user);
+
 }
 
 }

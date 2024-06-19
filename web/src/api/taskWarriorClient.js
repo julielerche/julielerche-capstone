@@ -392,7 +392,7 @@ async updateTask(taskName, taskType, difficulty, newTaskName, newTaskType, newDi
                     Authorization: `Bearer ${token}`
                 }
             });
-            return response.data.monsterList;
+            return response;
         } catch (error) {
             this.handleError(error, errorCallback)
         }
