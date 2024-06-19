@@ -11,6 +11,7 @@ export default class ViewEncounter extends BindingClass {
             'createNewEncounterSubmit', 'addMonsterTargetsToPage', 'attackMonster'], this);
         this.dataStore.addChangeListener(this.addEncounterToPage);
         this.dataStore.addChangeListener(this.addMonsterTargetsToPage);
+        this.dataStore.addChangeListener(ViewUser.addUserToPage);
         
         console.log("viewEncounter constructor");
     }
@@ -126,9 +127,10 @@ async createNewEncounterSubmit(evt) {
 async attackMonster(evt) {
     evt.preventDefault();
 
-    const errorMessageDisplay = document.getElementById('error-message');
+    const errorMessageDisplay = document.getElementById('error-message-monsters');
     errorMessageDisplay.innerText = ``;
     errorMessageDisplay.classList.add('hidden');
+    const user = this.dataStore.get("user");
 
     const attackButton = document.getElementById('swordAttack');
     const monsterTarget = document.getElementById('exampleFormControlSelect1').value;
@@ -137,12 +139,16 @@ async attackMonster(evt) {
 
     const response = await this.client.attackMonster(monsterTarget, (error) => {
         attackButton.innerText = origButtonText;
-        errorMessageDisplay.innerText = `Error: ${error.message}`;
+        if (error.message === "null" && user.stamina === 0) {
+            errorMessageDisplay.innerText = `Error: Not enough stamina!`;
+        } else {
+            errorMessageDisplay.innerText = `Error: ${error.message}`;
+        }
         errorMessageDisplay.classList.remove('hidden');
+        return;
     });
     this.dataStore.set('monsterList', response.data.assets);
     if (response.data.goldEarned !== 0) {
-        const user = this.dataStore.get('user');
         this.dataStore.set("gold", response.data.goldEarned + user.gold);
         const alertHTML =`<div class="alert alert-success fade show">
         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
@@ -150,6 +156,7 @@ async attackMonster(evt) {
         </div>`
         document.getElementById('monsterKilledAlert').innerHTML = alertHTML;
     }
+
     attackButton.innerText = origButtonText;
 }
      /**
@@ -158,9 +165,10 @@ async attackMonster(evt) {
 async spellMonster(evt) {
     evt.preventDefault();
 
-    const errorMessageDisplay = document.getElementById('error-message');
+    const errorMessageDisplay = document.getElementById('error-message-monsters');
     errorMessageDisplay.innerText = ``;
     errorMessageDisplay.classList.add('hidden');
+    const user = this.dataStore.get("user");
 
     const spellButton = document.getElementById('spellAttack');
     const origButtonText = spellButton.innerText;
@@ -168,12 +176,16 @@ async spellMonster(evt) {
 
     const response = await this.client.spellMonster((error) => {
         spellButton.innerText = origButtonText;
-        errorMessageDisplay.innerText = `Error: ${error.message}`;
+        if (error.message === "null" && user.mana === 0) {
+            errorMessageDisplay.innerText = `Error: Not enough mana!`;
+        } else {
+            errorMessageDisplay.innerText = `Error: ${error.message}`;
+        }
         errorMessageDisplay.classList.remove('hidden');
+        return;
     });
     this.dataStore.set('monsterList', response.data.assets);
     if (response.data.goldEarned !== 0) {
-        const user = this.dataStore.get('user');
         this.dataStore.set("gold", response.data.goldEarned + user.gold);
         const alertHTML =`<div class="alert alert-success fade show">
         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
@@ -181,11 +193,25 @@ async spellMonster(evt) {
         </div>`
         document.getElementById('monsterKilledAlert').innerHTML = alertHTML;
     }
+    user.mana = user.mana - 30;
+    this.dataStore.set('user', user);
     
     spellButton.innerText = origButtonText;
+
+
+}
+
+async monsterTurn() {
+    const user = await this.client.monsterTurn((error) => {
+        errorMessageDisplay.innerText = `Error: ${error.message}`;
+        errorMessageDisplay.classList.remove('hidden');
+        return;
+    });    
+    this.dataStore.set("user", user);
 }
 
 }
+
 //     /**
 //  * Main method to run when the page contents have loaded.
 //  */
