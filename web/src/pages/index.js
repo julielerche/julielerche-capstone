@@ -8,7 +8,7 @@ import DataStore from "../util/DataStore";
 class Index extends BindingClass {
     constructor() {
         super();
-        this.bindClassMethods(['mount', 'redirectButtons'], this);
+        this.bindClassMethods(['mount'], this);
         this.dataStore = new DataStore();
         this.header = new Header(this.dataStore);
         this.authenticator = new Authenticator();
@@ -21,21 +21,9 @@ class Index extends BindingClass {
      */
     mount() {
         this.header.addHeaderToPage();
+        this.drawScene();
     }
 
-    /**
- * When the user is logged in, redirect to createUser.
- */
-    redirectButtons() {
-        const loggedIn = this.authenticator.isUserLoggedIn;
-        if (loggedIn) {
-            let buttonHTML = `
-            <a href="http://www.google.com/">
-            <button>Visit Google</button>
-            </a>`;
-            document.getElementById("redirectButton").innerHTML = buttonHTML;
-        }
-    }
 }
     /**
      * Main method to run when the page contents have loaded.

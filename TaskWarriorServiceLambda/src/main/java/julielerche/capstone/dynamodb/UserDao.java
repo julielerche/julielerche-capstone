@@ -148,7 +148,7 @@ public class UserDao {
      * @return user with updated values.
      */
     public User useItem(User user, Asset asset) {
-        String description = asset.getDescription();
+        String description = asset.getDescription().toLowerCase();
         String[] elements = description.split(" ");
         switch (elements[0]) {
             case "health":
@@ -172,6 +172,22 @@ public class UserDao {
                 }
                 user.setStamina(newStaimina);
                 break;
+            case "elixir":
+                int elixirHealth = user.getHealth() + Integer.parseInt(elements[2]);
+                if (elixirHealth >= 100) {
+                    elixirHealth = 100;
+                }
+                user.setHealth(elixirHealth);
+                int elixirMana = user.getMana() + Integer.parseInt(elements[2]);
+                if (elixirMana >= 100) {
+                    elixirMana = 100;
+                }
+                user.setMana(elixirMana);
+                int elixirStamina = user.getStamina() + Integer.parseInt(elements[2]);
+                if (elixirStamina >= 100) {
+                    elixirStamina = 100;
+                }
+                user.setStamina(elixirStamina);
             default:
                 break;
         }
