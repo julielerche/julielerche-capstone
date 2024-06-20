@@ -21,7 +21,6 @@ class Index extends BindingClass {
      */
     mount() {
         this.header.addHeaderToPage();
-        this.drawScene();
     }
 
 }

@@ -16,12 +16,18 @@ font-family: DePixelHalbfett;
 src: url(DePixelHalbfett.ttf);
 font-weight: bold;
 }
+@font-face {
+    font-family: Crang;
+    src: url(Crang.ttf);
+    font-weight: normal;
+  }
 
 .background {
+    cursor: url('Icon_Cursor_01a.png'), auto;
     background-color: #8A8C8F;
     margin: 0;
     counter-reset: section;
-    font-family: DePixelHalbfett;
+    font-family: DePixelHalbfett, Crang;
     /* font-family: "Helvetica Neue",Helvetica,sans-serif; */
 }
 
@@ -32,14 +38,16 @@ font-weight: bold;
     align-items: center;
     background-color: var(--primary-color);
     color: var(--secondary-color);
-    padding: 4px 20px;
+    padding: 10px 20px;
+    font-family: Crang;
 }
 
 .button {
   background-color: var(--tertiary-color);
-  border: none;
+  border: 2px;
   color: var(--secondary-color);
-  padding: 6px 8px 4px 8px;
+  padding: 8px 10px 8px 10px;
+  margin: 20px;
   text-align: center;
   font-weight: bold;
   text-decoration: none;
@@ -51,12 +59,27 @@ font-weight: bold;
     justify-content: space-between;
 }
 
+body {
+    cursor: url('Icon_Cursor_01a.png'), auto;
+}
+
 .header_home {
     font-size: 36px;
     line-height: 40px;
     height: 100px;
     text-decoration: none;
     color: var(--secondary-color);
+}
+
+h2 {
+    font-family: Crang !important;
+}
+h5 {
+    font-family: Crang !important;
+}
+
+sub {
+    font-size: 16px;
 }
 
 img {
@@ -67,8 +90,29 @@ image-rendering: crisp-edges;
 .card {
     color: var(--primary-color);
     background-color: var(--secondary-color);
+    margin: 20px;
+    padding: 20px;
+}
+
+.make-task-container{
+    width: 70%;
+    padding: 20px;
     margin: 0 auto;
+}
+
+.section-container{
+    text-align: center;
+    width: 90%;
     padding: 10px;
+    margin: 0 auto;
+}
+.section-container-monsters{
+    text-align: center;
+    width: 100%;
+}
+.container-task-info{
+    text-align: center;
+    width: 100%;
 }
 
 .user-stats-container{
@@ -77,6 +121,21 @@ image-rendering: crisp-edges;
     width: 90%;
     padding: 20px;
     margin: 0 auto;
+}
+.entire-page-container{
+    font-size: 16px;
+    text-align: center;
+    width: 90%;
+    padding: 20px;
+    margin: 0 auto;
+}
+
+.attackInfo{
+    width: 80%;
+}
+
+.container-task-info{
+    width: 50%;
 }
 
 .error {
@@ -95,12 +154,14 @@ image-rendering: crisp-edges;
 .card-img-top {
     width: 100%;
     height: 5vw;
+    margin-bottom: 20px;
     object-fit: contain;
 }
 
 .card-content .form-field {
     display: flex;
     flex-direction: column;
+    width: 90%;
 }
 
 .tags {
