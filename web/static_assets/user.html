@@ -117,7 +117,9 @@
                             </div>
                             <div class="tab-pane fade" id="nav-store" role="tabpanel" aria-labelledby="nav-store-tab" tabindex="0">
                                 You can buy items in the store using gold.
+                                
                                 <div id="store-page"></div>
+                                
                             </div>
                             </div>
                             <p></p>
@@ -133,23 +135,23 @@
                         <div class="tab-content" id="nav-tabContent">
                             <div class="tab-pane fade show active" id="nav-daily" role="tabpanel" aria-labelledby="nav-daily-tab" tabindex="0">
                                 Daily tasks are expected to be done every day, or you will lose health!
-                                <ol id="daily-tasks"></ol>
+                                <div id="daily-tasks"></div>
                                 <p class="hidden error" id="error-message-task"> </p>
                             </div>
                             <div class="tab-pane fade" id="nav-chore" role="tabpanel" aria-labelledby="nav-chore-tab" tabindex="0">
                                 Chores are tasks that you do every once in a while, so you will not lose health for not doing them every day.
-                                <ol id="chore-tasks"></ol>
+                                <div id="chore-tasks"></div>
                                 <p class="hidden error" id="error-message-task"> </p>
                             </div>
                             <div class="tab-pane fade" id="nav-todo" role="tabpanel" aria-labelledby="nav-todo-tab" tabindex="0">
                                 ToDos are specific tasks that you have to do one time. They are deleted when you mark them as complete.
-                                <ol id="todo-tasks"></ol>
+                                <div id="todo-tasks"></div>
                                 <p class="hidden error" id="error-message-task"> </p>
                             </div>
                             <div class="tab-pane fade" id="nav-inventory" role="tabpanel" aria-labelledby="nav-inventory-tab" tabindex="0">
                                 This is your current inventory, you can buy more at the store.
                                 <div class="d-flex justify-content-around">
-                                <ol id="user-inventory"></ol>
+                                <div id="user-inventory"></div>
                             </div>
                             </div>
                         </div>
@@ -157,19 +159,20 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card">
+                <div class="card text-center">
                     
                     <h2>Encounter Info</h2>
                     <form class="card-content">
                         <sub> Display the current Encounter here.</sub>
                         <div id="monsterKilledAlert"></div>
-                        <ol id="encounter-monsters"></ol>
+                        <div id="encounter-monsters"></div>
                         <h5>Attacks</h5>
                         
                         <sub>Swords attack one creature, while Spells attack all creatures.</sub>
+                       
                         <p class="hidden error" id="error-message-monsters"> </p>
                         <div class="row">
-                            <div class="card" style="width: 12rem;">
+                            <div class="card" style="width: 16rem;">
                                 <img class="card-img-top" src="sprites/sword.png" alt="Card image cap">
                                     <div class="card-body">
                                     <h5 class="card-title">Sword Swing</h5>
@@ -179,7 +182,7 @@
                                     <a href="#" class="button" id="swordAttack">Use Attack</a>
                                     </div>
                             </div>
-                            <div class="card" style="width: 12rem;">
+                            <div class="card" style="width: 16rem;">
                                 <img class="card-img-top" src="sprites/spell.png" alt="Card image cap">
                                     <div class="card-body">
                                     <h5 class="card-title">Chain Lightning</h5>
