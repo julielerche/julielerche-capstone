@@ -84,7 +84,7 @@ export default class ViewUser extends BindingClass {
         for (asset of inventory) {
             assetCounter++;
             inventoryHTML += `<div class="col">
-                <div class="card" style="width: 10rem;">
+                <div class="card" style="width: 12rem;">
                     <img class="card-img-top" src="sprites/${asset.name}.png" alt="Card image cap">
                     <div class="card-body">
                     <h5 class="card-title">${asset.name}</h5>
@@ -170,7 +170,7 @@ export default class ViewUser extends BindingClass {
             const buttonId = task.taskType + counter;
             counter++;
             taskHTML += `
-            <div class="card">
+            <div class="card" style="width: 80%">
                 <div class="container">
                     <div class="row">
                          <div class="col"> <strong>
@@ -212,6 +212,8 @@ export default class ViewUser extends BindingClass {
                   <p class="hidden error" id="error-message"> </p>
                   <p class="form-field">
                   <sub> All fields are optional.</sub>
+                  <p></p>
+                  <p></p>
                       <label>New Task Name</label>
                       <input type="text" id="update-newTaskName-${buttonId}" placeholder="Clean Dishes" autofocus>
                   </p>
@@ -450,7 +452,7 @@ async useItem(e) {
             return;
         }
         
-        let inventoryHTML = '<div class="row row-cols-1 row-cols-md-3 g-4">';
+        let inventoryHTML = '<div class="row row-cols-1 row-cols-md-3 g-2">';
         let assetCounter = 0;
         let asset;
         for (asset of inventory) {
