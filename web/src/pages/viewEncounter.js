@@ -126,7 +126,7 @@ async createNewEncounterSubmit(evt) {
     const monsterList = this.dataStore.get("monsterList");
 
     //prevents new encounter if currently fighting
-    if (monsterList === undefined || monsterList.length !== 0) {
+    if (monsterList.length !== 0) {
         errorMessageDisplay.innerText = `You are already in an encounter!`;
         errorMessageDisplay.classList.remove('hidden');
         return;
