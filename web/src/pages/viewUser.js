@@ -78,13 +78,13 @@ export default class ViewUser extends BindingClass {
             return;
         }
         
-        let inventoryHTML = '<div class="row">';
+        let inventoryHTML = '<div class="row row-cols-1 row-cols-md-3 g-4">';
         let assetCounter = 0;
         let asset;
         for (asset of inventory) {
             assetCounter++;
-            inventoryHTML += `
-                <div class="card" style="width: 12rem;">
+            inventoryHTML += `<div class="col">
+                <div class="card h-100" style="width: 10rem;">
                     <img class="card-img-top" src="sprites/${asset.name}.png" alt="Card image cap">
                     <div class="card-body">
                     <h5 class="card-title">${asset.name}</h5>
@@ -92,12 +92,12 @@ export default class ViewUser extends BindingClass {
                     <button data-assetName="${asset.name}" data-assetDescription="${asset.description}" data-assetType="${asset.assetType}" data-assetID="${asset.assetId}" class="button use-item">Use Item</button>
                     </div>
                     </div>
+                    </div>
             `;
-            if (assetCounter % 2 == 0) {
-                inventoryHTML += `</div>
-                <div class="row">
-                `;
-            }
+            // if (assetCounter % 2 == 0) {
+            //     inventoryHTML += `</div>
+            //     `;
+            // }
         }
         inventoryHTML += `</div>`;
         document.getElementById('user-inventory').innerHTML = inventoryHTML;
@@ -450,13 +450,14 @@ async useItem(e) {
             return;
         }
         
-        let inventoryHTML = '<div class="row">';
+        let inventoryHTML = '<div class="row row-cols-1 row-cols-md-3 g-4">';
         let assetCounter = 0;
         let asset;
         for (asset of inventory) {
             assetCounter++;
             inventoryHTML += `
-                <div class="card" style="width: 12rem;">
+            <div class="col">
+                <div class="card h-100" style="width: 12rem;">
                     <img class="card-img-top" src="sprites/${asset.name}.png" alt="Card image cap">
                     <div class="card-body">
                     <h5 class="card-title">${asset.name}</h5>
@@ -465,12 +466,8 @@ async useItem(e) {
                     <button data-assetType="${asset.assetType}" data-assetID="${asset.assetId}" class="button buy-item">Buy Item</button>
                     </div>
                     </div>
+                    </div>
             `;
-            if (assetCounter % 2 == 0) {
-                inventoryHTML += `</div>
-                <div class="row">
-                `;
-            }
         }
         inventoryHTML += `</div>`;
         document.getElementById('store-page').innerHTML = inventoryHTML;

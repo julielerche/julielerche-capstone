@@ -11,7 +11,6 @@ export default class ViewEncounter extends BindingClass {
             'createNewEncounterSubmit', 'addMonsterTargetsToPage', 'attackMonster', 'monsterTurn'], this);
         this.dataStore.addChangeListener(this.addEncounterToPage);
         this.dataStore.addChangeListener(this.addMonsterTargetsToPage);
-        //this.dataStore.addChangeListener(ViewUser.addUserToPage);
         
         console.log("viewEncounter constructor");
     }
@@ -70,13 +69,24 @@ export default class ViewEncounter extends BindingClass {
             document.getElementById('encounter-monsters').innerHTML = noEncounterHTML;
             return;
         }
-        let encounterHTML = '';
+        const numberOfMonsters = monsterList.length;
+        let encounterHTML;
+        if (numberOfMonsters === 3) {
+            encounterHTML = '<div class="row row-cols-1 row-cols-md-3 g-4">';
+        } else if (numberOfMonsters === 2) {
+            encounterHTML = '<div class="row row-cols-1 row-cols-md-2 g-1">';
+        } else {
+            encounterHTML = '<div class="row row-cols-1 row-cols-md-1 g-4">';
+        }
+        
         let monster;
         for (monster of monsterList) {
+            var healthPercent = (monster.currentHealth / monster.startingHealth) * 100;
             encounterHTML += `
-                <div class="monster">
-                <div class="card">
-                    <span class="name">${monster.name}</span>`;
+            <div class="col">
+                <div class="card h-100 border-danger" style="width: 12rem;">
+                <img class="card-img-top" src="sprites/${monster.name}.png" alt="Card image cap">
+                    <h5 class="card-title">${monster.name}</h5>`;
 
                     if (monster.description == "easy") {
                         encounterHTML += `<span class="description">
@@ -91,13 +101,13 @@ export default class ViewEncounter extends BindingClass {
                     encounterHTML += `
                     <span class="attackPower">Attack Power: ${monster.attackPower}</span>
                     <div class="progress">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: `
-                        + (monster.currentHealth / monster.startingHealth) * 100 +
-                        `%" aria-valuenow="${monster.currentHealth}" aria-valuemin="0" aria-valuemax="${monster.startingHealth}"></div>
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: ${healthPercent}%" aria-valuenow="${monster.currentHealth}" aria-valuemin="0" aria-valuemax="${monster.startingHealth}"></div>
                     </div>
                     </div>
-                </div>
+                
+                
             `;
+            encounterHTML += `</div>`
         }
         document.getElementById('encounter-monsters').innerHTML = encounterHTML;
     }
@@ -116,7 +126,7 @@ async createNewEncounterSubmit(evt) {
     const monsterList = this.dataStore.get("monsterList");
 
     //prevents new encounter if currently fighting
-    if (monsterList.length !== 0) {
+    if (monsterList === undefined || monsterList.length !== 0) {
         errorMessageDisplay.innerText = `You are already in an encounter!`;
         errorMessageDisplay.classList.remove('hidden');
         return;

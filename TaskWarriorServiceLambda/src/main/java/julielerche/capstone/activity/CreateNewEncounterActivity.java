@@ -61,13 +61,15 @@ public class CreateNewEncounterActivity {
         List<AssetFromTable> monsterList = assetDao.getAllOfAssetType("MONSTER");
         System.out.print(monsterList);
         Random random = new Random();
-        int numberOfMonsters = random.nextInt(3);
+        int numberOfMonsters = random.nextInt(4);
         if (numberOfMonsters == 0) {
             numberOfMonsters = 1;
         }
         List<AssetFromTable> chosenMonsters = new ArrayList<>();
-        for (int k = 0; k <= numberOfMonsters; k++) {
-            chosenMonsters.add(monsterList.get(random.nextInt(monsterList.size())));
+        for (int k = 0; k < numberOfMonsters; k++) {
+            int randomIndex = random.nextInt(monsterList.size());
+            AssetFromTable monster = monsterList.get(randomIndex);
+            chosenMonsters.add(monster);
         }
 
         List<Asset> convertedList = chosenMonsters.stream()

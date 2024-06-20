@@ -1,6 +1,5 @@
 package julielerche.capstone.activity.results;
 
-import julielerche.capstone.dynamodb.models.Task;
 import julielerche.capstone.models.UserModel;
 
 public class UpdateTaskResult {

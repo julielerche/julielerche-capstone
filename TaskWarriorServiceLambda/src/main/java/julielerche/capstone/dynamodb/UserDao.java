@@ -188,6 +188,7 @@ public class UserDao {
                     elixirStamina = 100;
                 }
                 user.setStamina(elixirStamina);
+                break;
             default:
                 break;
         }
