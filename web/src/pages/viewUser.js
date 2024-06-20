@@ -84,12 +84,12 @@ export default class ViewUser extends BindingClass {
         for (asset of inventory) {
             assetCounter++;
             inventoryHTML += `<div class="col">
-                <div class="card h-100" style="width: 10rem;">
+                <div class="card" style="width: 10rem;">
                     <img class="card-img-top" src="sprites/${asset.name}.png" alt="Card image cap">
                     <div class="card-body">
                     <h5 class="card-title">${asset.name}</h5>
                     <p class="card-text">${asset.description}</p>
-                    <button data-assetName="${asset.name}" data-assetDescription="${asset.description}" data-assetType="${asset.assetType}" data-assetID="${asset.assetId}" class="button use-item">Use Item</button>
+                    <button type="button" data-assetName="${asset.name}" data-assetDescription="${asset.description}" data-assetType="${asset.assetType}" data-assetID="${asset.assetId}" class="btn btn-primary use-item">Use Item</button>
                     </div>
                     </div>
                     </div>
@@ -197,10 +197,10 @@ export default class ViewUser extends BindingClass {
                         <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#${buttonId}" aria-expanded="false" aria-controls="${buttonId}"> Update Task </button>
                         </div>
                         <div class="col">
-                        <button data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button delete-task">Delete</button>
+                        <button type="button" data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="btn btn-primary delete-task">Delete</button>
                         </div>
                         <div class="col-5">
-                        <button data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button complete-task">Mark Complete</button>
+                        <button type="button" data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="btn btn-primary complete-task">Mark Complete</button>
                         </div>
                     </div>
                     
@@ -238,7 +238,7 @@ export default class ViewUser extends BindingClass {
               <p></p>
                   <p>
                   <div id="updateTaskListener">
-                  <button data-buttonId=${buttonId} data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="button update-task" id="updateTaskButton">Update Task</a>
+                  <button type="button" data-buttonId=${buttonId} data-taskName="${task.taskName}" data-taskType="${task.taskType}" data-difficulty="${task.difficulty}" class="btn btn-primary update-task" id="updateTaskButton">Update Task</a>
                   </div>
                   </p>
               </form>
@@ -457,13 +457,13 @@ async useItem(e) {
             assetCounter++;
             inventoryHTML += `
             <div class="col">
-                <div class="card h-100" style="width: 12rem;">
+                <div class="card" style="width: 12rem;">
                     <img class="card-img-top" src="sprites/${asset.name}.png" alt="Card image cap">
                     <div class="card-body">
                     <h5 class="card-title">${asset.name}</h5>
                     <p class="card-text">${asset.description}<br>
                     ${asset.cost} Gold</p>
-                    <button data-assetType="${asset.assetType}" data-assetID="${asset.assetId}" class="button buy-item">Buy Item</button>
+                    <button type="button" data-assetType="${asset.assetType}" data-assetID="${asset.assetId}" class="btn btn-primary buy-item">Buy Item</button>
                     </div>
                     </div>
                     </div>

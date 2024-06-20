@@ -48,6 +48,8 @@ class CreateUser extends BindingClass {
             errorMessageDisplay.innerText = `Error: ${error.message}`;
             errorMessageDisplay.classList.remove('hidden');
         });
+
+        const encounter = await this.client.createEncounter()
         this.dataStore.set('user', user);
     }
 

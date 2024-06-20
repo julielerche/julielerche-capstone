@@ -84,7 +84,7 @@ export default class ViewEncounter extends BindingClass {
             var healthPercent = (monster.currentHealth / monster.startingHealth) * 100;
             encounterHTML += `
             <div class="col">
-                <div class="card h-100 border-danger" style="width: 12rem;">
+                <div class="card border-danger" style="width: 12rem;">
                 <img class="card-img-top" src="sprites/${monster.name}.png" alt="Card image cap">
                     <h5 class="card-title">${monster.name}</h5>`;
 
