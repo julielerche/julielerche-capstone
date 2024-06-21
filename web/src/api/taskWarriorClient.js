@@ -332,12 +332,14 @@ async updateTask(taskName, taskType, difficulty, newTaskName, newTaskType, newDi
     async useItem(assetType, assetId, assetDescription, assetName, errorCallback) {
         try {
             const token = await this.getTokenOrThrow("Only authenticated users can use an item.");
-            const response = await this.axiosClient.delete(`/users/inventory`, { data: { "asset": {
+            const response = await this.axiosClient.delete(`/users/inventory`, { 
+                headers: { Authorization: `Bearer ${token}` },
+                data: { "asset": {
                 "assetId": assetId,
                 "assetType": assetType,
                 "description": assetDescription,
                 "name": assetName }},
-                headers: { Authorization: `Bearer ${token}` } });
+                });
         return response.data.user;
     } catch (error) {
         this.handleError(error, errorCallback)

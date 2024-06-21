@@ -78,12 +78,13 @@ export default class ViewUser extends BindingClass {
             return;
         }
         
-        let inventoryHTML = '<div class="row row-cols-1 row-cols-md-3 g-4">';
+        // let inventoryHTML = '<div class="row row-cols-1 row-cols-md-3 g-4">';
+        let inventoryHTML = '';
         let assetCounter = 0;
         let asset;
         for (asset of inventory) {
             assetCounter++;
-            inventoryHTML += `<div class="col">
+            inventoryHTML += `
                 <div class="card" style="width: 12rem;">
                     <img class="card-img-top" src="sprites/${asset.name}.png" alt="Card image cap">
                     <div class="card-body">
@@ -91,15 +92,12 @@ export default class ViewUser extends BindingClass {
                     <p class="card-text">${asset.description}</p>
                     <button type="button" data-assetName="${asset.name}" data-assetDescription="${asset.description}" data-assetType="${asset.assetType}" data-assetID="${asset.assetId}" class="btn btn-primary use-item">Use Item</button>
                     </div>
-                    </div>
+                    
                     </div>
             `;
-            // if (assetCounter % 2 == 0) {
-            //     inventoryHTML += `</div>
-            //     `;
-            // }
+
         }
-        inventoryHTML += `</div>`;
+        inventoryHTML += ``;
         document.getElementById('user-inventory').innerHTML = inventoryHTML;
 
     }
