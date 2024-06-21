@@ -346,8 +346,7 @@ Resources:
           Properties:
             Path: /users/inventory
             Method: delete
-            Auth:
-              Authorizer: 'NONE'
+
 
   CreateAssetLambda:
     Type: AWS::Serverless::Function
