@@ -19,7 +19,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <div class="entire-page-container">
         <div class="row">
-            <div class="col">
+            <div class="col layout-col">
                 <div class="card">
                     <form class="card-content">
                         <div class="row">
@@ -164,9 +164,9 @@
                             </div>
                             <div class="tab-pane fade" id="nav-inventory" role="tabpanel" aria-labelledby="nav-inventory-tab" tabindex="0">
                                 This is your current inventory, you can buy more at the store.
-                                <div class="d-flex justify-content-around">
-                                <div id="user-inventory"></div>
-                            </div>
+                                <div class="d-flex justify-content-evenly flex-wrap" id="user-inventory">
+                                <!-- <div id="user-inventory"></div> -->
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -181,7 +181,8 @@
                         <sub>You are currently fighting: </sub>
                         
                         <div id="monsterKilledAlert"></div>
-                        <div id="encounter-monsters"></div>
+                        <div class="d-flex justify-content-evenly flex-wrap" id="encounter-monsters"></div>
+                        
                     
                     <div class="section-container">
                         <h5>Attacks</h5>

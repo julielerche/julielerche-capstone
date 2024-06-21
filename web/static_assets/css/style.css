@@ -110,10 +110,6 @@ image-rendering: crisp-edges;
     text-align: center;
     width: 100%;
 }
-.container-task-info{
-    text-align: center;
-    width: 100%;
-}
 
 .user-stats-container{
     font-size: 16px;
@@ -149,6 +145,14 @@ image-rendering: crisp-edges;
 }
 .validated-field:focus:invalid {
     color: var(--error-color);
+}
+
+.layout-col{
+    width: 50%;
+}
+
+.flex-wrap{
+    flex-flow: row wrap;
 }
 
 .card-img-top {
