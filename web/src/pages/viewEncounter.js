@@ -189,6 +189,7 @@ async attackMonster(evt) {
     if (response.data.assets.length > 0) {
         this.monsterTurn();
     }
+    this.dataStore.set('stamina', newStamina);
     
 }
      /**
@@ -228,10 +229,12 @@ async spellMonster(evt) {
     const newMana = mana - 30;
     document.getElementsByClassName('progress-bar bg-info').item(0).setAttribute('aria-valuenow',newMana);
     document.getElementsByClassName('progress-bar bg-info').item(0).setAttribute('style','width:'+Number(newMana)+'%');
-    //this.dataStore.set('user', user);
+    this.dataStore.set('mana', newMana);
     
     spellButton.innerText = origButtonText;
-    this.monsterTurn();
+    if (response.data.assets.length > 0) {
+        this.monsterTurn();
+    }
 
 }
 
