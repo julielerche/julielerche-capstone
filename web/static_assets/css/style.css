@@ -23,13 +23,13 @@ font-weight: bold;
   }
 
 .background {
-    background: url("background.png") var(--primary-color);
+    background: url("background.png");
     background-size: 400px 400px;
     margin: 0;
     counter-reset: section;
     background-attachment: fixed;
     font-family: DePixelHalbfett, Crang;
-    /* font-family: "Helvetica Neue",Helvetica,sans-serif; */
+    
 }
 
 .header {
@@ -37,7 +37,7 @@ font-weight: bold;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--primary-color);
+    background-color: var(--tertiary-color);
     color: var(--secondary-color);
     padding: 10px 20px;
     font-family: Crang;
