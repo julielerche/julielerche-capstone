@@ -1,8 +1,8 @@
 :root {
     /* css variables: https://developer.mozilla.org/en-US/docs/Web/CSS/var */
-    --primary-color: #5D5E5E;
+    --primary-color: #3b3e44;
     --secondary-color: #ffffff;
-    --tertiary-color: #F5881F;
+    --tertiary-color: #1f83f5;
     --error-color: #EE3A23;
 }
 
@@ -23,10 +23,11 @@ font-weight: bold;
   }
 
 .background {
-    cursor: url('Icon_Cursor_01a.png'), auto;
-    background-color: #8A8C8F;
+    background: url("background.png") var(--primary-color);
+    background-size: 400px 400px;
     margin: 0;
     counter-reset: section;
+    background-attachment: fixed;
     font-family: DePixelHalbfett, Crang;
     /* font-family: "Helvetica Neue",Helvetica,sans-serif; */
 }

@@ -10,13 +10,14 @@ export default class ViewUser extends BindingClass {
         this.dataStore = dataStore;
         this.bindClassMethods(['clientLoaded', 'mount', 'addUserToPage', 'addTasksToPage', 'addStoreToPage',
             'addInventoryToPage', 'addStatsToPage', 'delete', 'markComplete', 'updateUserName', 'createNewTask', 
-            'useItem', 'startNewDay', 'addGoldToPage', 'buyItem', 'updateTask'], this);
+            'useItem', 'startNewDay', 'addGoldToPage', 'buyItem', 'updateTask', 'redirectToDeathPage'], this);
         this.dataStore.addChangeListener(this.addUserToPage);
         this.dataStore.addChangeListener(this.addGoldToPage);
         this.dataStore.addChangeListener(this.addStoreToPage);
         this.dataStore.addChangeListener(this.addTasksToPage);
         this.dataStore.addChangeListener(this.addInventoryToPage);
         this.dataStore.addChangeListener(this.addStatsToPage);
+        this.dataStore.addChangeListener(this.redirectToDeathPage);
         //this.header = new Header(this.dataStore);
         console.log("viewUser constructor");
     }
@@ -326,7 +327,7 @@ export default class ViewUser extends BindingClass {
        errorMessageDisplay.classList.remove('hidden');
    });
    this.dataStore.set("user", response.data.userModel);
-   this.dataStore.set("gold", response.data.gold + response.data.userModel.gold);
+   this.dataStore.set("gold", response.data.gold);
 
     const alertHTML =`<div class="alert alert-success fade show">
     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
@@ -496,13 +497,15 @@ async buyItem(e) {
     this.dataStore.set('inventory', user.inventory);
     buyItemButton.innerText = origButtonText;
 }
-}
-// /**
-//  * Main method to run when the page contents have loaded.
-//  */
-// const main = async () => {
-//     const viewUser = new ViewUser();
-//     viewUser.mount();
-// };
 
-//window.addEventListener('DOMContentLoaded', main);
+/**
+     * When the user falls below 0 health, redirects to death page.
+     */
+redirectToDeathPage() {
+    const user = this.dataStore.get('user');
+    const health = user.health;
+    if (health <= 0) {
+        window.location.href = 'death.html';
+    }
+}
+}
